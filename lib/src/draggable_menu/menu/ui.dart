@@ -1,12 +1,12 @@
 import 'package:draggable_menu/src/default/colors.dart';
 import 'package:flutter/material.dart';
 
-class MenuUi extends StatelessWidget {
+class DraggableMenuUi extends StatelessWidget {
   final Widget? child;
   final Color? accentColor;
   final Color? color;
 
-  const MenuUi({super.key, this.child, this.accentColor, this.color});
+  const DraggableMenuUi({super.key, this.child, this.accentColor, this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -26,14 +26,14 @@ class MenuUi extends StatelessWidget {
             child: SizedBox(
               width: MediaQuery.of(context).size.width,
               child: Padding(
-                padding: const EdgeInsets.only(top: 20, bottom: 8),
+                padding: const EdgeInsets.only(top: 24, bottom: 8),
                 child: child,
               ),
             ),
           ),
         ),
         Positioned(
-          top: 8,
+          top: 10,
           right: 0,
           left: 0,
           child: Center(

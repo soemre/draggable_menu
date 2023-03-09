@@ -1,19 +1,36 @@
 import 'package:draggable_menu/src/draggable_menu/menu/ui.dart';
+import 'package:draggable_menu/src/draggable_menu/route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-class Menu extends StatefulWidget {
+class DraggableMenu extends StatefulWidget {
   final Widget? child;
   final Color? accentColor;
   final Color? color;
+  final Duration? animationDuration;
 
-  const Menu({super.key, this.child, this.accentColor, this.color});
+  const DraggableMenu(
+      {super.key,
+      this.child,
+      this.accentColor,
+      this.color,
+      this.animationDuration});
+
+  static open(BuildContext context, Widget draggableMenu,
+          {Duration? animationDuration}) =>
+      Navigator.maybeOf(context)?.push(
+        MenuRoute(
+          child: draggableMenu,
+          duration: animationDuration,
+        ),
+      );
 
   @override
-  State<Menu> createState() => MenuState();
+  State<DraggableMenu> createState() => _DraggableMenuState();
 }
 
-class MenuState extends State<Menu> with TickerProviderStateMixin {
+class _DraggableMenuState extends State<DraggableMenu>
+    with TickerProviderStateMixin {
   late final AnimationController _controller;
   double _value = 0;
   double _valueStart = 0;
@@ -27,7 +44,7 @@ class MenuState extends State<Menu> with TickerProviderStateMixin {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 320),
+      duration: widget.animationDuration ?? const Duration(milliseconds: 320),
     );
     _ticker = createTicker((elapsed) {
       setState(() {
@@ -93,7 +110,7 @@ class MenuState extends State<Menu> with TickerProviderStateMixin {
           Positioned(
             key: _widgetKey,
             bottom: _value,
-            child: MenuUi(
+            child: DraggableMenuUi(
               color: widget.color,
               accentColor: widget.accentColor,
               child: widget.child,

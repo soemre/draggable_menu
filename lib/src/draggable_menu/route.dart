@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 
 class MenuRoute extends PageRouteBuilder {
   final Widget child;
-  MenuRoute({required this.child})
+
+  MenuRoute({Duration? duration, required this.child})
       : super(
           pageBuilder: (context, animation, secondaryAnimation) => child,
-          transitionDuration: const Duration(milliseconds: 320),
-          reverseTransitionDuration: const Duration(milliseconds: 320),
+          transitionDuration: duration ?? const Duration(milliseconds: 320),
+          reverseTransitionDuration:
+              duration ?? const Duration(milliseconds: 320),
           opaque: false,
           barrierDismissible: true,
         );
