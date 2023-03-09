@@ -1,4 +1,4 @@
-import 'package:draggable_menu/src/default/colors.dart';
+import 'package:draggable_menu/src/draggable_menu/menu/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -10,10 +10,10 @@ class Menu extends StatefulWidget {
   const Menu({super.key, this.child, this.accentColor, this.color});
 
   @override
-  State<Menu> createState() => _MenuState();
+  State<Menu> createState() => MenuState();
 }
 
-class _MenuState extends State<Menu> with TickerProviderStateMixin {
+class MenuState extends State<Menu> with TickerProviderStateMixin {
   late final AnimationController _controller;
   double _value = 0;
   double _valueStart = 0;
@@ -91,51 +91,12 @@ class _MenuState extends State<Menu> with TickerProviderStateMixin {
       child: Stack(
         children: [
           Positioned(
+            key: _widgetKey,
             bottom: _value,
-            child: Stack(
-              children: [
-                DecoratedBox(
-                  key: _widgetKey,
-                  decoration: BoxDecoration(
-                    color: widget.color ?? DefaultColors.primaryBackground,
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(16),
-                    ),
-                  ),
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(
-                      minHeight: 120,
-                    ),
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 20, bottom: 8),
-                        child: widget.child,
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 8,
-                  right: 0,
-                  left: 0,
-                  child: Center(
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: widget.accentColor ??
-                            DefaultColors.primaryBackgroundAccent,
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(36),
-                        ),
-                      ),
-                      child: const SizedBox(
-                        width: 64,
-                        height: 4,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+            child: MenuUi(
+              color: widget.color,
+              accentColor: widget.accentColor,
+              child: widget.child,
             ),
           ),
         ],

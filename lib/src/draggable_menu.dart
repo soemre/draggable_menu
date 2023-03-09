@@ -1,4 +1,4 @@
-import 'package:draggable_menu/src/draggable_menu/menu.dart';
+import 'package:draggable_menu/src/draggable_menu/menu/menu.dart';
 import 'package:draggable_menu/src/draggable_menu/route.dart';
 import 'package:flutter/material.dart';
 
