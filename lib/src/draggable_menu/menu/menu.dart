@@ -70,7 +70,14 @@ class _DraggableMenuState extends State<DraggableMenu>
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.pop(context),
+      onTapDown: (details) {
+        final double? widgetHeight = _widgetKey.currentContext?.size?.height;
+        if (widgetHeight == null) return;
+        if (details.globalPosition.dy <
+            MediaQuery.of(context).size.height - widgetHeight) {
+          Navigator.pop(context);
+        }
+      },
       behavior: HitTestBehavior.opaque,
       onHorizontalDragStart: (details) {
         if (_controller.isAnimating) _controller.stop();
