@@ -5,8 +5,9 @@ class DraggableMenuUi extends StatelessWidget {
   final Widget? child;
   final Color? accentColor;
   final Color? color;
+  final double? maxHeight;
 
-  const DraggableMenuUi({super.key, this.child, this.accentColor, this.color});
+  const DraggableMenuUi({super.key, this.child, this.accentColor, this.color, this.maxHeight});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,8 @@ class DraggableMenuUi extends StatelessWidget {
             ),
           ),
           child: ConstrainedBox(
-            constraints: const BoxConstraints(
+            constraints: BoxConstraints(
+              maxHeight: maxHeight ?? double.infinity,
               minHeight: 120,
             ),
             child: SizedBox(

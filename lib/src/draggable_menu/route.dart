@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class MenuRoute extends PageRouteBuilder {
+class MenuRoute<T> extends PageRouteBuilder<T> {
   final Widget child;
 
   MenuRoute({Duration? duration, required this.child})

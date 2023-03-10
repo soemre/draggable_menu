@@ -8,18 +8,21 @@ class DraggableMenu extends StatefulWidget {
   final Color? accentColor;
   final Color? color;
   final Duration? animationDuration;
+  final double? maxHeight;
 
   const DraggableMenu(
       {super.key,
       this.child,
       this.accentColor,
       this.color,
-      this.animationDuration});
+      this.animationDuration,
+      this.maxHeight});
 
-  static open(BuildContext context, Widget draggableMenu,
+  static Future<T?>? open<T extends Object?>(
+          BuildContext context, Widget draggableMenu,
           {Duration? animationDuration}) =>
-      Navigator.maybeOf(context)?.push(
-        MenuRoute(
+      Navigator.maybeOf(context)?.push<T>(
+        MenuRoute<T>(
           child: draggableMenu,
           duration: animationDuration,
         ),
@@ -113,6 +116,7 @@ class _DraggableMenuState extends State<DraggableMenu>
             child: DraggableMenuUi(
               color: widget.color,
               accentColor: widget.accentColor,
+              maxHeight: widget.maxHeight,
               child: widget.child,
             ),
           ),
