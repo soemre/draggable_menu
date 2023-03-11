@@ -9,14 +9,17 @@ class DraggableMenu extends StatefulWidget {
   final Color? color;
   final Duration? animationDuration;
   final double? maxHeight;
+  final double? minHeight;
 
-  const DraggableMenu(
-      {super.key,
-      this.child,
-      this.accentColor,
-      this.color,
-      this.animationDuration,
-      this.maxHeight});
+  const DraggableMenu({
+    super.key,
+    this.child,
+    this.accentColor,
+    this.color,
+    this.animationDuration,
+    this.maxHeight,
+    this.minHeight,
+  });
 
   static Future<T?>? open<T extends Object?>(
           BuildContext context, Widget draggableMenu,
@@ -124,6 +127,7 @@ class _DraggableMenuState extends State<DraggableMenu>
               color: widget.color,
               accentColor: widget.accentColor,
               maxHeight: widget.maxHeight,
+              minHeight: widget.minHeight,
               child: widget.child,
             ),
           ),
