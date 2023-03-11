@@ -22,12 +22,18 @@ class DraggableMenu extends StatefulWidget {
   });
 
   static Future<T?>? open<T extends Object?>(
-          BuildContext context, Widget draggableMenu,
-          {Duration? animationDuration}) =>
+    BuildContext context,
+    Widget draggableMenu, {
+    Duration? animationDuration,
+    bool? barrier,
+    Color? barrierColor,
+  }) =>
       Navigator.maybeOf(context)?.push<T>(
         MenuRoute<T>(
           child: draggableMenu,
           duration: animationDuration,
+          barrier: barrier,
+          barrierColor: barrierColor,
         ),
       );
 
