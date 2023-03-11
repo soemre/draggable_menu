@@ -31,7 +31,7 @@ class DraggableMenuUi extends StatelessWidget {
           child: ConstrainedBox(
             constraints: BoxConstraints(
               maxHeight: maxHeight ?? double.infinity,
-              minHeight: minHeight ?? 120,
+              minHeight: minHeight ?? 240,
             ),
             child: SizedBox(
               width: MediaQuery.of(context).size.width,
@@ -55,7 +55,7 @@ class DraggableMenuUi extends StatelessWidget {
                 ),
               ),
               child: const SizedBox(
-                width: 64,
+                width: 40,
                 height: 4,
               ),
             ),
