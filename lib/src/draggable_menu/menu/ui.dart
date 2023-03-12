@@ -1,67 +1,55 @@
 import 'package:draggable_menu/src/default/colors.dart';
+import 'package:draggable_menu/src/draggable_menu/menu/widgets/default_bar_item.dart';
 import 'package:flutter/material.dart';
 
 class DraggableMenuUi extends StatelessWidget {
   final Widget? child;
+  final Widget? barItem;
   final Color? accentColor;
   final Color? color;
   final double maxHeight;
   final double minHeight;
+  final Radius? radius;
 
   const DraggableMenuUi({
     super.key,
     this.child,
-    this.accentColor,
+    this.barItem,
     this.color,
+    this.accentColor,
     required this.maxHeight,
     required this.minHeight,
+    this.radius,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        DecoratedBox(
-          decoration: BoxDecoration(
-            color: color ?? DefaultColors.primaryBackground,
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(16),
-            ),
-          ),
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxHeight: maxHeight,
-              minHeight: minHeight,
-            ),
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 24, bottom: 8),
-                child: child,
-              ),
-            ),
-          ),
+    return ClipRRect(
+      borderRadius: BorderRadius.vertical(
+        top: radius ?? const Radius.circular(16),
+      ),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: color ?? DefaultColors.primaryBackground,
         ),
-        Positioned(
-          top: 10,
-          right: 0,
-          left: 0,
-          child: Center(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                color: accentColor ?? DefaultColors.primaryBackgroundAccent,
-                borderRadius: const BorderRadius.all(
-                  Radius.circular(36),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: maxHeight,
+            minHeight: minHeight,
+          ),
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              children: [
+                Center(
+                  child: barItem ?? DefaultBarItem(color: accentColor),
                 ),
-              ),
-              child: const SizedBox(
-                width: 40,
-                height: 4,
-              ),
+                if (child != null) Expanded(child: child!),
+              ],
             ),
           ),
         ),
-      ],
+      ),
     );
   }
 }
