@@ -55,6 +55,7 @@ class _DraggableMenuState extends State<DraggableMenu>
   double? _initHeight;
   bool _isMaximized = false;
   double? _currentHeightStart;
+  int? currentAnimation;
 
   @override
   void initState() {
@@ -145,17 +146,27 @@ class _DraggableMenuState extends State<DraggableMenu>
           if (-_value / widgetHeight > 0.5) {
             Navigator.pop(context);
           } else {
+            currentAnimation = 1;
             Animation<double> animation =
                 Tween<double>(begin: _value, end: 0).animate(
               _controller.drive(
                 CurveTween(curve: Curves.ease),
               ),
             );
-            animation.addListener(() {
-              setState(() {
-                _value = animation.value;
-                _valueStart = _value;
-              });
+            callback() {
+              if (currentAnimation == 1) {
+                setState(() {
+                  _value = animation.value;
+                  _valueStart = _value;
+                });
+              }
+            }
+
+            animation.addListener(callback);
+            animation.addStatusListener((status) {
+              if (status == AnimationStatus.completed) {
+                animation.removeListener(callback);
+              }
             });
             _controller.reset();
             _controller.forward();
@@ -200,48 +211,62 @@ class _DraggableMenuState extends State<DraggableMenu>
 
   void _closeMaximized() {
     _isMaximized = false;
+    currentAnimation = 2;
     Animation<double> animation =
         Tween<double>(begin: _currentHeight, end: _initHeight).animate(
       _controller.drive(
         CurveTween(curve: Curves.ease),
       ),
     );
-    animation.addListener(() {
-      setState(() {
-        if (_currentHeight != _initHeight) {
-          _currentHeight = animation.value;
-          _currentHeightStart = _currentHeight;
-        } else {
-          _currentHeight = null;
-          _currentHeightStart = null;
-        }
-      });
+    callback() {
+      if (currentAnimation == 2) {
+        setState(() {
+          if (_currentHeight != _initHeight) {
+            _currentHeight = animation.value;
+            _currentHeightStart = _currentHeight;
+          } else {
+            _currentHeight = null;
+            _currentHeightStart = null;
+          }
+        });
+      }
+    }
+
+    animation.addListener(callback);
+    animation.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        animation.removeListener(callback);
+      }
     });
-    /* animation.addStatusListener((status) {
-              if (status == AnimationStatus.completed) {
-                animation.removeListener(() {});
-                animation.removeStatusListener((status) {});
-              }
-            }); */
     _controller.reset();
     _controller.forward();
   }
 
   void _openMaximized() {
+    _isMaximized = true;
+    currentAnimation = 3;
     final maximizedHeight =
         widget.maxHeight ?? MediaQuery.of(context).size.height * 0.8;
-    _isMaximized = true;
     Animation<double> animation =
         Tween<double>(begin: _currentHeight, end: maximizedHeight).animate(
       _controller.drive(
         CurveTween(curve: Curves.ease),
       ),
     );
-    animation.addListener(() {
-      setState(() {
-        _currentHeight = animation.value;
-        _currentHeightStart = _currentHeight;
-      });
+    callback() {
+      if (currentAnimation == 3) {
+        setState(() {
+          _currentHeight = animation.value;
+          _currentHeightStart = _currentHeight;
+        });
+      }
+    }
+
+    animation.addListener(callback);
+    animation.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        animation.removeListener(callback);
+      }
     });
     _controller.reset();
     _controller.forward();
