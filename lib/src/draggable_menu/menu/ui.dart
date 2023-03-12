@@ -5,16 +5,16 @@ class DraggableMenuUi extends StatelessWidget {
   final Widget? child;
   final Color? accentColor;
   final Color? color;
-  final double? maxHeight;
-  final double? minHeight;
+  final double maxHeight;
+  final double minHeight;
 
   const DraggableMenuUi({
     super.key,
     this.child,
     this.accentColor,
     this.color,
-    this.maxHeight,
-    this.minHeight,
+    required this.maxHeight,
+    required this.minHeight,
   });
 
   @override
@@ -30,8 +30,8 @@ class DraggableMenuUi extends StatelessWidget {
           ),
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              maxHeight: maxHeight ?? double.infinity,
-              minHeight: minHeight ?? 240,
+              maxHeight: maxHeight,
+              minHeight: minHeight,
             ),
             child: SizedBox(
               width: MediaQuery.of(context).size.width,

@@ -11,6 +11,7 @@ class DraggableMenu extends StatefulWidget {
   final double? maxHeight;
   final double? minHeight;
   final bool? maximize;
+  final double? maximizedHeight;
 
   const DraggableMenu({
     super.key,
@@ -21,6 +22,7 @@ class DraggableMenu extends StatefulWidget {
     this.maxHeight,
     this.minHeight,
     this.maximize,
+    this.maximizedHeight,
   });
 
   static Future<T?>? open<T extends Object?>(
@@ -56,10 +58,13 @@ class _DraggableMenuState extends State<DraggableMenu>
   bool _isMaximized = false;
   double? _currentHeightStart;
   int? currentAnimation;
+  late final double _maximizedHeight;
 
   @override
   void initState() {
     super.initState();
+    _maximizedHeight =
+        widget.maximizedHeight ?? widget.maxHeight ?? double.infinity;
     _controller = AnimationController(
       vsync: this,
       duration: widget.animationDuration ?? const Duration(milliseconds: 320),
@@ -69,6 +74,12 @@ class _DraggableMenuState extends State<DraggableMenu>
         if (_value > 0) {
           _value = 0;
           _valueStart = 0;
+        }
+        if (_currentHeight != null) {
+          if (_maximizedHeight < _currentHeight!) {
+            _currentHeight = _maximizedHeight;
+            if (!_isMaximized) _isMaximized = true;
+          }
         }
       });
     });
@@ -104,18 +115,16 @@ class _DraggableMenuState extends State<DraggableMenu>
         double valueChange = _yAxisStart! - details.globalPosition.dy;
         if (_value == 0 && valueChange > 0) {
           if (details.globalPosition.dy < _valueStart) return;
-          final maximizedHeight =
-              widget.maxHeight ?? MediaQuery.of(context).size.height * 0.8;
           if (widget.maximize == true) {
             // Will having the same height with init and max efect this?
-            if (maximizedHeight >= (_currentHeight ?? _initHeight!)) {
+            if (_maximizedHeight >= (_currentHeight ?? _initHeight!)) {
               _currentHeight =
                   (_currentHeightStart ?? _initHeight!) + valueChange;
             } else {
               // Opened the maximized feat
               if (!_isMaximized) {
                 // _currentHeight = maximizedHeight;
-                _currentHeightStart = maximizedHeight;
+                _currentHeightStart = _maximizedHeight;
                 _isMaximized = true;
               }
               _yAxisStart = details.globalPosition.dy - _valueStart;
@@ -170,18 +179,16 @@ class _DraggableMenuState extends State<DraggableMenu>
             _controller.forward();
           }
         } else {
-          final maximizedHeight =
-              widget.maxHeight ?? MediaQuery.of(context).size.height * 0.8;
           if (_isMaximized == false) {
             if (_currentHeight! - _initHeight! >
-                (maximizedHeight - _initHeight!) / 3) {
+                (_maximizedHeight - _initHeight!) / 3) {
               _openMaximized();
             } else {
               _closeMaximized();
             }
           } else {
-            if (maximizedHeight - _currentHeight! >
-                (maximizedHeight - _initHeight!) / 3) {
+            if (_maximizedHeight - _currentHeight! >
+                (_maximizedHeight - _initHeight!) / 3) {
               _closeMaximized();
             } else {
               _openMaximized();
@@ -197,8 +204,8 @@ class _DraggableMenuState extends State<DraggableMenu>
             child: DraggableMenuUi(
               color: widget.color,
               accentColor: widget.accentColor,
-              maxHeight: widget.maxHeight,
-              minHeight: _currentHeight ?? widget.minHeight,
+              maxHeight: _currentHeight ?? widget.maxHeight ?? double.infinity,
+              minHeight: _currentHeight ?? widget.minHeight ?? 240,
               child: widget.child,
             ),
           ),
@@ -241,10 +248,9 @@ class _DraggableMenuState extends State<DraggableMenu>
   void _openMaximized() {
     _isMaximized = true;
     currentAnimation = 3;
-    final maximizedHeight =
-        widget.maxHeight ?? MediaQuery.of(context).size.height * 0.8;
+
     Animation<double> animation =
-        Tween<double>(begin: _currentHeight, end: maximizedHeight).animate(
+        Tween<double>(begin: _currentHeight, end: _maximizedHeight).animate(
       _controller.drive(
         CurveTween(curve: Curves.ease),
       ),
