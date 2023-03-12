@@ -78,6 +78,7 @@ class _DraggableMenuState extends State<DraggableMenu>
         if (_currentHeight != null) {
           if (_maximizedHeight < _currentHeight!) {
             _currentHeight = _maximizedHeight;
+            _currentHeightStart = _maximizedHeight;
             if (!_isMaximized) _isMaximized = true;
           }
         }
@@ -117,13 +118,13 @@ class _DraggableMenuState extends State<DraggableMenu>
           if (details.globalPosition.dy < _valueStart) return;
           if (widget.maximize == true) {
             // Will having the same height with init and max efect this?
-            if (_maximizedHeight >= (_currentHeight ?? _initHeight!)) {
+            if (_maximizedHeight > (_currentHeight ?? _initHeight!)) {
               _currentHeight =
                   (_currentHeightStart ?? _initHeight!) + valueChange;
             } else {
               // Opened the maximized feat
               if (!_isMaximized) {
-                // _currentHeight = maximizedHeight;
+                _currentHeight = _maximizedHeight;
                 _currentHeightStart = _maximizedHeight;
                 _isMaximized = true;
               }
