@@ -58,13 +58,13 @@ class _DraggableMenuState extends State<DraggableMenu>
   bool _isMaximized = false;
   double? _currentHeightStart;
   int? currentAnimation;
-  late final double _maximizedHeight;
+  late final double? _maximizedHeight;
+  late bool willMaximize;
 
   @override
   void initState() {
     super.initState();
-    _maximizedHeight =
-        widget.maximizedHeight ?? widget.maxHeight ?? double.infinity;
+    _maximizeInit();
     _controller = AnimationController(
       vsync: this,
       duration: widget.animationDuration ?? const Duration(milliseconds: 320),
@@ -75,16 +75,52 @@ class _DraggableMenuState extends State<DraggableMenu>
           _value = 0;
           _valueStart = 0;
         }
-        if (_currentHeight != null) {
-          if (_maximizedHeight < _currentHeight!) {
-            _currentHeight = _maximizedHeight;
-            _currentHeightStart = _maximizedHeight;
-            if (!_isMaximized) _isMaximized = true;
+        if (willMaximize) {
+          if (_currentHeight != null) {
+            if (_maximizedHeight! < _currentHeight!) {
+              _currentHeight = _maximizedHeight;
+              _currentHeightStart = _maximizedHeight;
+              if (!_isMaximized) _isMaximized = true;
+            }
           }
         }
       });
     });
     _ticker.start();
+  }
+
+  void _maximizeInit() {
+    if (widget.maximize == true) {
+      willMaximize = true;
+      // willMaximize shouldn't be true if _maximizedHeight is null!
+      if (widget.maximizedHeight != null) {
+        if (widget.maxHeight != null) {
+          if (widget.maximizedHeight! > widget.maxHeight!) {
+            _maximizedHeight = widget.maximizedHeight!;
+          } else {
+            willMaximize = false;
+          }
+        } else {
+          _maximizedHeight = widget.maximizedHeight!;
+        }
+      } else {
+        if (widget.maxHeight != null) {
+          _maximizedHeight = widget.maxHeight!;
+        } else {
+          willMaximize = false;
+        }
+      }
+    } else {
+      willMaximize = false;
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant DraggableMenu oldWidget) {
+    if (oldWidget.maximize != widget.maximize) {
+      _maximizeInit();
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -116,13 +152,12 @@ class _DraggableMenuState extends State<DraggableMenu>
         double valueChange = _yAxisStart! - details.globalPosition.dy;
         if (_value == 0 && valueChange > 0) {
           if (details.globalPosition.dy < _valueStart) return;
-          if (widget.maximize == true) {
-            // Will having the same height with init and max efect this?
-            if (_maximizedHeight > (_currentHeight ?? _initHeight!)) {
+          if (willMaximize) {
+            if (_maximizedHeight! > (_currentHeight ?? _initHeight!)) {
               _currentHeight =
                   (_currentHeightStart ?? _initHeight!) + valueChange;
             } else {
-              // Opened the maximized feat
+              // Opens the maximized feat
               if (!_isMaximized) {
                 _currentHeight = _maximizedHeight;
                 _currentHeightStart = _maximizedHeight;
@@ -180,20 +215,24 @@ class _DraggableMenuState extends State<DraggableMenu>
             _controller.forward();
           }
         } else {
-          if (_isMaximized == false) {
-            if (_currentHeight! - _initHeight! >
-                (_maximizedHeight - _initHeight!) / 3) {
-              _openMaximized();
+          if (willMaximize) {
+            if (_isMaximized == false) {
+              if (_currentHeight! - _initHeight! >
+                  (_maximizedHeight! - _initHeight!) / 3) {
+                _openMaximized();
+              } else {
+                _closeMaximized();
+              }
             } else {
-              _closeMaximized();
+              if (_maximizedHeight! - _currentHeight! >
+                  (_maximizedHeight! - _initHeight!) / 3) {
+                _closeMaximized();
+              } else {
+                _openMaximized();
+              }
             }
           } else {
-            if (_maximizedHeight - _currentHeight! >
-                (_maximizedHeight - _initHeight!) / 3) {
-              _closeMaximized();
-            } else {
-              _openMaximized();
-            }
+            _closeMaximized();
           }
         }
       },
