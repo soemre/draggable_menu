@@ -155,10 +155,8 @@ class _DraggableMenuState extends State<DraggableMenu>
             );
             callback() {
               if (currentAnimation == 1) {
-                setState(() {
-                  _value = animation.value;
-                  _valueStart = _value;
-                });
+                _value = animation.value;
+                _valueStart = _value;
               }
             }
 
@@ -220,15 +218,13 @@ class _DraggableMenuState extends State<DraggableMenu>
     );
     callback() {
       if (currentAnimation == 2) {
-        setState(() {
-          if (_currentHeight != _initHeight) {
-            _currentHeight = animation.value;
-            _currentHeightStart = _currentHeight;
-          } else {
-            _currentHeight = null;
-            _currentHeightStart = null;
-          }
-        });
+        if (_currentHeight != _initHeight) {
+          _currentHeight = animation.value;
+          _currentHeightStart = _currentHeight;
+        } else {
+          _currentHeight = null;
+          _currentHeightStart = null;
+        }
       }
     }
 
@@ -255,10 +251,8 @@ class _DraggableMenuState extends State<DraggableMenu>
     );
     callback() {
       if (currentAnimation == 3) {
-        setState(() {
-          _currentHeight = animation.value;
-          _currentHeightStart = _currentHeight;
-        });
+        _currentHeight = animation.value;
+        _currentHeightStart = _currentHeight;
       }
     }
 
