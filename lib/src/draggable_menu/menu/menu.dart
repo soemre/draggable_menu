@@ -10,6 +10,7 @@ class DraggableMenu extends StatefulWidget {
   final Duration? animationDuration;
   final double? maxHeight;
   final double? minHeight;
+  final bool? maximize;
 
   const DraggableMenu({
     super.key,
@@ -19,6 +20,7 @@ class DraggableMenu extends StatefulWidget {
     this.animationDuration,
     this.maxHeight,
     this.minHeight,
+    this.maximize,
   });
 
   static Future<T?>? open<T extends Object?>(
@@ -47,9 +49,12 @@ class _DraggableMenuState extends State<DraggableMenu>
   double _value = 0;
   double _valueStart = 0;
   double? _yAxisStart;
-  double _yAxisChange = 0;
   late Ticker _ticker;
   final _widgetKey = GlobalKey();
+  double? _currentHeight;
+  double? _initHeight;
+  bool _isMaximized = false;
+  double? _currentHeightStart;
 
   @override
   void initState() {
@@ -91,37 +96,88 @@ class _DraggableMenuState extends State<DraggableMenu>
       onHorizontalDragStart: (details) {
         if (_controller.isAnimating) _controller.stop();
         _yAxisStart = details.globalPosition.dy;
+        _initHeight ??= _widgetKey.currentContext?.size?.height;
       },
       onHorizontalDragUpdate: (details) {
         if (_yAxisStart == null) return;
-        if (_value == 0 && _yAxisStart! - details.globalPosition.dy > 0) {
+        double valueChange = _yAxisStart! - details.globalPosition.dy;
+        if (_value == 0 && valueChange > 0) {
           if (details.globalPosition.dy < _valueStart) return;
-          _yAxisStart = details.globalPosition.dy - _valueStart;
+          final maximizedHeight =
+              widget.maxHeight ?? MediaQuery.of(context).size.height * 0.8;
+          if (widget.maximize == true) {
+            // Will having the same height with init and max efect this?
+            if (maximizedHeight >= (_currentHeight ?? _initHeight!)) {
+              _currentHeight =
+                  (_currentHeightStart ?? _initHeight!) + valueChange;
+            } else {
+              // Opened the maximized feat
+              if (!_isMaximized) {
+                // _currentHeight = maximizedHeight;
+                _currentHeightStart = maximizedHeight;
+                _isMaximized = true;
+              }
+              _yAxisStart = details.globalPosition.dy - _valueStart;
+            }
+          } else {
+            _yAxisStart = details.globalPosition.dy - _valueStart;
+          }
         } else {
-          _yAxisChange = _yAxisStart! - details.globalPosition.dy;
-          _value = _valueStart + _yAxisChange;
+          if (_currentHeight != null) {
+            if (_currentHeight! > _initHeight!) {
+              _currentHeight =
+                  (_currentHeightStart ?? _initHeight!) + valueChange;
+            } else {
+              _currentHeight = null;
+              _currentHeightStart = null;
+              _isMaximized = false;
+              _yAxisStart = details.globalPosition.dy;
+            }
+          } else {
+            _value = _valueStart + valueChange;
+          }
         }
       },
       onHorizontalDragEnd: (details) {
         final double? widgetHeight = _widgetKey.currentContext?.size?.height;
         if (widgetHeight == null) return;
-        if (-_value / widgetHeight > 0.5) {
-          Navigator.pop(context);
-        } else {
-          Animation<double> animation =
-              Tween<double>(begin: _value, end: 0).animate(
-            _controller.drive(
-              CurveTween(curve: Curves.ease),
-            ),
-          );
-          animation.addListener(() {
-            setState(() {
-              _value = animation.value;
-              _valueStart = _value;
+        if (_currentHeight == null) {
+          if (-_value / widgetHeight > 0.5) {
+            Navigator.pop(context);
+          } else {
+            Animation<double> animation =
+                Tween<double>(begin: _value, end: 0).animate(
+              _controller.drive(
+                CurveTween(curve: Curves.ease),
+              ),
+            );
+            animation.addListener(() {
+              setState(() {
+                _value = animation.value;
+                _valueStart = _value;
+              });
             });
-          });
-          _controller.reset();
-          _controller.forward();
+            _controller.reset();
+            _controller.forward();
+          }
+        } else {
+          final maximizedHeight =
+              widget.maxHeight ?? MediaQuery.of(context).size.height * 0.8;
+          if (_isMaximized == false) {
+            if (_currentHeight! - _initHeight! >
+                (maximizedHeight - _initHeight!) / 3) {
+              _openMaximized();
+            } else {
+              _closeMaximized();
+            }
+          } else {
+            if (maximizedHeight - _currentHeight! >
+                (maximizedHeight - _initHeight!) / 3) {
+              _closeMaximized();
+            } else {
+              _openMaximized();
+            }
+          }
         }
       },
       child: Stack(
@@ -133,12 +189,61 @@ class _DraggableMenuState extends State<DraggableMenu>
               color: widget.color,
               accentColor: widget.accentColor,
               maxHeight: widget.maxHeight,
-              minHeight: widget.minHeight,
+              minHeight: _currentHeight ?? widget.minHeight,
               child: widget.child,
             ),
           ),
         ],
       ),
     );
+  }
+
+  void _closeMaximized() {
+    _isMaximized = false;
+    Animation<double> animation =
+        Tween<double>(begin: _currentHeight, end: _initHeight).animate(
+      _controller.drive(
+        CurveTween(curve: Curves.ease),
+      ),
+    );
+    animation.addListener(() {
+      setState(() {
+        if (_currentHeight != _initHeight) {
+          _currentHeight = animation.value;
+          _currentHeightStart = _currentHeight;
+        } else {
+          _currentHeight = null;
+          _currentHeightStart = null;
+        }
+      });
+    });
+    /* animation.addStatusListener((status) {
+              if (status == AnimationStatus.completed) {
+                animation.removeListener(() {});
+                animation.removeStatusListener((status) {});
+              }
+            }); */
+    _controller.reset();
+    _controller.forward();
+  }
+
+  void _openMaximized() {
+    final maximizedHeight =
+        widget.maxHeight ?? MediaQuery.of(context).size.height * 0.8;
+    _isMaximized = true;
+    Animation<double> animation =
+        Tween<double>(begin: _currentHeight, end: maximizedHeight).animate(
+      _controller.drive(
+        CurveTween(curve: Curves.ease),
+      ),
+    );
+    animation.addListener(() {
+      setState(() {
+        _currentHeight = animation.value;
+        _currentHeightStart = _currentHeight;
+      });
+    });
+    _controller.reset();
+    _controller.forward();
   }
 }
