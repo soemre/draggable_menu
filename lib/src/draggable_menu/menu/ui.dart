@@ -1,5 +1,7 @@
-import 'package:draggable_menu/src/default/colors.dart';
-import 'package:draggable_menu/src/draggable_menu/menu/widgets/default_bar_item.dart';
+import 'package:draggable_menu/src/draggable_menu/menu/enums/status.dart';
+import 'package:draggable_menu/src/draggable_menu/menu/enums/ui.dart';
+import 'package:draggable_menu/src/draggable_menu/menu/ui/classic.dart';
+import 'package:draggable_menu/src/draggable_menu/menu/ui/modern.dart';
 import 'package:flutter/material.dart';
 
 class DraggableMenuUi extends StatelessWidget {
@@ -7,10 +9,12 @@ class DraggableMenuUi extends StatelessWidget {
   final Widget? barItem;
   final Color? accentColor;
   final Color? color;
+  final Radius? radius;
   final double maxHeight;
   final double minHeight;
-  final Radius? radius;
+  final DraggableMenuUiType? uiType;
   final Widget? customUi;
+  final DraggableMenuStatus? status;
 
   const DraggableMenuUi({
     super.key,
@@ -21,7 +25,9 @@ class DraggableMenuUi extends StatelessWidget {
     required this.maxHeight,
     required this.minHeight,
     this.radius,
+    this.uiType,
     this.customUi,
+    this.status,
   });
 
   @override
@@ -33,26 +39,28 @@ class DraggableMenuUi extends StatelessWidget {
       ),
       child: SizedBox(
         width: MediaQuery.of(context).size.width,
-        child: customUi ??
-            ClipRRect(
-              borderRadius: BorderRadius.vertical(
-                top: radius ?? const Radius.circular(16),
-              ),
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: color ?? DefaultColors.primaryBackground,
-                ),
-                child: Column(
-                  children: [
-                    Center(
-                      child: barItem ?? DefaultBarItem(color: accentColor),
-                    ),
-                    if (child != null) Expanded(child: child!),
-                  ],
-                ),
-              ),
-            ),
+        child: customUi ?? _ui(),
       ),
+    );
+  }
+
+  Widget _ui() {
+    if (uiType == DraggableMenuUiType.modern) {
+      return ModernUi(
+        accentColor: accentColor,
+        color: color,
+        radius: radius,
+        barItem: barItem,
+        status: status,
+        child: child,
+      );
+    }
+    return ClassicUi(
+      accentColor: accentColor,
+      color: color,
+      radius: radius,
+      barItem: barItem,
+      child: child,
     );
   }
 }

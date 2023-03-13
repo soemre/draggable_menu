@@ -1,0 +1,4 @@
+enum DraggableMenuUiType {
+  classic,
+  modern,
+}

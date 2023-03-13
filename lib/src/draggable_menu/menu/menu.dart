@@ -1,4 +1,5 @@
-import 'package:draggable_menu/src/draggable_menu/menu/status.dart';
+import 'package:draggable_menu/src/draggable_menu/menu/enums/status.dart';
+import 'package:draggable_menu/src/draggable_menu/menu/enums/ui.dart';
 import 'package:draggable_menu/src/draggable_menu/menu/ui.dart';
 import 'package:draggable_menu/src/draggable_menu/route.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ class DraggableMenu extends StatefulWidget {
   final Widget? barItem;
   final Radius? radius;
   final Function(DraggableMenuStatus status)? addStatusListener;
+  final DraggableMenuUiType? uiType;
   final Widget? customUi;
 
   const DraggableMenu({
@@ -32,6 +34,7 @@ class DraggableMenu extends StatefulWidget {
     this.radius,
     this.addStatusListener,
     this.customUi,
+    this.uiType,
   });
 
   static Future<T?>? open<T extends Object?>(
@@ -276,7 +279,9 @@ class _DraggableMenuState extends State<DraggableMenu>
               maxHeight: _currentHeight ?? widget.maxHeight ?? double.infinity,
               radius: widget.radius,
               barItem: widget.barItem,
+              uiType: widget.uiType,
               customUi: widget.customUi,
+              status: _status,
               child: widget.child,
             ),
           ),
