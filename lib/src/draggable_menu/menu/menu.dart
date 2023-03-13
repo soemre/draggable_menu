@@ -19,6 +19,7 @@ class DraggableMenu extends StatefulWidget {
   final Function(DraggableMenuStatus status)? addStatusListener;
   final DraggableMenuUiType? uiType;
   final Widget? customUi;
+  final Curve? curve;
 
   const DraggableMenu({
     super.key,
@@ -35,12 +36,14 @@ class DraggableMenu extends StatefulWidget {
     this.addStatusListener,
     this.customUi,
     this.uiType,
+    this.curve,
   });
 
   static Future<T?>? open<T extends Object?>(
     BuildContext context,
     Widget draggableMenu, {
     Duration? animationDuration,
+    Curve? curve,
     bool? barrier,
     Color? barrierColor,
   }) =>
@@ -48,6 +51,7 @@ class DraggableMenu extends StatefulWidget {
         MenuRoute<T>(
           child: draggableMenu,
           duration: animationDuration,
+          curve: curve,
           barrier: barrier,
           barrierColor: barrierColor,
         ),
@@ -222,7 +226,7 @@ class _DraggableMenuState extends State<DraggableMenu>
             Animation<double> animation =
                 Tween<double>(begin: _value, end: 0).animate(
               _controller.drive(
-                CurveTween(curve: Curves.ease),
+                CurveTween(curve: widget.curve ?? Curves.ease),
               ),
             );
             callback() {
@@ -282,6 +286,7 @@ class _DraggableMenuState extends State<DraggableMenu>
               uiType: widget.uiType,
               customUi: widget.customUi,
               status: _status,
+              curve: widget.curve,
               child: widget.child,
             ),
           ),
@@ -296,7 +301,7 @@ class _DraggableMenuState extends State<DraggableMenu>
     Animation<double> animation =
         Tween<double>(begin: _currentHeight, end: _initHeight).animate(
       _controller.drive(
-        CurveTween(curve: Curves.ease),
+        CurveTween(curve: widget.curve ?? Curves.ease),
       ),
     );
     callback() {
@@ -336,7 +341,7 @@ class _DraggableMenuState extends State<DraggableMenu>
     Animation<double> animation =
         Tween<double>(begin: _currentHeight, end: _maximizedHeight).animate(
       _controller.drive(
-        CurveTween(curve: Curves.ease),
+        CurveTween(curve: widget.curve ?? Curves.ease),
       ),
     );
     callback() {

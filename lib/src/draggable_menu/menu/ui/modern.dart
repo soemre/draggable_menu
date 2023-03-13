@@ -11,6 +11,7 @@ class ModernUi extends StatefulWidget {
   final Radius? radius;
   final DraggableMenuStatus? status;
   final Duration? animationDuration;
+  final Curve? curve;
 
   const ModernUi({
     super.key,
@@ -21,6 +22,7 @@ class ModernUi extends StatefulWidget {
     this.radius,
     this.status,
     this.animationDuration,
+    this.curve,
   });
 
   @override
@@ -46,7 +48,7 @@ class _ModernUiState extends State<ModernUi> with TickerProviderStateMixin {
 
     _animation = Tween<double>(begin: 16, end: 0).animate(
       _controller.drive(
-        CurveTween(curve: Curves.ease),
+        CurveTween(curve: widget.curve ?? Curves.ease),
       ),
     )..addListener(listener);
     super.initState();

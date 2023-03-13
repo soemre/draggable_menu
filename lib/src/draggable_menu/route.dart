@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 
 class MenuRoute<T> extends PageRouteBuilder<T> {
   final Widget child;
+  final Curve? curve;
 
   MenuRoute(
       {Duration? duration,
       required this.child,
       bool? barrier,
-      Color? barrierColor})
+      Color? barrierColor,
+      this.curve})
       : super(
           pageBuilder: (context, animation, secondaryAnimation) => child,
           transitionDuration: duration ?? const Duration(milliseconds: 320),
@@ -27,7 +29,7 @@ class MenuRoute<T> extends PageRouteBuilder<T> {
           Tween<Offset>(begin: const Offset(0, 1), end: const Offset(0, 0))
               .animate(
         animation.drive(
-          CurveTween(curve: Curves.ease),
+          CurveTween(curve: curve ?? Curves.ease),
         ),
       ),
       child: child,
