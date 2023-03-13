@@ -95,7 +95,7 @@ class _ModernUiState extends State<ModernUi> with TickerProviderStateMixin {
                 child:
                     widget.barItem ?? DefaultBarItem(color: widget.accentColor),
               ),
-              if (widget.child != null) Expanded(child: widget.child!),
+              if (widget.child != null) widget.child!,
             ],
           ),
         ),

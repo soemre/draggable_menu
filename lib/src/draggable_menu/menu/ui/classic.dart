@@ -32,7 +32,7 @@ class ClassicUi extends StatelessWidget {
             Center(
               child: barItem ?? DefaultBarItem(color: accentColor),
             ),
-            if (child != null) Expanded(child: child!),
+            if (child != null) child!,
           ],
         ),
       ),
