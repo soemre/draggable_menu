@@ -10,6 +10,7 @@ class ModernUi extends StatefulWidget {
   final Color? color;
   final Radius? radius;
   final DraggableMenuStatus? status;
+  final Duration? animationDuration;
 
   const ModernUi({
     super.key,
@@ -19,6 +20,7 @@ class ModernUi extends StatefulWidget {
     this.color,
     this.radius,
     this.status,
+    this.animationDuration,
   });
 
   @override
@@ -34,7 +36,7 @@ class _ModernUiState extends State<ModernUi> with TickerProviderStateMixin {
   void initState() {
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 320),
+      duration: widget.animationDuration ?? const Duration(milliseconds: 320),
     );
     listener() {
       setState(() {

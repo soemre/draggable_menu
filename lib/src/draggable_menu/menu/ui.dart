@@ -15,6 +15,7 @@ class DraggableMenuUi extends StatelessWidget {
   final DraggableMenuUiType? uiType;
   final Widget? customUi;
   final DraggableMenuStatus? status;
+  final Duration? animationDuration;
 
   const DraggableMenuUi({
     super.key,
@@ -28,6 +29,7 @@ class DraggableMenuUi extends StatelessWidget {
     this.uiType,
     this.customUi,
     this.status,
+    this.animationDuration,
   });
 
   @override
@@ -52,6 +54,7 @@ class DraggableMenuUi extends StatelessWidget {
         radius: radius,
         barItem: barItem,
         status: status,
+        animationDuration: animationDuration,
         child: child,
       );
     }
