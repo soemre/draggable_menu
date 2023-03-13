@@ -7,7 +7,7 @@ class ClassicUi extends StatelessWidget {
   final Widget? barItem;
   final Color? accentColor;
   final Color? color;
-  final Radius? radius;
+  final double? radius;
 
   const ClassicUi(
       {super.key,
@@ -21,7 +21,7 @@ class ClassicUi extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.vertical(
-        top: radius ?? const Radius.circular(16),
+        top: Radius.circular(radius ?? 16),
       ),
       child: DecoratedBox(
         decoration: BoxDecoration(

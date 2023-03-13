@@ -8,7 +8,7 @@ class ModernUi extends StatefulWidget {
   final Widget? barItem;
   final Color? accentColor;
   final Color? color;
-  final Radius? radius;
+  final double? radius;
   final DraggableMenuStatus? status;
   final Duration? animationDuration;
   final Curve? curve;
@@ -33,6 +33,8 @@ class _ModernUiState extends State<ModernUi> with TickerProviderStateMixin {
   double _padding = 16;
   late final AnimationController _controller;
   late final Animation<double> _animation;
+  late final Animation<double> _radiusAnimation;
+  double? _radius;
 
   @override
   void initState() {
@@ -40,6 +42,7 @@ class _ModernUiState extends State<ModernUi> with TickerProviderStateMixin {
       vsync: this,
       duration: widget.animationDuration ?? const Duration(milliseconds: 320),
     );
+
     listener() {
       setState(() {
         _padding = _animation.value;
@@ -51,6 +54,19 @@ class _ModernUiState extends State<ModernUi> with TickerProviderStateMixin {
         CurveTween(curve: widget.curve ?? Curves.ease),
       ),
     )..addListener(listener);
+
+    radiusListener() {
+      setState(() {
+        _radius = _radiusAnimation.value;
+      });
+    }
+
+    _radiusAnimation =
+        Tween<double>(begin: widget.radius ?? 16, end: 0).animate(
+      _controller.drive(
+        CurveTween(curve: widget.curve ?? Curves.ease),
+      ),
+    )..addListener(radiusListener);
     super.initState();
   }
 
@@ -83,8 +99,9 @@ class _ModernUiState extends State<ModernUi> with TickerProviderStateMixin {
     return Padding(
       padding: EdgeInsets.all(_padding),
       child: ClipRRect(
-        borderRadius:
-            BorderRadius.all(widget.radius ?? const Radius.circular(16)),
+        borderRadius: BorderRadius.vertical(
+            top: Radius.circular(widget.radius ?? 16),
+            bottom: Radius.circular(_radius ?? widget.radius ?? 16)),
         child: DecoratedBox(
           decoration: BoxDecoration(
             color: widget.color ?? DefaultColors.primaryBackground,

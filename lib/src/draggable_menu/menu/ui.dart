@@ -9,7 +9,7 @@ class DraggableMenuUi extends StatelessWidget {
   final Widget? barItem;
   final Color? accentColor;
   final Color? color;
-  final Radius? radius;
+  final double? radius;
   final double maxHeight;
   final double minHeight;
   final DraggableMenuUiType? uiType;

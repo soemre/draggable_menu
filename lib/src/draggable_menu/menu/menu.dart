@@ -15,7 +15,7 @@ class DraggableMenu extends StatefulWidget {
   final bool? maximize;
   final double? maximizedHeight;
   final Widget? barItem;
-  final Radius? radius;
+  final double? radius;
   final Function(DraggableMenuStatus status)? addStatusListener;
   final DraggableMenuUiType? uiType;
   final Widget? customUi;
