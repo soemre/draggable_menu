@@ -32,9 +32,7 @@ class _AppState extends State<App> {
             const Text(
               "Maximize:",
               style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red),
+                  fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),
             ),
             const SizedBox(height: 4),
             Row(
@@ -59,9 +57,7 @@ class _AppState extends State<App> {
             const Text(
               "Barrier:",
               style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red),
+                  fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),
             ),
             const SizedBox(height: 4),
             Row(
@@ -86,9 +82,7 @@ class _AppState extends State<App> {
             const Text(
               "UI Type:",
               style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red),
+                  fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),
             ),
             const SizedBox(height: 4),
             Row(
@@ -127,6 +121,7 @@ class _AppState extends State<App> {
                 child: const Text("Open The Menu"),
               ),
             ),
+            const SizedBox(height: 8),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(

@@ -28,11 +28,12 @@ class ClassicUi extends StatelessWidget {
           color: color ?? DefaultColors.primaryBackground,
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Center(
               child: barItem ?? DefaultBarItem(color: accentColor),
             ),
-            if (child != null) child!,
+            if (child != null) Flexible(child: child!),
           ],
         ),
       ),

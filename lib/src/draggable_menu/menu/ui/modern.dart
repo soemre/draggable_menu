@@ -90,12 +90,13 @@ class _ModernUiState extends State<ModernUi> with TickerProviderStateMixin {
             color: widget.color ?? DefaultColors.primaryBackground,
           ),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Center(
                 child:
                     widget.barItem ?? DefaultBarItem(color: widget.accentColor),
               ),
-              if (widget.child != null) widget.child!,
+              if (widget.child != null) Flexible(child: widget.child!),
             ],
           ),
         ),
