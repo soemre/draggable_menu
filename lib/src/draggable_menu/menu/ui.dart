@@ -10,6 +10,7 @@ class DraggableMenuUi extends StatelessWidget {
   final double maxHeight;
   final double minHeight;
   final Radius? radius;
+  final Widget? customUi;
 
   const DraggableMenuUi({
     super.key,
@@ -20,35 +21,37 @@ class DraggableMenuUi extends StatelessWidget {
     required this.maxHeight,
     required this.minHeight,
     this.radius,
+    this.customUi,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.vertical(
-        top: radius ?? const Radius.circular(16),
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxHeight: maxHeight,
+        minHeight: minHeight,
       ),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: color ?? DefaultColors.primaryBackground,
-        ),
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxHeight: maxHeight,
-            minHeight: minHeight,
-          ),
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              children: [
-                Center(
-                  child: barItem ?? DefaultBarItem(color: accentColor),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        child: customUi ??
+            ClipRRect(
+              borderRadius: BorderRadius.vertical(
+                top: radius ?? const Radius.circular(16),
+              ),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: color ?? DefaultColors.primaryBackground,
                 ),
-                if (child != null) Expanded(child: child!),
-              ],
+                child: Column(
+                  children: [
+                    Center(
+                      child: barItem ?? DefaultBarItem(color: accentColor),
+                    ),
+                    if (child != null) Expanded(child: child!),
+                  ],
+                ),
+              ),
             ),
-          ),
-        ),
       ),
     );
   }

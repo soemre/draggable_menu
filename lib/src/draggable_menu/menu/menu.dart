@@ -16,6 +16,7 @@ class DraggableMenu extends StatefulWidget {
   final Widget? barItem;
   final Radius? radius;
   final Function(DraggableMenuStatus status)? addStatusListener;
+  final Widget? customUi;
 
   const DraggableMenu({
     super.key,
@@ -30,6 +31,7 @@ class DraggableMenu extends StatefulWidget {
     this.animationDuration,
     this.radius,
     this.addStatusListener,
+    this.customUi,
   });
 
   static Future<T?>? open<T extends Object?>(
@@ -274,6 +276,7 @@ class _DraggableMenuState extends State<DraggableMenu>
               maxHeight: _currentHeight ?? widget.maxHeight ?? double.infinity,
               radius: widget.radius,
               barItem: widget.barItem,
+              customUi: widget.customUi,
               child: widget.child,
             ),
           ),
