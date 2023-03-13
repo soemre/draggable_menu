@@ -1,3 +1,4 @@
+import 'package:draggable_menu/src/draggable_menu/menu/status.dart';
 import 'package:draggable_menu/src/draggable_menu/menu/ui.dart';
 import 'package:draggable_menu/src/draggable_menu/route.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ class DraggableMenu extends StatefulWidget {
   final double? maximizedHeight;
   final Widget? barItem;
   final Radius? radius;
+  final Function(DraggableMenuStatus status)? addStatusListener;
 
   const DraggableMenu({
     super.key,
@@ -27,6 +29,7 @@ class DraggableMenu extends StatefulWidget {
     this.maximizedHeight,
     this.animationDuration,
     this.radius,
+    this.addStatusListener,
   });
 
   static Future<T?>? open<T extends Object?>(
@@ -64,6 +67,7 @@ class _DraggableMenuState extends State<DraggableMenu>
   int? currentAnimation;
   late final double? _maximizedHeight;
   late bool willMaximize;
+  DraggableMenuStatus? _status;
 
   @override
   void initState() {
@@ -85,12 +89,19 @@ class _DraggableMenuState extends State<DraggableMenu>
               _currentHeight = _maximizedHeight;
               _currentHeightStart = _maximizedHeight;
               if (!_isMaximized) _isMaximized = true;
+              _notifyStatusListener(DraggableMenuStatus.maximized);
             }
           }
         }
       });
     });
     _ticker.start();
+  }
+
+  _notifyStatusListener(DraggableMenuStatus status) {
+    if (_status == status) return;
+    _status = status;
+    if (widget.addStatusListener != null) widget.addStatusListener!(status);
   }
 
   void _maximizeInit() {
@@ -142,6 +153,7 @@ class _DraggableMenuState extends State<DraggableMenu>
         if (widgetHeight == null) return;
         if (details.globalPosition.dy <
             MediaQuery.of(context).size.height - widgetHeight + _value) {
+          _notifyStatusListener(DraggableMenuStatus.closing);
           Navigator.pop(context);
         }
       },
@@ -160,12 +172,14 @@ class _DraggableMenuState extends State<DraggableMenu>
             if (_maximizedHeight! > (_currentHeight ?? _initHeight!)) {
               _currentHeight =
                   (_currentHeightStart ?? _initHeight!) + valueChange;
+              _notifyStatusListener(DraggableMenuStatus.mayMaximize);
             } else {
               // Opens the maximized feat
               if (!_isMaximized) {
                 _currentHeight = _maximizedHeight;
                 _currentHeightStart = _maximizedHeight;
                 _isMaximized = true;
+                _notifyStatusListener(DraggableMenuStatus.maximized);
               }
               _yAxisStart = details.globalPosition.dy - _valueStart;
             }
@@ -177,14 +191,17 @@ class _DraggableMenuState extends State<DraggableMenu>
             if (_currentHeight! > _initHeight!) {
               _currentHeight =
                   (_currentHeightStart ?? _initHeight!) + valueChange;
+              _notifyStatusListener(DraggableMenuStatus.mayMinimize);
             } else {
               _currentHeight = null;
               _currentHeightStart = null;
               _isMaximized = false;
               _yAxisStart = details.globalPosition.dy;
+              _notifyStatusListener(DraggableMenuStatus.minimized);
             }
           } else {
             _value = _valueStart + valueChange;
+            _notifyStatusListener(DraggableMenuStatus.mayClose);
           }
         }
       },
@@ -193,6 +210,7 @@ class _DraggableMenuState extends State<DraggableMenu>
         if (widgetHeight == null) return;
         if (_currentHeight == null) {
           if (-_value / widgetHeight > 0.5) {
+            _notifyStatusListener(DraggableMenuStatus.closing);
             Navigator.pop(context);
           } else {
             currentAnimation = 1;
@@ -213,9 +231,13 @@ class _DraggableMenuState extends State<DraggableMenu>
             animation.addStatusListener((status) {
               if (status == AnimationStatus.completed) {
                 animation.removeListener(callback);
+                if (_value == 0 && _currentHeight == null) {
+                  _notifyStatusListener(DraggableMenuStatus.minimized);
+                }
               }
             });
             _controller.reset();
+            _notifyStatusListener(DraggableMenuStatus.canceling);
             _controller.forward();
           }
         } else {
@@ -285,9 +307,17 @@ class _DraggableMenuState extends State<DraggableMenu>
     animation.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         animation.removeListener(callback);
+        if (_currentHeight == _initHeight) {
+          _currentHeight = null;
+          _currentHeightStart = null;
+        }
+        if (_value == 0 && _currentHeight == null) {
+          _notifyStatusListener(DraggableMenuStatus.minimized);
+        }
       }
     });
     _controller.reset();
+    _notifyStatusListener(DraggableMenuStatus.minimizing);
     _controller.forward();
   }
 
@@ -312,9 +342,13 @@ class _DraggableMenuState extends State<DraggableMenu>
     animation.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         animation.removeListener(callback);
+        if (_currentHeight == _maximizedHeight) {
+          _notifyStatusListener(DraggableMenuStatus.maximized);
+        }
       }
     });
     _controller.reset();
+    _notifyStatusListener(DraggableMenuStatus.maximizing);
     _controller.forward();
   }
 }
