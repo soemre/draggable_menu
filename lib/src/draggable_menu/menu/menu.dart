@@ -167,12 +167,12 @@ class _DraggableMenuState extends State<DraggableMenu>
         }
       },
       behavior: HitTestBehavior.opaque,
-      onHorizontalDragStart: (details) {
+      onVerticalDragStart: (details) {
         if (_controller.isAnimating) _controller.stop();
         _yAxisStart = details.globalPosition.dy;
         _initHeight ??= _widgetKey.currentContext?.size?.height;
       },
-      onHorizontalDragUpdate: (details) {
+      onVerticalDragUpdate: (details) {
         if (_yAxisStart == null) return;
         double valueChange = _yAxisStart! - details.globalPosition.dy;
         if (_value == 0 && valueChange > 0) {
@@ -214,7 +214,7 @@ class _DraggableMenuState extends State<DraggableMenu>
           }
         }
       },
-      onHorizontalDragEnd: (details) {
+      onVerticalDragEnd: (details) {
         final double? widgetHeight = _widgetKey.currentContext?.size?.height;
         if (widgetHeight == null) return;
         if (_currentHeight == null) {
