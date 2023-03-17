@@ -57,6 +57,24 @@ class DraggableMenu extends StatefulWidget {
         ),
       );
 
+  static Future? openReplacement(
+    BuildContext context,
+    Widget draggableMenu, {
+    Duration? animationDuration,
+    Curve? curve,
+    bool? barrier,
+    Color? barrierColor,
+  }) =>
+      Navigator.maybeOf(context)?.pushReplacement(
+        MenuRoute(
+          child: draggableMenu,
+          duration: animationDuration,
+          curve: curve,
+          barrier: barrier,
+          barrierColor: barrierColor,
+        ),
+      );
+
   @override
   State<DraggableMenu> createState() => _DraggableMenuState();
 }
