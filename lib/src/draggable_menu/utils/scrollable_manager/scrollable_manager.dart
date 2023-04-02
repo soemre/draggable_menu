@@ -1,18 +1,13 @@
+import 'package:draggable_menu/src/draggable_menu/utils/scrollable_manager/scrollable_manager_scope.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class ScrollableManager extends StatefulWidget {
   final Widget child;
-  final Function(double globalPosition)? onDragUpdate;
-  final Function()? onDragEnd;
-  final Function(double globalPosition)? onDragStart;
 
   const ScrollableManager({
     super.key,
     required this.child,
-    this.onDragUpdate,
-    this.onDragEnd,
-    this.onDragStart,
   });
 
   @override
@@ -38,15 +33,13 @@ class _ScrollableManagerState extends State<ScrollableManager> {
           _controller = controller;
         },
       ),
-      child: _controller?.hasClients == true
-          ? GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onVerticalDragStart: (details) => onDragStart(details),
-              onVerticalDragUpdate: (details) => onDragUpdate(details),
-              onVerticalDragEnd: (details) => onDragEnd(details),
-              child: IgnorePointer(child: widget.child),
-            )
-          : widget.child,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onVerticalDragStart: (details) => onDragStart(details),
+        onVerticalDragUpdate: (details) => onDragUpdate(details),
+        onVerticalDragEnd: (details) => onDragEnd(details),
+        child: IgnorePointer(child: widget.child),
+      ),
     );
   }
 
@@ -58,7 +51,9 @@ class _ScrollableManagerState extends State<ScrollableManager> {
   onDragUpdate(DragUpdateDetails details) {
     if (details.primaryDelta == null) return;
     if (isOverScrolling) {
-      widget.onDragUpdate?.call(details.globalPosition.dy);
+      ScrollableManagerScope.of(context)
+          .onDragUpdate
+          ?.call(details.globalPosition.dy);
     } else if (drag != null) {
       drag!.update(details);
     } else {
@@ -67,13 +62,17 @@ class _ScrollableManagerState extends State<ScrollableManager> {
             _controller?.position.pixels ==
                 _controller?.position.minScrollExtent) {
           isOverScrolling = true;
-          widget.onDragStart?.call(details.globalPosition.dy);
+          ScrollableManagerScope.of(context)
+              .onDragStart
+              ?.call(details.globalPosition.dy);
           return;
         } else if (details.primaryDelta!.sign < 0 &&
             _controller?.position.pixels ==
                 _controller?.position.maxScrollExtent) {
           isOverScrolling = true;
-          widget.onDragStart?.call(details.globalPosition.dy);
+          ScrollableManagerScope.of(context)
+              .onDragStart
+              ?.call(details.globalPosition.dy);
           return;
         }
       }
@@ -87,7 +86,7 @@ class _ScrollableManagerState extends State<ScrollableManager> {
     drag?.end(details);
     if (isOverScrolling) {
       isOverScrolling = false;
-      widget.onDragEnd?.call();
+      ScrollableManagerScope.of(context).onDragEnd?.call();
     }
   }
 }

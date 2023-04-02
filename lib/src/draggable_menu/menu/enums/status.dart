@@ -4,8 +4,8 @@ enum DraggableMenuStatus {
   canceling,
   minimized,
   minimizing,
-  mayMaximize,
+  mayExpand,
   mayMinimize,
-  maximized,
+  expanded,
   maximizing,
 }

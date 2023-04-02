@@ -13,8 +13,8 @@ class CustomDraggableMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return DraggableMenu(
       uiType: uiType,
-      maximize: maximize,
-      maximizedHeight: MediaQuery.of(context).size.height * 0.72,
+      expandable: maximize,
+      expandedHeight: MediaQuery.of(context).size.height * 0.72,
       maxHeight: MediaQuery.of(context).size.height * 0.36,
       child: child,
     );

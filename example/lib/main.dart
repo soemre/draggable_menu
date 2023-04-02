@@ -106,12 +106,18 @@ class _AppState extends State<App> {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 24),
+            const Text(
+              "Open:",
+              style: TextStyle(
+                  fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),
+            ),
+            const SizedBox(height: 4),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 style: const ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll(Colors.red),
+                  backgroundColor: MaterialStatePropertyAll(Colors.green),
                 ),
                 onPressed: () => DraggableMenu.open(
                   context,
@@ -124,6 +130,7 @@ class _AppState extends State<App> {
                 child: const Text("Open The Menu"),
               ),
             ),
+            const SizedBox(height: 8),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -135,23 +142,99 @@ class _AppState extends State<App> {
                   CustomDraggableMenu(
                     uiType: _type,
                     maximize: _maximize,
-                    child: ListView.builder(
-                      itemCount: 50,
-                      padding: const EdgeInsets.all(0),
-                      itemBuilder: (context, index) => Material(
-                          color: Colors.transparent,
-                          child: ListTile(
-                              title: Text(
-                            "Item ${index + 1}",
-                            style: const TextStyle(
-                              color: Colors.white,
-                            ),
-                          ))),
+                    child: ScrollableManager(
+                      child: ListView.builder(
+                        itemCount: 50,
+                        padding: const EdgeInsets.all(0),
+                        itemBuilder: (context, index) => Material(
+                            color: Colors.transparent,
+                            child: ListTile(
+                                title: Text(
+                              "Item ${index + 1}",
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                            ))),
+                      ),
                     ),
                   ),
                   barrier: _barrier,
                 ),
-                child: const Text("Open The Menu with a Scrollable Inside"),
+                child: const Text("Open The Menu with a Scrollable"),
+              ),
+            ),
+            const SizedBox(height: 8),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: const ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll(Colors.red),
+                ),
+                onPressed: () => DraggableMenu.open(
+                  context,
+                  CustomDraggableMenu(
+                    uiType: _type,
+                    maximize: _maximize,
+                    child: Padding(
+                      padding: const EdgeInsets.all(32),
+                      child: Center(
+                        child: Row(
+                          children: [
+                            Flexible(
+                              child: ColoredBox(
+                                color: Colors.red,
+                                child: ScrollableManager(
+                                  child: ListView.builder(
+                                    controller: ScrollController(),
+                                    itemCount: 25,
+                                    padding: const EdgeInsets.all(0),
+                                    itemBuilder: (context, index) => Material(
+                                      color: Colors.transparent,
+                                      child: ListTile(
+                                        title: Text(
+                                          "Item ${index + 1}",
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 32),
+                            Flexible(
+                              child: ColoredBox(
+                                color: Colors.red,
+                                child: ScrollableManager(
+                                  child: ListView.builder(
+                                    controller: ScrollController(),
+                                    itemCount: 25,
+                                    padding: const EdgeInsets.all(0),
+                                    itemBuilder: (context, index) => Material(
+                                      color: Colors.transparent,
+                                      child: ListTile(
+                                        title: Text(
+                                          "Item ${index + 1}",
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  barrier: _barrier,
+                ),
+                child: const Text("Open the Menu with two Scrollable"),
               ),
             ),
             const SizedBox(height: 8),

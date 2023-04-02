@@ -31,7 +31,7 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
               _text = "Closing";
             });
           }
-          if (status == DraggableMenuStatus.maximized) {
+          if (status == DraggableMenuStatus.expanded) {
             setState(() {
               _color = Colors.amber;
               _text = "Maximized";
@@ -49,7 +49,7 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
               _text = "May Close";
             });
           }
-          if (status == DraggableMenuStatus.mayMaximize) {
+          if (status == DraggableMenuStatus.mayExpand) {
             setState(() {
               _color = Colors.green;
               _text = "May Maximize";
@@ -75,9 +75,9 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
           }
         },
         uiType: widget.uiType,
-        maximize: widget.maximize,
+        expandable: widget.maximize,
         color: _color,
-        maximizedHeight: MediaQuery.of(context).size.height * 0.72,
+        expandedHeight: MediaQuery.of(context).size.height * 0.72,
         animationDuration: const Duration(seconds: 1),
         child: Material(
           color: Colors.transparent,

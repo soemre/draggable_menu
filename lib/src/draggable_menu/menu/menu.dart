@@ -2,7 +2,7 @@ import 'package:draggable_menu/src/draggable_menu/menu/enums/status.dart';
 import 'package:draggable_menu/src/draggable_menu/menu/enums/ui.dart';
 import 'package:draggable_menu/src/draggable_menu/menu/ui.dart';
 import 'package:draggable_menu/src/draggable_menu/route.dart';
-import 'package:draggable_menu/src/draggable_menu/utils/scroll_manager.dart';
+import 'package:draggable_menu/src/draggable_menu/utils/scrollable_manager/scrollable_manager_scope.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -13,8 +13,8 @@ class DraggableMenu extends StatefulWidget {
   final Duration? animationDuration;
   final double? maxHeight;
   final double? minHeight;
-  final bool? maximize;
-  final double? maximizedHeight;
+  final bool? expandable;
+  final double? expandedHeight;
   final Widget? barItem;
   final double? radius;
   final Function(DraggableMenuStatus status)? addStatusListener;
@@ -30,8 +30,8 @@ class DraggableMenu extends StatefulWidget {
     this.accentColor,
     this.minHeight,
     this.maxHeight,
-    this.maximize,
-    this.maximizedHeight,
+    this.expandable,
+    this.expandedHeight,
     this.animationDuration,
     this.radius,
     this.addStatusListener,
@@ -90,17 +90,17 @@ class _DraggableMenuState extends State<DraggableMenu>
   final _widgetKey = GlobalKey();
   double? _currentHeight;
   double? _initHeight;
-  bool _isMaximized = false;
+  bool _isExpanded = false;
   double? _currentHeightStart;
   int? currentAnimation;
-  late final double? _maximizedHeight;
-  late bool willMaximize;
+  late final double? _expandedHeight;
+  late bool willExpand;
   DraggableMenuStatus? _status;
 
   @override
   void initState() {
     super.initState();
-    _maximizeInit();
+    _expandInit();
     _controller = AnimationController(
       vsync: this,
       duration: widget.animationDuration ?? const Duration(milliseconds: 320),
@@ -111,13 +111,13 @@ class _DraggableMenuState extends State<DraggableMenu>
           _value = 0;
           _valueStart = 0;
         }
-        if (willMaximize) {
+        if (willExpand) {
           if (_currentHeight != null) {
-            if (_maximizedHeight! < _currentHeight!) {
-              _currentHeight = _maximizedHeight;
-              _currentHeightStart = _maximizedHeight;
-              if (!_isMaximized) _isMaximized = true;
-              _notifyStatusListener(DraggableMenuStatus.maximized);
+            if (_expandedHeight! < _currentHeight!) {
+              _currentHeight = _expandedHeight;
+              _currentHeightStart = _expandedHeight;
+              if (!_isExpanded) _isExpanded = true;
+              _notifyStatusListener(DraggableMenuStatus.expanded);
             }
           }
         }
@@ -132,36 +132,36 @@ class _DraggableMenuState extends State<DraggableMenu>
     if (widget.addStatusListener != null) widget.addStatusListener!(status);
   }
 
-  void _maximizeInit() {
-    if (widget.maximize == true) {
-      willMaximize = true;
-      // willMaximize shouldn't be true if _maximizedHeight is null!
-      if (widget.maximizedHeight != null) {
+  void _expandInit() {
+    if (widget.expandable == true) {
+      willExpand = true;
+      // willExpand shouldn't be true if _expandedHeight is null!
+      if (widget.expandedHeight != null) {
         if (widget.maxHeight != null) {
-          if (widget.maximizedHeight! > widget.maxHeight!) {
-            _maximizedHeight = widget.maximizedHeight!;
+          if (widget.expandedHeight! > widget.maxHeight!) {
+            _expandedHeight = widget.expandedHeight!;
           } else {
-            willMaximize = false;
+            willExpand = false;
           }
         } else {
-          _maximizedHeight = widget.maximizedHeight!;
+          _expandedHeight = widget.expandedHeight!;
         }
       } else {
         if (widget.maxHeight != null) {
-          _maximizedHeight = widget.maxHeight!;
+          _expandedHeight = widget.maxHeight!;
         } else {
-          willMaximize = false;
+          willExpand = false;
         }
       }
     } else {
-      willMaximize = false;
+      willExpand = false;
     }
   }
 
   @override
   void didUpdateWidget(covariant DraggableMenu oldWidget) {
-    if (oldWidget.maximize != widget.maximize) {
-      _maximizeInit();
+    if (oldWidget.expandable != widget.expandable) {
+      _expandInit();
     }
     super.didUpdateWidget(oldWidget);
   }
@@ -195,7 +195,7 @@ class _DraggableMenuState extends State<DraggableMenu>
           Positioned(
             key: _widgetKey,
             bottom: _value,
-            child: ScrollableManager(
+            child: ScrollableManagerScope(
               onDragStart: (globalPosition) => onDragStart(globalPosition),
               onDragUpdate: (globalPosition) => onDragUpdate(globalPosition),
               onDragEnd: () => onDragEnd(),
@@ -220,8 +220,8 @@ class _DraggableMenuState extends State<DraggableMenu>
     );
   }
 
-  void _closeMaximized() {
-    _isMaximized = false;
+  void _closeExpanded() {
+    _isExpanded = false;
     currentAnimation = 2;
     Animation<double> animation =
         Tween<double>(begin: _currentHeight, end: _initHeight).animate(
@@ -259,12 +259,12 @@ class _DraggableMenuState extends State<DraggableMenu>
     _controller.forward();
   }
 
-  void _openMaximized() {
-    _isMaximized = true;
+  void _openExpanded() {
+    _isExpanded = true;
     currentAnimation = 3;
 
     Animation<double> animation =
-        Tween<double>(begin: _currentHeight, end: _maximizedHeight).animate(
+        Tween<double>(begin: _currentHeight, end: _expandedHeight).animate(
       _controller.drive(
         CurveTween(curve: widget.curve ?? Curves.ease),
       ),
@@ -280,8 +280,8 @@ class _DraggableMenuState extends State<DraggableMenu>
     animation.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         animation.removeListener(callback);
-        if (_currentHeight == _maximizedHeight) {
-          _notifyStatusListener(DraggableMenuStatus.maximized);
+        if (_currentHeight == _expandedHeight) {
+          _notifyStatusListener(DraggableMenuStatus.expanded);
         }
       }
     });
@@ -326,24 +326,24 @@ class _DraggableMenuState extends State<DraggableMenu>
         _controller.forward();
       }
     } else {
-      if (willMaximize) {
-        if (_isMaximized == false) {
+      if (willExpand) {
+        if (_isExpanded == false) {
           if (_currentHeight! - _initHeight! >
-              (_maximizedHeight! - _initHeight!) / 3) {
-            _openMaximized();
+              (_expandedHeight! - _initHeight!) / 3) {
+            _openExpanded();
           } else {
-            _closeMaximized();
+            _closeExpanded();
           }
         } else {
-          if (_maximizedHeight! - _currentHeight! >
-              (_maximizedHeight! - _initHeight!) / 3) {
-            _closeMaximized();
+          if (_expandedHeight! - _currentHeight! >
+              (_expandedHeight! - _initHeight!) / 3) {
+            _closeExpanded();
           } else {
-            _openMaximized();
+            _openExpanded();
           }
         }
       } else {
-        _closeMaximized();
+        _closeExpanded();
       }
     }
   }
@@ -353,17 +353,17 @@ class _DraggableMenuState extends State<DraggableMenu>
     double valueChange = _yAxisStart! - globalPosition;
     if (_value == 0 && valueChange > 0) {
       if (globalPosition < _valueStart) return;
-      if (willMaximize) {
-        if (_maximizedHeight! > (_currentHeight ?? _initHeight!)) {
+      if (willExpand) {
+        if (_expandedHeight! > (_currentHeight ?? _initHeight!)) {
           _currentHeight = (_currentHeightStart ?? _initHeight!) + valueChange;
-          _notifyStatusListener(DraggableMenuStatus.mayMaximize);
+          _notifyStatusListener(DraggableMenuStatus.mayExpand);
         } else {
-          // Opens the maximized feat
-          if (!_isMaximized) {
-            _currentHeight = _maximizedHeight;
-            _currentHeightStart = _maximizedHeight;
-            _isMaximized = true;
-            _notifyStatusListener(DraggableMenuStatus.maximized);
+          // Opens the expanded feat
+          if (!_isExpanded) {
+            _currentHeight = _expandedHeight;
+            _currentHeightStart = _expandedHeight;
+            _isExpanded = true;
+            _notifyStatusListener(DraggableMenuStatus.expanded);
           }
           _yAxisStart = globalPosition - _valueStart;
         }
@@ -378,7 +378,7 @@ class _DraggableMenuState extends State<DraggableMenu>
         } else {
           _currentHeight = null;
           _currentHeightStart = null;
-          _isMaximized = false;
+          _isExpanded = false;
           _yAxisStart = globalPosition;
           _notifyStatusListener(DraggableMenuStatus.minimized);
         }
