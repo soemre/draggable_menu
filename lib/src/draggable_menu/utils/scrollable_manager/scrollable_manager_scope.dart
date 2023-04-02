@@ -1,17 +1,22 @@
+import 'package:draggable_menu/src/draggable_menu/menu/enums/status.dart';
 import 'package:flutter/material.dart';
 
 class ScrollableManagerScope extends InheritedWidget {
-  const ScrollableManagerScope(
-      {this.onDragUpdate,
-      this.onDragEnd,
-      this.onDragStart,
-      super.key,
-      required Widget child})
-      : super(child: child);
+  const ScrollableManagerScope({
+    this.willExpand,
+    this.status,
+    this.onDragUpdate,
+    this.onDragEnd,
+    this.onDragStart,
+    super.key,
+    required Widget child,
+  }) : super(child: child);
 
   final void Function(double globalPosition)? onDragUpdate;
   final void Function()? onDragEnd;
   final void Function(double globalPosition)? onDragStart;
+  final DraggableMenuStatus? status;
+  final bool? willExpand;
 
   static ScrollableManagerScope of(BuildContext context) {
     final ScrollableManagerScope? result =

@@ -3,9 +3,15 @@ import 'package:flutter/material.dart';
 
 class StatusDraggableMenu extends StatefulWidget {
   final DraggableMenuUiType? uiType;
-  final bool? maximize;
+  final bool? expand;
+  final bool? enableExpandedScroll;
 
-  const StatusDraggableMenu({super.key, this.uiType, this.maximize});
+  const StatusDraggableMenu({
+    super.key,
+    this.uiType,
+    this.expand,
+    this.enableExpandedScroll,
+  });
 
   @override
   State<StatusDraggableMenu> createState() => _StatusDraggableMenuState();
@@ -34,13 +40,13 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
           if (status == DraggableMenuStatus.expanded) {
             setState(() {
               _color = Colors.amber;
-              _text = "Maximized";
+              _text = "Expanded";
             });
           }
-          if (status == DraggableMenuStatus.maximizing) {
+          if (status == DraggableMenuStatus.expanding) {
             setState(() {
               _color = Colors.blue;
-              _text = "Maximizing";
+              _text = "Expanding";
             });
           }
           if (status == DraggableMenuStatus.mayClose) {
@@ -52,7 +58,7 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
           if (status == DraggableMenuStatus.mayExpand) {
             setState(() {
               _color = Colors.green;
-              _text = "May Maximize";
+              _text = "May Expand";
             });
           }
           if (status == DraggableMenuStatus.mayMinimize) {
@@ -75,7 +81,7 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
           }
         },
         uiType: widget.uiType,
-        expandable: widget.maximize,
+        expandable: widget.expand,
         color: _color,
         expandedHeight: MediaQuery.of(context).size.height * 0.72,
         animationDuration: const Duration(seconds: 1),
@@ -95,9 +101,9 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 4),
                   Text(
-                    "Maximize: ${widget.maximize == true ? "True" : "False"}\nUI Type: ${widget.uiType == DraggableMenuUiType.modern ? "Modern" : "Classic"}",
+                    "UI Type: ${widget.uiType == DraggableMenuUiType.modern ? "Modern" : "Classic"}\nExpand: ${widget.expand == true ? "True" : "False"}\nenableExpandedScroll: ${widget.enableExpandedScroll == true ? "True" : "False"}",
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: Colors.white,

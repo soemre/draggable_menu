@@ -124,6 +124,7 @@ DraggableMenu(
   ),
 )
 ```
+Extra: *Check out the `ScrollableManager`'s `enableExpandedScroll` parameter.*
 
 ---
 
@@ -138,8 +139,8 @@ Use the `addStatusListener` parameter to listen the Draggable Menu's status.
 * Minimizing
 * May Expand
 * May Minimize
+* Expanding
 * Expanded
-* Maximizing
 
 You can point them out with `DraggableMenuStatus` like:
 ```dart

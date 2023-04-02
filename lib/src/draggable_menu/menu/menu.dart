@@ -196,6 +196,8 @@ class _DraggableMenuState extends State<DraggableMenu>
             key: _widgetKey,
             bottom: _value,
             child: ScrollableManagerScope(
+              status: _status,
+              willExpand: willExpand,
               onDragStart: (globalPosition) => onDragStart(globalPosition),
               onDragUpdate: (globalPosition) => onDragUpdate(globalPosition),
               onDragEnd: () => onDragEnd(),
@@ -286,7 +288,7 @@ class _DraggableMenuState extends State<DraggableMenu>
       }
     });
     _controller.reset();
-    _notifyStatusListener(DraggableMenuStatus.maximizing);
+    _notifyStatusListener(DraggableMenuStatus.expanding);
     _controller.forward();
   }
 

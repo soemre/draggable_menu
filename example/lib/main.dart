@@ -17,8 +17,9 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   DraggableMenuUiType? _type;
-  bool? _maximize;
+  bool? _expand;
   bool? _barrier;
+  bool? _enableExpandedScroll;
 
   @override
   Widget build(BuildContext context) {
@@ -33,36 +34,61 @@ class _AppState extends State<App> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              "Maximize:",
+              "Expand:",
               style: TextStyle(
                   fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 2),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () => _maximize = true,
+                    onPressed: () => _expand = true,
                     child: const Text("True"),
                   ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () => _maximize = false,
+                    onPressed: () => _expand = false,
                     child: const Text("False"),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 4),
+            const Text(
+              "enableExpandedScroll:",
+              style: TextStyle(
+                  fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),
+            ),
+            const SizedBox(height: 2),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () => _enableExpandedScroll = true,
+                    child: const Text("True"),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () => _enableExpandedScroll = false,
+                    child: const Text("False"),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
             const Text(
               "Barrier:",
               style: TextStyle(
                   fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 2),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -81,13 +107,13 @@ class _AppState extends State<App> {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 4),
             const Text(
               "UI Type:",
               style: TextStyle(
                   fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 2),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -106,13 +132,13 @@ class _AppState extends State<App> {
                 ),
               ],
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 12),
             const Text(
               "Open:",
               style: TextStyle(
                   fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 2),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -123,14 +149,14 @@ class _AppState extends State<App> {
                   context,
                   CustomDraggableMenu(
                     uiType: _type,
-                    maximize: _maximize,
+                    expand: _expand,
                   ),
                   barrier: _barrier,
                 ),
                 child: const Text("Open The Menu"),
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 4),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -141,8 +167,9 @@ class _AppState extends State<App> {
                   context,
                   CustomDraggableMenu(
                     uiType: _type,
-                    maximize: _maximize,
+                    expand: _expand,
                     child: ScrollableManager(
+                      enableExpandedScroll: _enableExpandedScroll,
                       child: ListView.builder(
                         itemCount: 50,
                         padding: const EdgeInsets.all(0),
@@ -163,7 +190,7 @@ class _AppState extends State<App> {
                 child: const Text("Open The Menu with a Scrollable"),
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 4),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -174,7 +201,7 @@ class _AppState extends State<App> {
                   context,
                   CustomDraggableMenu(
                     uiType: _type,
-                    maximize: _maximize,
+                    expand: _expand,
                     child: Padding(
                       padding: const EdgeInsets.all(32),
                       child: Center(
@@ -184,6 +211,7 @@ class _AppState extends State<App> {
                               child: ColoredBox(
                                 color: Colors.red,
                                 child: ScrollableManager(
+                                  enableExpandedScroll: _enableExpandedScroll,
                                   child: ListView.builder(
                                     controller: ScrollController(),
                                     itemCount: 25,
@@ -208,6 +236,7 @@ class _AppState extends State<App> {
                               child: ColoredBox(
                                 color: Colors.red,
                                 child: ScrollableManager(
+                                  enableExpandedScroll: _enableExpandedScroll,
                                   child: ListView.builder(
                                     controller: ScrollController(),
                                     itemCount: 25,
@@ -237,7 +266,7 @@ class _AppState extends State<App> {
                 child: const Text("Open the Menu with two Scrollable"),
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 4),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -248,7 +277,8 @@ class _AppState extends State<App> {
                   context,
                   StatusDraggableMenu(
                     uiType: _type,
-                    maximize: _maximize,
+                    expand: _expand,
+                    enableExpandedScroll: _enableExpandedScroll,
                   ),
                   barrier: _barrier,
                 ),
