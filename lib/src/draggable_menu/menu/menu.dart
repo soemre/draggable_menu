@@ -197,9 +197,8 @@ class _DraggableMenuState extends State<DraggableMenu>
             bottom: _value,
             child: ScrollableManager(
               onDragStart: (globalPosition) => onDragStart(globalPosition),
-              addOverScrollListener: (globalPosition) =>
-                  onDragUpdate(globalPosition),
-              onScrollStopped: () => onDragEnd(),
+              onDragUpdate: (globalPosition) => onDragUpdate(globalPosition),
+              onDragEnd: () => onDragEnd(),
               child: DraggableMenuUi(
                 color: widget.color,
                 accentColor: widget.accentColor,

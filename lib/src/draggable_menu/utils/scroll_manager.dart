@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 
 class ScrollableManager extends StatefulWidget {
   final Widget child;
-  final Function(double globalPosition)? addOverScrollListener;
-  final Function()? onScrollStopped;
+  final Function(double globalPosition)? onDragUpdate;
+  final Function()? onDragEnd;
   final Function(double globalPosition)? onDragStart;
 
   const ScrollableManager({
     super.key,
     required this.child,
-    this.addOverScrollListener,
-    this.onScrollStopped,
+    this.onDragUpdate,
+    this.onDragEnd,
     this.onDragStart,
   });
 
@@ -58,7 +58,7 @@ class _ScrollableManagerState extends State<ScrollableManager> {
   onDragUpdate(DragUpdateDetails details) {
     if (details.primaryDelta == null) return;
     if (isOverScrolling) {
-      widget.addOverScrollListener?.call(details.globalPosition.dy);
+      widget.onDragUpdate?.call(details.globalPosition.dy);
     } else if (drag != null) {
       drag!.update(details);
     } else {
@@ -87,7 +87,7 @@ class _ScrollableManagerState extends State<ScrollableManager> {
     drag?.end(details);
     if (isOverScrolling) {
       isOverScrolling = false;
-      widget.onScrollStopped?.call();
+      widget.onDragEnd?.call();
     }
   }
 }
