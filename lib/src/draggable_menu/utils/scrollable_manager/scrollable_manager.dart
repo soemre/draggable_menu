@@ -23,12 +23,6 @@ class _ScrollableManagerState extends State<ScrollableManager> {
   Drag? drag;
 
   @override
-  void dispose() {
-    _controller?.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return ScrollConfiguration(
       behavior: _DisabledScrollBehavior(
@@ -41,7 +35,7 @@ class _ScrollableManagerState extends State<ScrollableManager> {
         onVerticalDragStart: (details) => onDragStart(details),
         onVerticalDragUpdate: (details) => onDragUpdate(details),
         onVerticalDragEnd: (details) => onDragEnd(details),
-        child: IgnorePointer(child: widget.child),
+        child: AbsorbPointer(child: widget.child),
       ),
     );
   }
