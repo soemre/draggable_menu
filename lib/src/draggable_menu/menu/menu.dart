@@ -2,6 +2,7 @@ import 'package:draggable_menu/src/draggable_menu/menu/enums/status.dart';
 import 'package:draggable_menu/src/draggable_menu/menu/enums/ui.dart';
 import 'package:draggable_menu/src/draggable_menu/menu/ui.dart';
 import 'package:draggable_menu/src/draggable_menu/route.dart';
+import 'package:draggable_menu/src/draggable_menu/utils/scroll_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -185,127 +186,34 @@ class _DraggableMenuState extends State<DraggableMenu>
         }
       },
       behavior: HitTestBehavior.opaque,
-      onVerticalDragStart: (details) {
-        if (_controller.isAnimating) _controller.stop();
-        _yAxisStart = details.globalPosition.dy;
-        _initHeight ??= _widgetKey.currentContext?.size?.height;
-      },
-      onVerticalDragUpdate: (details) {
-        if (_yAxisStart == null) return;
-        double valueChange = _yAxisStart! - details.globalPosition.dy;
-        if (_value == 0 && valueChange > 0) {
-          if (details.globalPosition.dy < _valueStart) return;
-          if (willMaximize) {
-            if (_maximizedHeight! > (_currentHeight ?? _initHeight!)) {
-              _currentHeight =
-                  (_currentHeightStart ?? _initHeight!) + valueChange;
-              _notifyStatusListener(DraggableMenuStatus.mayMaximize);
-            } else {
-              // Opens the maximized feat
-              if (!_isMaximized) {
-                _currentHeight = _maximizedHeight;
-                _currentHeightStart = _maximizedHeight;
-                _isMaximized = true;
-                _notifyStatusListener(DraggableMenuStatus.maximized);
-              }
-              _yAxisStart = details.globalPosition.dy - _valueStart;
-            }
-          } else {
-            _yAxisStart = details.globalPosition.dy - _valueStart;
-          }
-        } else {
-          if (_currentHeight != null) {
-            if (_currentHeight! > _initHeight!) {
-              _currentHeight =
-                  (_currentHeightStart ?? _initHeight!) + valueChange;
-              _notifyStatusListener(DraggableMenuStatus.mayMinimize);
-            } else {
-              _currentHeight = null;
-              _currentHeightStart = null;
-              _isMaximized = false;
-              _yAxisStart = details.globalPosition.dy;
-              _notifyStatusListener(DraggableMenuStatus.minimized);
-            }
-          } else {
-            _value = _valueStart + valueChange;
-            _notifyStatusListener(DraggableMenuStatus.mayClose);
-          }
-        }
-      },
-      onVerticalDragEnd: (details) {
-        final double? widgetHeight = _widgetKey.currentContext?.size?.height;
-        if (widgetHeight == null) return;
-        if (_currentHeight == null) {
-          if (-_value / widgetHeight > 0.5) {
-            _notifyStatusListener(DraggableMenuStatus.closing);
-            Navigator.pop(context);
-          } else {
-            currentAnimation = 1;
-            Animation<double> animation =
-                Tween<double>(begin: _value, end: 0).animate(
-              _controller.drive(
-                CurveTween(curve: widget.curve ?? Curves.ease),
-              ),
-            );
-            callback() {
-              if (currentAnimation == 1) {
-                _value = animation.value;
-                _valueStart = _value;
-              }
-            }
-
-            animation.addListener(callback);
-            animation.addStatusListener((status) {
-              if (status == AnimationStatus.completed) {
-                animation.removeListener(callback);
-                if (_value == 0 && _currentHeight == null) {
-                  _notifyStatusListener(DraggableMenuStatus.minimized);
-                }
-              }
-            });
-            _controller.reset();
-            _notifyStatusListener(DraggableMenuStatus.canceling);
-            _controller.forward();
-          }
-        } else {
-          if (willMaximize) {
-            if (_isMaximized == false) {
-              if (_currentHeight! - _initHeight! >
-                  (_maximizedHeight! - _initHeight!) / 3) {
-                _openMaximized();
-              } else {
-                _closeMaximized();
-              }
-            } else {
-              if (_maximizedHeight! - _currentHeight! >
-                  (_maximizedHeight! - _initHeight!) / 3) {
-                _closeMaximized();
-              } else {
-                _openMaximized();
-              }
-            }
-          } else {
-            _closeMaximized();
-          }
-        }
-      },
+      onVerticalDragStart: (details) => onDragStart(details.globalPosition.dy),
+      onVerticalDragUpdate: (details) =>
+          onDragUpdate(details.globalPosition.dy),
+      onVerticalDragEnd: (details) => onDragEnd(),
       child: Stack(
         children: [
           Positioned(
             key: _widgetKey,
             bottom: _value,
-            child: DraggableMenuUi(
-              color: widget.color,
-              accentColor: widget.accentColor,
-              minHeight: _currentHeight ?? widget.minHeight ?? 240,
-              maxHeight: _currentHeight ?? widget.maxHeight ?? double.infinity,
-              radius: widget.radius,
-              barItem: widget.barItem,
-              uiType: widget.uiType,
-              customUi: widget.customUi,
-              status: _status,
-              curve: widget.curve,
-              child: widget.child,
+            child: ScrollableManager(
+              onDragStart: (globalPosition) => onDragStart(globalPosition),
+              addOverScrollListener: (globalPosition) =>
+                  onDragUpdate(globalPosition),
+              onScrollStopped: () => onDragEnd(),
+              child: DraggableMenuUi(
+                color: widget.color,
+                accentColor: widget.accentColor,
+                minHeight: _currentHeight ?? widget.minHeight ?? 240,
+                maxHeight:
+                    _currentHeight ?? widget.maxHeight ?? double.infinity,
+                radius: widget.radius,
+                barItem: widget.barItem,
+                uiType: widget.uiType,
+                customUi: widget.customUi,
+                status: _status,
+                curve: widget.curve,
+                child: widget.child,
+              ),
             ),
           ),
         ],
@@ -381,5 +289,110 @@ class _DraggableMenuState extends State<DraggableMenu>
     _controller.reset();
     _notifyStatusListener(DraggableMenuStatus.maximizing);
     _controller.forward();
+  }
+
+  onDragEnd() {
+    final double? widgetHeight = _widgetKey.currentContext?.size?.height;
+    if (widgetHeight == null) return;
+    if (_currentHeight == null) {
+      if (-_value / widgetHeight > 0.5) {
+        _notifyStatusListener(DraggableMenuStatus.closing);
+        Navigator.pop(context);
+      } else {
+        currentAnimation = 1;
+        Animation<double> animation =
+            Tween<double>(begin: _value, end: 0).animate(
+          _controller.drive(
+            CurveTween(curve: widget.curve ?? Curves.ease),
+          ),
+        );
+        callback() {
+          if (currentAnimation == 1) {
+            _value = animation.value;
+            _valueStart = _value;
+          }
+        }
+
+        animation.addListener(callback);
+        animation.addStatusListener((status) {
+          if (status == AnimationStatus.completed) {
+            animation.removeListener(callback);
+            if (_value == 0 && _currentHeight == null) {
+              _notifyStatusListener(DraggableMenuStatus.minimized);
+            }
+          }
+        });
+        _controller.reset();
+        _notifyStatusListener(DraggableMenuStatus.canceling);
+        _controller.forward();
+      }
+    } else {
+      if (willMaximize) {
+        if (_isMaximized == false) {
+          if (_currentHeight! - _initHeight! >
+              (_maximizedHeight! - _initHeight!) / 3) {
+            _openMaximized();
+          } else {
+            _closeMaximized();
+          }
+        } else {
+          if (_maximizedHeight! - _currentHeight! >
+              (_maximizedHeight! - _initHeight!) / 3) {
+            _closeMaximized();
+          } else {
+            _openMaximized();
+          }
+        }
+      } else {
+        _closeMaximized();
+      }
+    }
+  }
+
+  void onDragUpdate(double globalPosition) {
+    if (_yAxisStart == null) return;
+    double valueChange = _yAxisStart! - globalPosition;
+    if (_value == 0 && valueChange > 0) {
+      if (globalPosition < _valueStart) return;
+      if (willMaximize) {
+        if (_maximizedHeight! > (_currentHeight ?? _initHeight!)) {
+          _currentHeight = (_currentHeightStart ?? _initHeight!) + valueChange;
+          _notifyStatusListener(DraggableMenuStatus.mayMaximize);
+        } else {
+          // Opens the maximized feat
+          if (!_isMaximized) {
+            _currentHeight = _maximizedHeight;
+            _currentHeightStart = _maximizedHeight;
+            _isMaximized = true;
+            _notifyStatusListener(DraggableMenuStatus.maximized);
+          }
+          _yAxisStart = globalPosition - _valueStart;
+        }
+      } else {
+        _yAxisStart = globalPosition - _valueStart;
+      }
+    } else {
+      if (_currentHeight != null) {
+        if (_currentHeight! > _initHeight!) {
+          _currentHeight = (_currentHeightStart ?? _initHeight!) + valueChange;
+          _notifyStatusListener(DraggableMenuStatus.mayMinimize);
+        } else {
+          _currentHeight = null;
+          _currentHeightStart = null;
+          _isMaximized = false;
+          _yAxisStart = globalPosition;
+          _notifyStatusListener(DraggableMenuStatus.minimized);
+        }
+      } else {
+        _value = _valueStart + valueChange;
+        _notifyStatusListener(DraggableMenuStatus.mayClose);
+      }
+    }
+  }
+
+  onDragStart(double globalPosition) {
+    if (_controller.isAnimating) _controller.stop();
+    _yAxisStart = globalPosition;
+    _initHeight ??= _widgetKey.currentContext?.size?.height;
   }
 }

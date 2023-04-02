@@ -121,6 +121,36 @@ class _AppState extends State<App> {
                 child: const Text("Open The Menu"),
               ),
             ),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: const ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll(Colors.red),
+                ),
+                onPressed: () => DraggableMenu.open(
+                  context,
+                  CustomDraggableMenu(
+                    uiType: _type,
+                    maximize: _maximize,
+                    child: ListView.builder(
+                      itemCount: 50,
+                      padding: const EdgeInsets.all(0),
+                      itemBuilder: (context, index) => Material(
+                          color: Colors.transparent,
+                          child: ListTile(
+                              title: Text(
+                            "Item ${index + 1}",
+                            style: const TextStyle(
+                              color: Colors.white,
+                            ),
+                          ))),
+                    ),
+                  ),
+                  barrier: _barrier,
+                ),
+                child: const Text("Open The Menu with a Scrollable Inside"),
+              ),
+            ),
             const SizedBox(height: 8),
             SizedBox(
               width: double.infinity,

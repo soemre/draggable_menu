@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 class CustomDraggableMenu extends StatelessWidget {
   final DraggableMenuUiType? uiType;
   final bool? maximize;
+  final Widget? child;
 
-  const CustomDraggableMenu({super.key, this.uiType, this.maximize});
+  const CustomDraggableMenu(
+      {super.key, this.uiType, this.maximize, this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +15,8 @@ class CustomDraggableMenu extends StatelessWidget {
       uiType: uiType,
       maximize: maximize,
       maximizedHeight: MediaQuery.of(context).size.height * 0.72,
+      maxHeight: MediaQuery.of(context).size.height * 0.36,
+      child: child,
     );
   }
 }
