@@ -7,39 +7,120 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 class DraggableMenu extends StatefulWidget {
-  final Widget? child;
-  final Color? accentColor;
-  final Color? color;
-  final Duration? animationDuration;
-  final double? maxHeight;
+  /// It specifies the min-height of the Draggable Menu.
+  ///
+  /// If the child's height is higher, it will take its child's height instead.
   final double? minHeight;
+
+  /// It specifies the max-height of the Draggable Menu's minimized status (Not Expanded).
+  ///
+  /// When the menu is expanded, it takes its `expandedHeight` parameter's value as its height.
+  ///
+  /// To be able to use an expandable draggable menu, the `expandedHeight` parameter must be higher than the `maxHeight` parameter.
+  final double? maxHeight;
+
+  /// It specifies whether the Draggable Menu will be expandable or not.
+  ///
+  /// The `expandedHeight` parameter must be provided to use an expandable draggable menu.
+  ///
+  /// When the menu is expanded, it takes its `expandedHeight` parameter's value as its height.
   final bool? expandable;
+
+  /// It specifies the height of the Draggable Menu when it's expanded.
+  ///
+  /// To be able to use an expandable draggable menu, the `expandedHeight` parameter must be higher than the `maxHeight` parameter.
   final double? expandedHeight;
-  final Widget? barItem;
+
+  /// Adds a child inside the Draggable Menu's Default UI.
+  final Widget? child;
+
+  /// Specifies the Background color of the Default UIs.
+  final Color? color;
+
+  /// Specifies the Bar Item color of the Default UIs.
+  final Color? accentColor;
+
+  /// Specifies the radius of the Default UIs.
   final double? radius;
-  final Function(DraggableMenuStatus status)? addStatusListener;
+
+  /// Specifies the Default UI Type.
+  ///
+  /// By default, it is `Classic`.
   final DraggableMenuUiType? uiType;
+
+  /// Overrides the Default Bar Item of the Default UIs.
+  final Widget? barItem;
+
+  /// Overrides the Default UIs.
+  ///
+  /// Thanks to the `customUi` parameter, you can create your custom UI from scratch.
   final Widget? customUi;
+
+  /// Adds a listener to listen to its Status.
+  ///
+  /// *To understand better the usage of the "Status Listeners",
+  /// check out the [Draggable Menu Example](https://github.com/emresoysuren/draggable_menu/tree/main/example) app.*
+  final Function(DraggableMenuStatus status)? addStatusListener;
+
+  /// Specifies the duration of the Draggable Menu's animations.
+  ///
+  /// By default, it is `320ms`.
+  final Duration? animationDuration;
+
+  /// Specifies the curve of the Draggable Menu's animations.
+  ///
+  /// By default, it is `Curves.ease`.
   final Curve? curve;
 
+  /// Creates a Draggable Menu widget.
+  ///
+  /// To push the Draggable Menu to the screen, you can use the `DraggableMenu`'s `open` and `openReplacement` methods.
+  /// 
+  /// ---
+  /// 
+  /// #### Using Scrollables
+  /// While using scrollable with a Draggable Menu you need to add the `ScrollableManager` widget
+  /// above the scrollable you want to control Draggable with and set the physics of the Scrollable (e.g. ListView)
+  /// to `NeverScrollableScrollPhysics`. The `ScrollableManager` widget must be under a `DraggableMenu` widget.
+  /// You can do it by just simply using your widgets under its `child` or `customUI` parameters.
+  /// 
+  /// ```dart
+  /// DraggableMenu(
+  ///   child: ScrollableManager(
+  ///     child: ListView(
+  ///       physics: const NeverScrollableScrollPhysics(),
+  ///     ), // You can use any scrollable widget
+  ///   ),
+  /// )
+  /// ```
+  /// 
+  /// In short, do not forget to use `ScrollableManager` and set the physics of
+  /// the scrollable you want to `NeverScrollableScrollPhysics`.
+  ///
+  /// ---
+  ///
+  /// *For more info, check out the [GitHub Repository](https://github.com/emresoysuren/draggable_menu).*
   const DraggableMenu({
     super.key,
-    this.child,
-    this.barItem,
-    this.color,
-    this.accentColor,
     this.minHeight,
     this.maxHeight,
     this.expandable,
     this.expandedHeight,
-    this.animationDuration,
+    this.child,
+    this.color,
+    this.accentColor,
     this.radius,
-    this.addStatusListener,
-    this.customUi,
     this.uiType,
+    this.barItem,
+    this.customUi,
+    this.addStatusListener,
+    this.animationDuration,
     this.curve,
   });
 
+  /// Opens the given Draggable Menu using `Navigator`'s `push` method.
+  ///
+  /// *The `DraggableMenu.open()` shouldn't be in the same place as the `MaterialApp` widget.*
   static Future<T?>? open<T extends Object?>(
     BuildContext context,
     Widget draggableMenu, {
@@ -58,6 +139,9 @@ class DraggableMenu extends StatefulWidget {
         ),
       );
 
+  /// Opens the given Draggable Menu using `Navigator`'s `pushReplacement` method.
+  ///
+  /// *The `DraggableMenu.openReplacement()` shouldn't be in the same place as the `MaterialApp` widget.*
   static Future? openReplacement(
     BuildContext context,
     Widget draggableMenu, {

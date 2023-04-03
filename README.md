@@ -1,3 +1,12 @@
+# Flutter Draggable Menu (draggable_menu)
+With `draggable_menu`, create Draggable Menus as you want and make your app look way better and more convenient.
+
+`draggable_menu` also allows you to customize the UI and the animations. You can use one of the default themes or create your custom UI from scratch.
+
+| Modern | Classic |
+|---|---|
+|<img height="240" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/modern-1.gif?raw=true"><img height="240" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/modern-2.gif?raw=true">|<img height="240" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/classic-1.gif?raw=true"><img height="240" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/classic-2.gif?raw=true">|
+
 # Quick Start
 To start as fast as possible, you need to know how to create and open it.
 
@@ -39,8 +48,8 @@ Note: *The `DraggableMenu.open()` shouldn't be in the same place as the `Materia
 | Category | Parameters | Description |
 |---|---|---|
 | Constraints | double? minHeight | It specifies the min-height of the Draggable Menu. If the child's height is higher, it will take its child's height instead. |
-| Constraints | double? maxHeight | It specifies the max height of the Draggable Menu's minimized status (Not Expanded). If the menu is expandable, it takes its `expandedHeight` parameter's value as the fixed height. To use an expandable draggable menu, the `expandedHeight` parameter must be higher than the `maxHeight` parameter. |
-| Expandability | bool? expandable | It specifies whether the Draggable Menu will be expandable or not. The `expandedHeight` parameter must have been set to use an expandable draggable menu. |
+| Constraints | double? maxHeight | It specifies the max-height of the Draggable Menu's minimized status (Not Expanded). When the menu is expanded, it takes its `expandedHeight` parameter's value as its height. To be able to use an expandable draggable menu, the `expandedHeight` parameter must be higher than the `maxHeight` parameter. |
+| Expandability | bool? expandable | It specifies whether the Draggable Menu will be expandable or not. The `expandedHeight` parameter must be provided to use an expandable draggable menu. |
 | Expandability | double? expandedHeight | It specifies the height of the Draggable Menu when it's expanded. |
 | UI | Widget? child | Adds a child inside the Draggable Menu's Default UI. |
 | UI | Color? color | Specifies the Background color of the Default UIs. |
@@ -64,7 +73,7 @@ DraggableMenu(
 )
 ```
 
-After that, you will probably want to push the Draggable Menu to the screen. To do that, use `Navigator`'s methods (like `push`) or the Draggable Menu's `open` or `openReplacement` methods. They are the same with just a little difference. The `openReplacement` method replaces the previous root (like `Navigator.pushReplacement`).
+After that, you will probably want to push the Draggable Menu to the screen. To do that, use `Navigator`'s methods (e.g. `push`) or the Draggable Menu's `open` or `openReplacement` methods. They are the same with just a little difference. The `openReplacement` method replaces the previous root (e.g. `Navigator.pushReplacement`).
 
 ```dart
 DraggableMenu.open(
@@ -115,7 +124,7 @@ DraggableMenu(
 ---
 
 ## Using Scrollables
-While using scrollable with a Draggable Menu you need to add the `ScrollableManager` widget above the scrollable you want to control Draggable with and set the physics of the Scrollable (like ListView) to `NeverScrollableScrollPhysics`. The `ScrollableManager` widget must be under a `DraggableMenu` widget. You can do it by just simply using your widgets under its `child` or `customUI` parameters.
+While using scrollable with a Draggable Menu you need to add the `ScrollableManager` widget above the scrollable you want to control Draggable with and set the physics of the Scrollable (e.g. ListView) to `NeverScrollableScrollPhysics`. The `ScrollableManager` widget must be under a `DraggableMenu` widget. You can do it by just simply using your widgets under its `child` or `customUI` parameters.
 
 ```dart
 DraggableMenu(
@@ -126,6 +135,8 @@ DraggableMenu(
   ),
 )
 ```
+
+If there will be more than one `ScrollableManager` at the same time, give each scrollables different controllers.
 
 In short, do not forget to use `ScrollableManager` and set the physics of the scrollable you want to `NeverScrollableScrollPhysics`.
 
@@ -166,4 +177,6 @@ DraggableMenu(
 
 
 
-Note: *You can find more examples in the `Draggable Menu Example` app.*
+Note: *You can find more examples in the [Draggable Menu Example](https://github.com/emresoysuren/draggable_menu/tree/main/example) app.*
+
+*For more info, check out the [GitHub Repository](https://github.com/emresoysuren/draggable_menu).*
