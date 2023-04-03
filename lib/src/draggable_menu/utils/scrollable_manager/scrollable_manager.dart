@@ -35,7 +35,7 @@ class _ScrollableManagerState extends State<ScrollableManager> {
         onVerticalDragStart: (details) => onDragStart(details),
         onVerticalDragUpdate: (details) => onDragUpdate(details),
         onVerticalDragEnd: (details) => onDragEnd(details),
-        child: AbsorbPointer(child: widget.child),
+        child: widget.child,
       ),
     );
   }

@@ -4,7 +4,7 @@ import 'package:example/menus/status_draggable_menu.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  // Material Page and DraggableMenu.open() souldn't be in the same place
+  // The DraggableMenu.open() shouldn't be in the same place as the MaterialApp widget.
   runApp(const MaterialApp(home: App()));
 }
 
@@ -171,17 +171,21 @@ class _AppState extends State<App> {
                     child: ScrollableManager(
                       enableExpandedScroll: _enableExpandedScroll,
                       child: ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
                         itemCount: 50,
                         padding: const EdgeInsets.all(0),
                         itemBuilder: (context, index) => Material(
-                            color: Colors.transparent,
-                            child: ListTile(
-                                title: Text(
+                          color: Colors.transparent,
+                          child: ListTile(
+                            onTap: () {},
+                            title: Text(
                               "Item ${index + 1}",
                               style: const TextStyle(
                                 color: Colors.white,
                               ),
-                            ))),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -213,6 +217,8 @@ class _AppState extends State<App> {
                                 child: ScrollableManager(
                                   enableExpandedScroll: _enableExpandedScroll,
                                   child: ListView.builder(
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
                                     controller: ScrollController(),
                                     itemCount: 25,
                                     padding: const EdgeInsets.all(0),
@@ -238,6 +244,8 @@ class _AppState extends State<App> {
                                 child: ScrollableManager(
                                   enableExpandedScroll: _enableExpandedScroll,
                                   child: ListView.builder(
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
                                     controller: ScrollController(),
                                     itemCount: 25,
                                     padding: const EdgeInsets.all(0),
