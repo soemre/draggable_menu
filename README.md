@@ -3,9 +3,9 @@ With `draggable_menu`, create Draggable Menus as you want and make your app look
 
 `draggable_menu` also allows you to customize the UI and the animations. You can use one of the default themes or create your custom UI from scratch.
 
-| Modern | Classic |
-|---|---|
-|<img height="240" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/modern-1.gif?raw=true"><img height="240" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/modern-2.gif?raw=true">|<img height="240" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/classic-1.gif?raw=true"><img height="240" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/classic-2.gif?raw=true">|
+| Modern | Modern (Expandable) | Classic | Classic (Expandable) |
+|---|---|---|---|
+|<img height="320" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/modern-1.gif?raw=true">|<img height="320" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/modern-2.gif?raw=true">|<img height="320" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/classic-1.gif?raw=true">|<img height="320" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/classic-2.gif?raw=true">|
 
 # Quick Start
 To start as fast as possible, you need to know how to create and open it.
@@ -49,8 +49,11 @@ Note: *The `DraggableMenu.open()` shouldn't be in the same place as the `Materia
 |---|---|---|
 | Constraints | double? minHeight | It specifies the min-height of the Draggable Menu. If the child's height is higher, it will take its child's height instead. |
 | Constraints | double? maxHeight | It specifies the max-height of the Draggable Menu's minimized status (Not Expanded). When the menu is expanded, it takes its `expandedHeight` parameter's value as its height. To be able to use an expandable draggable menu, the `expandedHeight` parameter must be higher than the `maxHeight` parameter. |
-| Expandability | bool? expandable | It specifies whether the Draggable Menu will be expandable or not. The `expandedHeight` parameter must be provided to use an expandable draggable menu. |
-| Expandability | double? expandedHeight | It specifies the height of the Draggable Menu when it's expanded. |
+| Constraints | double? expandedHeight | It specifies the height of the Draggable Menu when it's expanded. To be able to use an expandable draggable menu, the `expandedHeight` parameter must be higher than the `maxHeight` parameter, and the `expandable` parameter mustn't be null. |
+| Usage | bool? expandable | It specifies whether the Draggable Menu will be expandable or not. The `expandedHeight` parameter must be provided to use an expandable draggable menu. |
+| Usage | double? closeThreshold | Specifies the Close Threshold of the Draggable Menu. Takes a value between `0` and `1`. |
+| Usage | double? expandThreshold | Specifies the Expand Threshold of the Draggable Menu. Takes a value between `0` and `1`. |
+| Usage | double? minimizeThreshold | Specifies the Minimize Threshold of the Draggable Menu. Takes a value between `0` and `1`. |
 | UI | Widget? child | Adds a child inside the Draggable Menu's Default UI. |
 | UI | Color? color | Specifies the Background color of the Default UIs. |
 | UI | Color? accentColor | Specifies the Bar Item color of the Default UIs. |
@@ -60,7 +63,7 @@ Note: *The `DraggableMenu.open()` shouldn't be in the same place as the `Materia
 | UI | Widget? customUi | Overrides the Default UIs. |
 | Listener | Function(DraggableMenuStatus status)? addStatusListener | Adds a listener to listen to its Status. |
 | Animation | Duration? animationDuration | Specifies the duration of the Draggable Menu's animations. |
-| Animaton | Curve? curve | Specifies the curve of the Draggable Menu's animations. |
+| Animation | Curve? curve | Specifies the curve of the Draggable Menu's animations. |
 
 # How To Use
 

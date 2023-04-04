@@ -28,7 +28,8 @@ class DraggableMenu extends StatefulWidget {
 
   /// It specifies the height of the Draggable Menu when it's expanded.
   ///
-  /// To be able to use an expandable draggable menu, the `expandedHeight` parameter must be higher than the `maxHeight` parameter.
+  /// To be able to use an expandable draggable menu, the `expandedHeight` parameter must be higher than the `maxHeight` parameter,
+  /// and the `expandable` parameter mustn't be null.
   final double? expandedHeight;
 
   /// Adds a child inside the Draggable Menu's Default UI.
@@ -72,18 +73,39 @@ class DraggableMenu extends StatefulWidget {
   /// By default, it is `Curves.ease`.
   final Curve? curve;
 
+  /// Specifies the Close Threshold of the Draggable Menu.
+  ///
+  /// Takes a value between `0` and `1`.
+  ///
+  /// By default, it is `0.5`.
+  final double? closeThreshold;
+
+  /// Specifies the Expand Threshold of the Draggable Menu.
+  ///
+  /// Takes a value between `0` and `1`.
+  ///
+  /// By default, it is `1/3`.
+  final double? expandThreshold;
+
+  /// Specifies the Minimize Threshold of the Draggable Menu.
+  ///
+  /// Takes a value between `0` and `1`.
+  ///
+  /// By default, it is `1/3`.
+  final double? minimizeThreshold;
+
   /// Creates a Draggable Menu widget.
   ///
   /// To push the Draggable Menu to the screen, you can use the `DraggableMenu`'s `open` and `openReplacement` methods.
-  /// 
+  ///
   /// ---
-  /// 
+  ///
   /// #### Using Scrollables
   /// While using scrollable with a Draggable Menu you need to add the `ScrollableManager` widget
   /// above the scrollable you want to control Draggable with and set the physics of the Scrollable (e.g. ListView)
   /// to `NeverScrollableScrollPhysics`. The `ScrollableManager` widget must be under a `DraggableMenu` widget.
   /// You can do it by just simply using your widgets under its `child` or `customUI` parameters.
-  /// 
+  ///
   /// ```dart
   /// DraggableMenu(
   ///   child: ScrollableManager(
@@ -93,7 +115,7 @@ class DraggableMenu extends StatefulWidget {
   ///   ),
   /// )
   /// ```
-  /// 
+  ///
   /// In short, do not forget to use `ScrollableManager` and set the physics of
   /// the scrollable you want to `NeverScrollableScrollPhysics`.
   ///
@@ -116,6 +138,9 @@ class DraggableMenu extends StatefulWidget {
     this.addStatusListener,
     this.animationDuration,
     this.curve,
+    this.closeThreshold,
+    this.expandThreshold,
+    this.minimizeThreshold,
   });
 
   /// Opens the given Draggable Menu using `Navigator`'s `push` method.
@@ -380,7 +405,7 @@ class _DraggableMenuState extends State<DraggableMenu>
     final double? widgetHeight = _widgetKey.currentContext?.size?.height;
     if (widgetHeight == null) return;
     if (_currentHeight == null) {
-      if (-_value / widgetHeight > 0.5) {
+      if (-_value / widgetHeight > (widget.closeThreshold ?? (0.5))) {
         _notifyStatusListener(DraggableMenuStatus.closing);
         Navigator.pop(context);
       } else {
@@ -415,14 +440,16 @@ class _DraggableMenuState extends State<DraggableMenu>
       if (willExpand) {
         if (_isExpanded == false) {
           if (_currentHeight! - _initHeight! >
-              (_expandedHeight! - _initHeight!) / 3) {
+              (_expandedHeight! - _initHeight!) *
+                  (widget.expandThreshold ?? (1 / 3))) {
             _openExpanded();
           } else {
             _closeExpanded();
           }
         } else {
           if (_expandedHeight! - _currentHeight! >
-              (_expandedHeight! - _initHeight!) / 3) {
+              (_expandedHeight! - _initHeight!) *
+                  (widget.minimizeThreshold ?? (1 / 3))) {
             _closeExpanded();
           } else {
             _openExpanded();
