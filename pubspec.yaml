@@ -1,7 +1,7 @@
 name: draggable_menu
-description: A custom draggable menu widget.
+description: A draggable menu widget for flutter.
 version: 0.0.1
-homepage:
+repository: https://github.com/emresoysuren/draggable_menu
 
 environment:
   sdk: '>=2.19.2 <3.0.0'
