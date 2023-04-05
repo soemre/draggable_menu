@@ -1,3 +1,5 @@
-## 0.0.1
+## 0.1.0
 
-* v0.0.1 Release
+* Added the "addValueListener" parameter to listen to its Menu Value.
+
+* Added the "Soft Modern UI" as a new UI

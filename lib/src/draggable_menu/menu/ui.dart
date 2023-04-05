@@ -2,6 +2,7 @@ import 'package:draggable_menu/src/draggable_menu/menu/enums/status.dart';
 import 'package:draggable_menu/src/draggable_menu/menu/enums/ui.dart';
 import 'package:draggable_menu/src/draggable_menu/menu/ui/classic.dart';
 import 'package:draggable_menu/src/draggable_menu/menu/ui/modern.dart';
+import 'package:draggable_menu/src/draggable_menu/menu/ui/modern_soft.dart';
 import 'package:flutter/material.dart';
 
 class DraggableMenuUi extends StatelessWidget {
@@ -15,6 +16,7 @@ class DraggableMenuUi extends StatelessWidget {
   final DraggableMenuUiType? uiType;
   final Widget? customUi;
   final DraggableMenuStatus? status;
+  final double menuValue;
   final Duration? animationDuration;
   final Curve? curve;
 
@@ -32,6 +34,7 @@ class DraggableMenuUi extends StatelessWidget {
     this.status,
     this.animationDuration,
     this.curve,
+    required this.menuValue,
   });
 
   @override
@@ -58,6 +61,15 @@ class DraggableMenuUi extends StatelessWidget {
         status: status,
         animationDuration: animationDuration,
         curve: curve,
+        child: child,
+      );
+    } else if (uiType == DraggableMenuUiType.softModern) {
+      return SoftModernUi(
+        accentColor: accentColor,
+        color: color,
+        radius: radius,
+        barItem: barItem,
+        menuValue: menuValue,
         child: child,
       );
     }

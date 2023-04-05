@@ -123,11 +123,18 @@ class _AppState extends State<App> {
                     child: const Text("Classic"),
                   ),
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: 8),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () => _type = DraggableMenuUiType.modern,
                     child: const Text("Modern"),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () => _type = DraggableMenuUiType.softModern,
+                    child: const Text("Soft Modern"),
                   ),
                 ),
               ],

@@ -4,35 +4,34 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class ScrollableManager extends StatefulWidget {
-
   /// Prefer using this just above scrollables.
-  /// 
+  ///
   /// Do not forget to set the physics of the scrollable to `NeverScrollableScrollPhysics`.
-  /// 
+  ///
   /// If there will be more than one `ScrollableManager` at the same time, give each scrollables different controllers.
   final Widget child;
 
   /// Only work if the `DraggableMenu`'s expandable feature can work.
-  /// 
+  ///
   /// If it can work, it will block its scrollable child's drag-up gesture when the Draggable Menu's status isn't `expanded`.
-  /// 
+  ///
   /// By default, it is `false`.
   final bool? enableExpandedScroll;
 
   /// Prefer using this just above scrollables.
-  /// 
+  ///
   /// Do not forget to set the physics of the scrollable to `NeverScrollableScrollPhysics`.
-  /// 
+  ///
   /// If there will be more than one `ScrollableManager` at the same time, give each scrollables different controllers.
   ///
   /// ---
-  /// 
+  ///
   /// #### Using Scrollables
   /// While using scrollable with a Draggable Menu you need to add the `ScrollableManager` widget
   /// above the scrollable you want to control Draggable with and set the physics of the Scrollable (e.g. ListView)
   /// to `NeverScrollableScrollPhysics`. The `ScrollableManager` widget must be under a `DraggableMenu` widget.
   /// You can do it by just simply using your widgets under its `child` or `customUI` parameters.
-  /// 
+  ///
   /// ```dart
   /// DraggableMenu(
   ///   child: ScrollableManager(
@@ -44,7 +43,7 @@ class ScrollableManager extends StatefulWidget {
   /// ```
   ///
   /// ---
-  /// 
+  ///
   /// The `enableExpandedScroll` parameter blocks its scrollable child's drag-up gesture
   /// when the Draggable Menu's status isn't `expanded`. (By default, it is `false`.)
   const ScrollableManager({

@@ -63,6 +63,16 @@ class DraggableMenu extends StatefulWidget {
   /// check out the [Draggable Menu Example](https://github.com/emresoysuren/draggable_menu/tree/main/example) app.*
   final Function(DraggableMenuStatus status)? addStatusListener;
 
+  /// Adds a listener to listen to its Menu Value.
+  ///
+  /// Takes a value between `-1` and `1`.
+  ///
+  /// The `0` value stands for the Menu's `minimized` position. The `1` value stands for the Menu's `expanded` position. The `-1` value stands for the Menu's `closed` position.
+  ///
+  /// *To understand better the usage of the "Value Listeners",
+  /// check out the [Draggable Menu Example](https://github.com/emresoysuren/draggable_menu/tree/main/example) app.*
+  final Function(double menuValue)? addValueListener;
+
   /// Specifies the duration of the Draggable Menu's animations.
   ///
   /// By default, it is `320ms`.
@@ -136,6 +146,7 @@ class DraggableMenu extends StatefulWidget {
     this.barItem,
     this.customUi,
     this.addStatusListener,
+    this.addValueListener,
     this.animationDuration,
     this.curve,
     this.closeThreshold,
@@ -205,6 +216,8 @@ class _DraggableMenuState extends State<DraggableMenu>
   late final double? _expandedHeight;
   late bool willExpand;
   DraggableMenuStatus? _status;
+  double _listenerValue = 0;
+  double? minimizedHeight;
 
   @override
   void initState() {
@@ -230,9 +243,29 @@ class _DraggableMenuState extends State<DraggableMenu>
             }
           }
         }
+        _notifyValueListener();
       });
     });
     _ticker.start();
+  }
+
+  _notifyValueListener() {
+    double value = 0;
+    minimizedHeight ??= _widgetKey.currentContext?.size?.height;
+    if (minimizedHeight == null) return;
+    if (_currentHeight == null || _currentHeight == minimizedHeight) {
+      if (_value != 0) {
+        value = (_value / minimizedHeight!);
+      }
+    } else if (_currentHeight != null) {
+      value = ((_currentHeight! - minimizedHeight!) /
+          (widget.expandedHeight! - minimizedHeight!));
+    }
+    if (_listenerValue == value) return;
+    _listenerValue = value;
+    if (widget.addStatusListener != null) {
+      widget.addValueListener!(_listenerValue);
+    }
   }
 
   _notifyStatusListener(DraggableMenuStatus status) {
@@ -321,6 +354,7 @@ class _DraggableMenuState extends State<DraggableMenu>
                 uiType: widget.uiType,
                 customUi: widget.customUi,
                 status: _status,
+                menuValue: _listenerValue,
                 curve: widget.curve,
                 child: widget.child,
               ),

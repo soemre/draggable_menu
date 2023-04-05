@@ -20,6 +20,7 @@ class StatusDraggableMenu extends StatefulWidget {
 class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
   Color? _color;
   String? _text;
+  double _value = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -85,6 +86,11 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
         color: _color,
         expandedHeight: MediaQuery.of(context).size.height * 0.72,
         animationDuration: const Duration(seconds: 1),
+        addValueListener: (value) {
+          setState(() {
+            _value = value;
+          });
+        },
         child: Material(
           color: Colors.transparent,
           child: Padding(
@@ -103,7 +109,7 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    "UI Type: ${widget.uiType == DraggableMenuUiType.modern ? "Modern" : "Classic"}\nExpand: ${widget.expand == true ? "True" : "False"}\nenableExpandedScroll: ${widget.enableExpandedScroll == true ? "True" : "False"}",
+                    "Menu Value: $_value\nUI Type: ${widget.uiType == DraggableMenuUiType.modern ? "Modern" : "Classic"}\nExpand: ${widget.expand == true ? "True" : "False"}\nenableExpandedScroll: ${widget.enableExpandedScroll == true ? "True" : "False"}",
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: Colors.white,

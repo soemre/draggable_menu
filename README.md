@@ -1,4 +1,7 @@
 # Flutter Draggable Menu (draggable_menu)
+[![Pub](https://img.shields.io/badge/pub-v0.1.0-%237f7eff?style=flat&logo=flutter)](https://pub.dev/packages/draggable_menu)
+[![GitHub](https://img.shields.io/badge/GitHub-v0.1.0-%237f7eff?style=flat&logo=github)](https://github.com/emresoysuren/draggable_menu)
+
 With `draggable_menu`, create Draggable Menus as you want and make your app look way better and more convenient.
 
 `draggable_menu` also allows you to customize the UI and the animations. You can use one of the default themes or create your custom UI from scratch.
@@ -62,6 +65,7 @@ Note: *The `DraggableMenu.open()` shouldn't be in the same place as the `Materia
 | UI | Widget? barItem | Overrides the Default Bar Item of the Default UIs. |
 | UI | Widget? customUi | Overrides the Default UIs. |
 | Listener | Function(DraggableMenuStatus status)? addStatusListener | Adds a listener to listen to its Status. |
+| Listener | final Function(double menuValue)? addValueListener | Adds a listener to listen to its Menu Value. |
 | Animation | Duration? animationDuration | Specifies the duration of the Draggable Menu's animations. |
 | Animation | Curve? curve | Specifies the curve of the Draggable Menu's animations. |
 
@@ -114,6 +118,7 @@ DraggableMenu(
 Use different UIs by setting the `uiType` parameter. The `uiType` parameter takes DraggableMenuUiType. And DraggableMenuUiType currently has these:
 * Classic
 * Modern
+* Soft Modern
 
 The `uiType` param is optional, so if you don't use it, its default value is `DraggableMenuUiType.classic`.
 

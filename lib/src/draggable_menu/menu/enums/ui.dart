@@ -1,4 +1,1 @@
-enum DraggableMenuUiType {
-  classic,
-  modern,
-}
+enum DraggableMenuUiType { classic, modern, softModern }
