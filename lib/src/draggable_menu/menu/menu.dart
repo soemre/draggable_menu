@@ -326,23 +326,24 @@ class _DraggableMenuState extends State<DraggableMenu>
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTapUp: (details) {
-        if (widget.blockMenuClosing == true) return;
-        final double? widgetHeight = _widgetKey.currentContext?.size?.height;
-        if (widgetHeight == null) return;
-        if (details.globalPosition.dy <
-            MediaQuery.of(context).size.height - widgetHeight + _value) {
-          _notifyStatusListener(DraggableMenuStatus.closing);
-          Navigator.pop(context);
-        }
-      },
-      behavior: HitTestBehavior.opaque,
       onVerticalDragStart: (details) => onDragStart(details.globalPosition.dy),
       onVerticalDragUpdate: (details) =>
           onDragUpdate(details.globalPosition.dy),
       onVerticalDragEnd: (details) => onDragEnd(),
       child: Stack(
         children: [
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTapUp: (details) {
+              if (widget.blockMenuClosing == true) return;
+              _notifyStatusListener(DraggableMenuStatus.closing);
+              Navigator.pop(context);
+            },
+            child: const SizedBox(
+              height: double.infinity,
+              width: double.infinity,
+            ),
+          ),
           Positioned(
             key: _widgetKey,
             bottom: _value,

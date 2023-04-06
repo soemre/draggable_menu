@@ -23,8 +23,7 @@ class SoftModernUi extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(
-          (radius ?? 16) * (1 - (menuValue < 0 ? 0 : menuValue))),
+      padding: EdgeInsets.all(16 * (1 - (menuValue < 0 ? 0 : menuValue))),
       child: ClipRRect(
         borderRadius: BorderRadius.vertical(
             top: Radius.circular(radius ?? 16),

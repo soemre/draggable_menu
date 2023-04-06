@@ -247,8 +247,28 @@ The `-1` value stands for the Menu's `closed` position.
 
 ---
 
-<!-- ## Using Custom UI -->
+## Using Custom UI
+Create your own Draggable Menu UIs by using the `customUi` parameter of the `DraggableMenu`.
 
+To create it, give the `customUi` parameter a Widget. And by doing this, you'll override the `DraggableMenu`'s Default UIs.
+
+```dart
+DraggableMenu(
+  customUi: customUi, // Give a widget to override the default UI
+  child: child, // Optional
+)
+```
+
+If you just want to override the default UIs' bar item, use the `barItem` parameter of the `DraggableMenu`. This'll override the bar items of `DraggableMenu`'s Default UIs.
+
+```dart
+DraggableMenu(
+  barItem: barItem, // Give a widget to override the default UIs' barItem
+  child: child, // Optional
+)
+```
+
+---
 
 
 Note: *You can find more examples in the [Draggable Menu Example](https://github.com/emresoysuren/draggable_menu/tree/main/example) app.*

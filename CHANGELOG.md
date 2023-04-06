@@ -7,3 +7,5 @@
 * Changed the return type of the `open` and the `openReplacement` methods of the `DraggableMenu`.
 
 * Added the `blockMenuClosing` parameter to the `DraggableMenu`.
+
+* Pop area fix.
