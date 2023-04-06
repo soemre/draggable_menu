@@ -1,8 +1,6 @@
-## 0.1.0
+## 0.1.1
 
-* Added the `addValueListener` parameter to listen to the `DraggableMenu`'s Menu Value.
-
-* Added the `Soft Modern UI` as a new UI.
+* Fixed the unnecessary `addValueListener` method calling issue.
 
 * Changed the return type of the `open` and the `openReplacement` methods of the `DraggableMenu`.
 
