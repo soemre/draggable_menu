@@ -11,7 +11,7 @@ With `draggable_menu`, create Draggable Menus as you want and make your app look
 |<img height="320" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/modern-1.gif?raw=true">|<img height="320" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/modern-2.gif?raw=true">|<img height="320" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/classic-1.gif?raw=true">|<img height="320" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/classic-2.gif?raw=true">|
 
 # Quick Start
-To start as fast as possible, you need to know how to create and open it.
+To start as fast as possible, you need to know how to create, open and close it.
 
 ## Create the Draggable Menu
 Create a Draggable Menu widget with a child.
@@ -45,6 +45,12 @@ DraggableMenu.open(
 
 Note: *The `DraggableMenu.open()` shouldn't be in the same place as the `MaterialApp` widget.*
 
+If you want to close the menu programmatically close it by calling the `Navigator`'s `pop` method.
+
+```dart
+Navigator.pop(context);
+```
+
 
 # Parameters of DraggableMenu
 
@@ -57,6 +63,7 @@ Note: *The `DraggableMenu.open()` shouldn't be in the same place as the `Materia
 | Usage | double? closeThreshold | Specifies the Close Threshold of the Draggable Menu. Takes a value between `0` and `1`. |
 | Usage | double? expandThreshold | Specifies the Expand Threshold of the Draggable Menu. Takes a value between `0` and `1`. |
 | Usage | double? minimizeThreshold | Specifies the Minimize Threshold of the Draggable Menu. Takes a value between `0` and `1`. |
+| Usage | bool? blockMenuClosing | It specifies whether the Draggable Menu can close itself by dragging down and taping outside of the Menu or not. |
 | UI | Widget? child | Adds a child inside the Draggable Menu's Default UI. |
 | UI | Color? color | Specifies the Background color of the Default UIs. |
 | UI | Color? accentColor | Specifies the Bar Item color of the Default UIs. |
@@ -65,7 +72,7 @@ Note: *The `DraggableMenu.open()` shouldn't be in the same place as the `Materia
 | UI | Widget? barItem | Overrides the Default Bar Item of the Default UIs. |
 | UI | Widget? customUi | Overrides the Default UIs. |
 | Listener | Function(DraggableMenuStatus status)? addStatusListener | Adds a listener to listen to its Status. |
-| Listener | final Function(double menuValue)? addValueListener | Adds a listener to listen to its Menu Value. |
+| Listener | Function(double menuValue)? addValueListener | Adds a listener to listen to its Menu Value. |
 | Animation | Duration? animationDuration | Specifies the duration of the Draggable Menu's animations. |
 | Animation | Curve? curve | Specifies the curve of the Draggable Menu's animations. |
 
@@ -93,6 +100,43 @@ DraggableMenu.open(
   animationDuration: animationDuration, // Optional. Specifies its animation's duration.
   curve: animationDuration, // Optional. Specifies its animation's curve.
 )
+```
+
+You can make it return a value. Do it in the same way you do it with the `Navigator`'s `push` method.
+
+```dart
+final returnValue = await DraggableMenu.open<T>(
+  context,
+  DraggableMenu(
+    child: child, // Optional
+  ),
+);
+```
+
+or do it using `Future` instead of using `async` 
+
+```dart
+DraggableMenu.open<T>(
+  context,
+  DraggableMenu(
+    child: child, // Optional
+  ),
+).then((value) => null); // Add something to do 
+```
+
+---
+
+## How to Close
+If you want to close the menu programmatically close it by calling the `Navigator`'s `pop` method.
+
+```dart
+Navigator.pop(context);
+```
+
+You can also return a value with it.
+
+```dart
+Navigator.pop<T>(context, value);
 ```
 
 ---
@@ -178,6 +222,28 @@ DraggableMenu(
   child: child, // Optional
 )
 ```
+
+---
+
+## Using the Value Listener
+Use the `addValueListener` parameter to listen to the Draggable Menu's Menu Value. 
+
+It takes a `double` value between `-1` and `1`.
+
+```dart
+DraggableMenu(
+  addValueListener: (menuValue) {
+    // Add something to do when its status change
+  }
+  child: child, // Optional
+)
+```
+
+The `0` value stands for the Menu's `minimized` position.
+
+The `1` value stands for the Menu's `expanded` position.
+
+The `-1` value stands for the Menu's `closed` position.
 
 ---
 

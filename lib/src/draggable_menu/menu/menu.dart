@@ -104,6 +104,13 @@ class DraggableMenu extends StatefulWidget {
   /// By default, it is `1/3`.
   final double? minimizeThreshold;
 
+  /// It specifies whether the Draggable Menu can close itself by dragging down and taping outside of the Menu or not.
+  ///
+  /// If it is `true`, it'll block closing the Draggable Menu by dragging down and taping outside.
+  ///
+  /// By default, it is `false`.
+  final bool? blockMenuClosing;
+
   /// Creates a Draggable Menu widget.
   ///
   /// To push the Draggable Menu to the screen, you can use the `DraggableMenu`'s `open` and `openReplacement` methods.
@@ -152,12 +159,13 @@ class DraggableMenu extends StatefulWidget {
     this.closeThreshold,
     this.expandThreshold,
     this.minimizeThreshold,
+    this.blockMenuClosing,
   });
 
   /// Opens the given Draggable Menu using `Navigator`'s `push` method.
   ///
   /// *The `DraggableMenu.open()` shouldn't be in the same place as the `MaterialApp` widget.*
-  static Future<T?>? open<T extends Object?>(
+  static Future<T?> open<T extends Object?>(
     BuildContext context,
     Widget draggableMenu, {
     Duration? animationDuration,
@@ -165,7 +173,7 @@ class DraggableMenu extends StatefulWidget {
     bool? barrier,
     Color? barrierColor,
   }) =>
-      Navigator.maybeOf(context)?.push<T>(
+      Navigator.of(context).push<T>(
         MenuRoute<T>(
           child: draggableMenu,
           duration: animationDuration,
@@ -178,7 +186,7 @@ class DraggableMenu extends StatefulWidget {
   /// Opens the given Draggable Menu using `Navigator`'s `pushReplacement` method.
   ///
   /// *The `DraggableMenu.openReplacement()` shouldn't be in the same place as the `MaterialApp` widget.*
-  static Future? openReplacement(
+  static Future openReplacement(
     BuildContext context,
     Widget draggableMenu, {
     Duration? animationDuration,
@@ -186,7 +194,7 @@ class DraggableMenu extends StatefulWidget {
     bool? barrier,
     Color? barrierColor,
   }) =>
-      Navigator.maybeOf(context)?.pushReplacement(
+      Navigator.of(context).pushReplacement(
         MenuRoute(
           child: draggableMenu,
           duration: animationDuration,
@@ -263,7 +271,7 @@ class _DraggableMenuState extends State<DraggableMenu>
     }
     if (_listenerValue == value) return;
     _listenerValue = value;
-    if (widget.addStatusListener != null) {
+    if (widget.addValueListener != null) {
       widget.addValueListener!(_listenerValue);
     }
   }
@@ -319,6 +327,7 @@ class _DraggableMenuState extends State<DraggableMenu>
   Widget build(BuildContext context) {
     return GestureDetector(
       onTapUp: (details) {
+        if (widget.blockMenuClosing == true) return;
         final double? widgetHeight = _widgetKey.currentContext?.size?.height;
         if (widgetHeight == null) return;
         if (details.globalPosition.dy <
@@ -439,7 +448,8 @@ class _DraggableMenuState extends State<DraggableMenu>
     final double? widgetHeight = _widgetKey.currentContext?.size?.height;
     if (widgetHeight == null) return;
     if (_currentHeight == null) {
-      if (-_value / widgetHeight > (widget.closeThreshold ?? (0.5))) {
+      if ((-_value / widgetHeight > (widget.closeThreshold ?? (0.5))) &&
+          (widget.blockMenuClosing != true)) {
         _notifyStatusListener(DraggableMenuStatus.closing);
         Navigator.pop(context);
       } else {
