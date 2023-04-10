@@ -111,6 +111,18 @@ class DraggableMenu extends StatefulWidget {
   /// By default, it is `false`.
   final bool? blockMenuClosing;
 
+  /// It specifies whether the Draggable Menu will be closed when it has been dragged too fast or not.
+  ///
+  /// By default, it is `true`.
+  final bool? fastDrag;
+
+  /// Specifies the Fast Drag Velocity of the Draggable Menu. That means it defines how many velocities will pop the menu.
+  ///
+  /// Takes a value above `0`. If the value is negative, it will throw an error.
+  ///
+  /// By default, it is `1500`.
+  final double? fastDragVelocity;
+
   /// Creates a Draggable Menu widget.
   ///
   /// To push the Draggable Menu to the screen, you can use the `DraggableMenu`'s `open` and `openReplacement` methods.
@@ -160,6 +172,8 @@ class DraggableMenu extends StatefulWidget {
     this.expandThreshold,
     this.minimizeThreshold,
     this.blockMenuClosing,
+    this.fastDrag,
+    this.fastDragVelocity,
   });
 
   /// Opens the given Draggable Menu using `Navigator`'s `push` method.
@@ -170,6 +184,7 @@ class DraggableMenu extends StatefulWidget {
     Widget draggableMenu, {
     Duration? animationDuration,
     Curve? curve,
+    Curve? popCurve,
     bool? barrier,
     Color? barrierColor,
   }) =>
@@ -178,6 +193,7 @@ class DraggableMenu extends StatefulWidget {
           child: draggableMenu,
           duration: animationDuration,
           curve: curve,
+          popCurve: popCurve,
           barrier: barrier,
           barrierColor: barrierColor,
         ),
@@ -191,6 +207,7 @@ class DraggableMenu extends StatefulWidget {
     Widget draggableMenu, {
     Duration? animationDuration,
     Curve? curve,
+    Curve? popCurve,
     bool? barrier,
     Color? barrierColor,
   }) =>
@@ -199,6 +216,7 @@ class DraggableMenu extends StatefulWidget {
           child: draggableMenu,
           duration: animationDuration,
           curve: curve,
+          popCurve: popCurve,
           barrier: barrier,
           barrierColor: barrierColor,
         ),
@@ -329,15 +347,13 @@ class _DraggableMenuState extends State<DraggableMenu>
       onVerticalDragStart: (details) => onDragStart(details.globalPosition.dy),
       onVerticalDragUpdate: (details) =>
           onDragUpdate(details.globalPosition.dy),
-      onVerticalDragEnd: (details) => onDragEnd(),
+      onVerticalDragEnd: (details) => onDragEnd(details),
       child: Stack(
         children: [
           GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTapUp: (details) {
-              if (widget.blockMenuClosing == true) return;
-              _notifyStatusListener(DraggableMenuStatus.closing);
-              Navigator.pop(context);
+              _close();
             },
             child: const SizedBox(
               height: double.infinity,
@@ -352,7 +368,7 @@ class _DraggableMenuState extends State<DraggableMenu>
               willExpand: willExpand,
               onDragStart: (globalPosition) => onDragStart(globalPosition),
               onDragUpdate: (globalPosition) => onDragUpdate(globalPosition),
-              onDragEnd: () => onDragEnd(),
+              onDragEnd: (details) => onDragEnd(details),
               child: DraggableMenuUi(
                 color: widget.color,
                 accentColor: widget.accentColor,
@@ -445,42 +461,41 @@ class _DraggableMenuState extends State<DraggableMenu>
     _controller.forward();
   }
 
-  onDragEnd() {
+  onDragEnd(DragEndDetails details) {
+    if (widget.fastDrag != false && fastDrag(details)) return;
     final double? widgetHeight = _widgetKey.currentContext?.size?.height;
     if (widgetHeight == null) return;
     if (_currentHeight == null) {
-      if ((-_value / widgetHeight > (widget.closeThreshold ?? (0.5))) &&
-          (widget.blockMenuClosing != true)) {
-        _notifyStatusListener(DraggableMenuStatus.closing);
-        Navigator.pop(context);
-      } else {
-        currentAnimation = 1;
-        Animation<double> animation =
-            Tween<double>(begin: _value, end: 0).animate(
-          _controller.drive(
-            CurveTween(curve: widget.curve ?? Curves.ease),
-          ),
-        );
-        callback() {
-          if (currentAnimation == 1) {
-            _value = animation.value;
-            _valueStart = _value;
+      if ((-_value / widgetHeight > (widget.closeThreshold ?? (0.5)))) {
+        _close();
+        return;
+      }
+      currentAnimation = 1;
+      Animation<double> animation =
+          Tween<double>(begin: _value, end: 0).animate(
+        _controller.drive(
+          CurveTween(curve: widget.curve ?? Curves.ease),
+        ),
+      );
+      callback() {
+        if (currentAnimation == 1) {
+          _value = animation.value;
+          _valueStart = _value;
+        }
+      }
+
+      animation.addListener(callback);
+      animation.addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          animation.removeListener(callback);
+          if (_value == 0 && _currentHeight == null) {
+            _notifyStatusListener(DraggableMenuStatus.minimized);
           }
         }
-
-        animation.addListener(callback);
-        animation.addStatusListener((status) {
-          if (status == AnimationStatus.completed) {
-            animation.removeListener(callback);
-            if (_value == 0 && _currentHeight == null) {
-              _notifyStatusListener(DraggableMenuStatus.minimized);
-            }
-          }
-        });
-        _controller.reset();
-        _notifyStatusListener(DraggableMenuStatus.canceling);
-        _controller.forward();
-      }
+      });
+      _controller.reset();
+      _notifyStatusListener(DraggableMenuStatus.canceling);
+      _controller.forward();
     } else {
       if (willExpand) {
         if (_isExpanded == false) {
@@ -551,5 +566,24 @@ class _DraggableMenuState extends State<DraggableMenu>
     if (_controller.isAnimating) _controller.stop();
     _yAxisStart = globalPosition;
     _initHeight ??= _widgetKey.currentContext?.size?.height;
+  }
+
+  bool fastDrag(DragEndDetails details) {
+    if (widget.fastDragVelocity != null) {
+      assert(widget.fastDragVelocity! < 0,
+          "The `fastDragVelocity` parameter can't be negative.");
+    }
+    if (details.velocity.pixelsPerSecond.dy >
+        (widget.fastDragVelocity ?? 1500)) {
+      _close();
+      return true;
+    }
+    return false;
+  }
+
+  _close() {
+    if (widget.blockMenuClosing == true) return;
+    _notifyStatusListener(DraggableMenuStatus.closing);
+    Navigator.pop(context);
   }
 }

@@ -3,21 +3,21 @@ import 'package:flutter/material.dart';
 class MenuRoute<T> extends PageRouteBuilder<T> {
   final Widget child;
   final Curve? curve;
+  final Curve? popCurve;
 
-  MenuRoute(
-      {Duration? duration,
-      required this.child,
-      bool? barrier,
-      Color? barrierColor,
-      this.curve})
-      : super(
+  MenuRoute({
+    Duration? duration,
+    required this.child,
+    bool? barrier,
+    Color? barrierColor,
+    this.curve,
+    this.popCurve,
+  }) : super(
           pageBuilder: (context, animation, secondaryAnimation) => child,
           transitionDuration: duration ?? const Duration(milliseconds: 320),
-          reverseTransitionDuration:
-              duration ?? const Duration(milliseconds: 320),
           opaque: false,
           barrierColor:
-              barrier == true ? barrierColor ?? const Color(0x80000000) : null,
+              barrier != false ? barrierColor ?? const Color(0x80000000) : null,
           barrierDismissible: true,
         );
 
@@ -29,7 +29,11 @@ class MenuRoute<T> extends PageRouteBuilder<T> {
           Tween<Offset>(begin: const Offset(0, 1), end: const Offset(0, 0))
               .animate(
         animation.drive(
-          CurveTween(curve: curve ?? Curves.ease),
+          CurveTween(
+            curve: animation.status == AnimationStatus.forward
+                ? curve ?? Curves.ease
+                : popCurve ?? Curves.easeOut,
+          ),
         ),
       ),
       child: child,

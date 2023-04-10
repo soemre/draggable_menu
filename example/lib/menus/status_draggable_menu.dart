@@ -5,12 +5,14 @@ class StatusDraggableMenu extends StatefulWidget {
   final DraggableMenuUiType? uiType;
   final bool? expand;
   final bool? enableExpandedScroll;
+  final bool? fastDrag;
 
   const StatusDraggableMenu({
     super.key,
     this.uiType,
     this.expand,
     this.enableExpandedScroll,
+    this.fastDrag,
   });
 
   @override
@@ -26,66 +28,51 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
   Widget build(BuildContext context) {
     return DraggableMenu(
         addStatusListener: (status) {
-          if (status == DraggableMenuStatus.canceling) {
-            setState(() {
+          setState(() {
+            if (status == DraggableMenuStatus.canceling) {
               _color = Colors.blue;
               _text = "Canceling";
-            });
-          }
-          if (status == DraggableMenuStatus.closing) {
-            setState(() {
+            }
+            if (status == DraggableMenuStatus.closing) {
               _color = Colors.red;
               _text = "Closing";
-            });
-          }
-          if (status == DraggableMenuStatus.expanded) {
-            setState(() {
+            }
+            if (status == DraggableMenuStatus.expanded) {
               _color = Colors.amber;
               _text = "Expanded";
-            });
-          }
-          if (status == DraggableMenuStatus.expanding) {
-            setState(() {
+            }
+            if (status == DraggableMenuStatus.expanding) {
               _color = Colors.blue;
               _text = "Expanding";
-            });
-          }
-          if (status == DraggableMenuStatus.mayClose) {
-            setState(() {
+            }
+            if (status == DraggableMenuStatus.mayClose) {
               _color = Colors.green;
               _text = "May Close";
-            });
-          }
-          if (status == DraggableMenuStatus.mayExpand) {
-            setState(() {
+            }
+            if (status == DraggableMenuStatus.mayExpand) {
               _color = Colors.green;
               _text = "May Expand";
-            });
-          }
-          if (status == DraggableMenuStatus.mayMinimize) {
-            setState(() {
+            }
+            if (status == DraggableMenuStatus.mayMinimize) {
               _color = Colors.green;
               _text = "May Minimize";
-            });
-          }
-          if (status == DraggableMenuStatus.minimized) {
-            setState(() {
+            }
+            if (status == DraggableMenuStatus.minimized) {
               _color = Colors.amber;
               _text = "Minimized";
-            });
-          }
-          if (status == DraggableMenuStatus.minimizing) {
-            setState(() {
+            }
+            if (status == DraggableMenuStatus.minimizing) {
               _color = Colors.blue;
               _text = "Minimizing";
-            });
-          }
+            }
+          });
         },
         uiType: widget.uiType,
         expandable: widget.expand,
         color: _color,
         expandedHeight: MediaQuery.of(context).size.height * 0.72,
         animationDuration: const Duration(seconds: 1),
+        fastDrag: widget.fastDrag,
         addValueListener: (value) {
           setState(() {
             _value = value;

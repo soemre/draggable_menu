@@ -116,7 +116,7 @@ class _ScrollableManagerState extends State<ScrollableManager> {
     drag?.end(details);
     if (isOverScrolling) {
       isOverScrolling = false;
-      ScrollableManagerScope.of(context).onDragEnd?.call();
+      ScrollableManagerScope.of(context).onDragEnd?.call(details);
     }
   }
 

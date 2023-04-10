@@ -16,10 +16,11 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  DraggableMenuUiType? _type;
-  bool? _expand;
-  bool? _barrier;
-  bool? _enableExpandedScroll;
+  DraggableMenuUiType _type = DraggableMenuUiType.classic;
+  bool _expand = false;
+  bool _barrier = true;
+  bool _enableExpandedScroll = false;
+  bool _fastDrag = true;
 
   @override
   Widget build(BuildContext context) {
@@ -30,279 +31,308 @@ class _AppState extends State<App> {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Expand:",
-              style: TextStyle(
-                  fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),
+            _boolRow("Expand", _expand, (value) => _expand = value),
+            _boolRow(
+              "enableExpandedScroll",
+              _enableExpandedScroll,
+              (value) => _enableExpandedScroll = value,
             ),
-            const SizedBox(height: 2),
-            Row(
-              mainAxisSize: MainAxisSize.min,
+            _boolRow("Fast Drag", _fastDrag, (value) => _fastDrag = value),
+            _boolRow("Barrier", _barrier, (value) => _barrier = value),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => _expand = true,
-                    child: const Text("True"),
+                const Text(
+                  "UI Type:",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red,
                   ),
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => _expand = false,
-                    child: const Text("False"),
-                  ),
+                const SizedBox(height: 2),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => setState(() {
+                          _type = DraggableMenuUiType.classic;
+                        }),
+                        style: _type == DraggableMenuUiType.classic
+                            ? const ButtonStyle(
+                                backgroundColor:
+                                    MaterialStatePropertyAll(Colors.green),
+                              )
+                            : null,
+                        child: const Text("Classic"),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => setState(() {
+                          _type = DraggableMenuUiType.modern;
+                        }),
+                        style: _type == DraggableMenuUiType.modern
+                            ? const ButtonStyle(
+                                backgroundColor:
+                                    MaterialStatePropertyAll(Colors.green),
+                              )
+                            : null,
+                        child: const Text("Modern"),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => setState(() {
+                          _type = DraggableMenuUiType.softModern;
+                        }),
+                        style: _type == DraggableMenuUiType.softModern
+                            ? const ButtonStyle(
+                                backgroundColor:
+                                    MaterialStatePropertyAll(Colors.green),
+                              )
+                            : null,
+                        child: const Text("Soft Modern"),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-            const SizedBox(height: 4),
-            const Text(
-              "enableExpandedScroll:",
-              style: TextStyle(
-                  fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),
-            ),
-            const SizedBox(height: 2),
-            Row(
-              mainAxisSize: MainAxisSize.min,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
+                const Text(
+                  "Open:",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                SizedBox(
+                  width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () => _enableExpandedScroll = true,
-                    child: const Text("True"),
+                    style: const ButtonStyle(
+                      backgroundColor: MaterialStatePropertyAll(Colors.red),
+                    ),
+                    onPressed: () => DraggableMenu.open(
+                      context,
+                      CustomDraggableMenu(
+                        uiType: _type,
+                        expand: _expand,
+                        fastDrag: _fastDrag,
+                      ),
+                      barrier: _barrier,
+                    ),
+                    child: const Text("Open The Menu"),
                   ),
                 ),
-                const SizedBox(width: 16),
-                Expanded(
+                const SizedBox(height: 4),
+                SizedBox(
+                  width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () => _enableExpandedScroll = false,
-                    child: const Text("False"),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 4),
-            const Text(
-              "Barrier:",
-              style: TextStyle(
-                  fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),
-            ),
-            const SizedBox(height: 2),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => _barrier = true,
-                    child: const Text("True"),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => _barrier = false,
-                    child: const Text("False"),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 4),
-            const Text(
-              "UI Type:",
-              style: TextStyle(
-                  fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),
-            ),
-            const SizedBox(height: 2),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => _type = DraggableMenuUiType.classic,
-                    child: const Text("Classic"),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => _type = DraggableMenuUiType.modern,
-                    child: const Text("Modern"),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => _type = DraggableMenuUiType.softModern,
-                    child: const Text("Soft Modern"),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            const Text(
-              "Open:",
-              style: TextStyle(
-                  fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),
-            ),
-            const SizedBox(height: 2),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: const ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll(Colors.green),
-                ),
-                onPressed: () => DraggableMenu.open(
-                  context,
-                  CustomDraggableMenu(
-                    uiType: _type,
-                    expand: _expand,
-                  ),
-                  barrier: _barrier,
-                ),
-                child: const Text("Open The Menu"),
-              ),
-            ),
-            const SizedBox(height: 4),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: const ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll(Colors.red),
-                ),
-                onPressed: () => DraggableMenu.open(
-                  context,
-                  CustomDraggableMenu(
-                    uiType: _type,
-                    expand: _expand,
-                    child: ScrollableManager(
-                      enableExpandedScroll: _enableExpandedScroll,
-                      child: ListView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: 50,
-                        padding: const EdgeInsets.all(0),
-                        itemBuilder: (context, index) => Material(
-                          color: Colors.transparent,
-                          child: ListTile(
-                            onTap: () {},
-                            title: Text(
-                              "Item ${index + 1}",
-                              style: const TextStyle(
-                                color: Colors.white,
+                    style: const ButtonStyle(
+                      backgroundColor: MaterialStatePropertyAll(Colors.red),
+                    ),
+                    onPressed: () => DraggableMenu.open(
+                      context,
+                      CustomDraggableMenu(
+                        uiType: _type,
+                        expand: _expand,
+                        fastDrag: _fastDrag,
+                        child: ScrollableManager(
+                          enableExpandedScroll: _enableExpandedScroll,
+                          child: ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: 50,
+                            padding: const EdgeInsets.all(0),
+                            itemBuilder: (context, index) => Material(
+                              color: Colors.transparent,
+                              child: ListTile(
+                                onTap: () {},
+                                title: Text(
+                                  "Item ${index + 1}",
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
+                      barrier: _barrier,
                     ),
+                    child: const Text("Open The Menu with a Scrollable"),
                   ),
-                  barrier: _barrier,
                 ),
-                child: const Text("Open The Menu with a Scrollable"),
-              ),
-            ),
-            const SizedBox(height: 4),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: const ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll(Colors.red),
-                ),
-                onPressed: () => DraggableMenu.open(
-                  context,
-                  CustomDraggableMenu(
-                    uiType: _type,
-                    expand: _expand,
-                    child: Padding(
-                      padding: const EdgeInsets.all(32),
-                      child: Center(
-                        child: Row(
-                          children: [
-                            Flexible(
-                              child: ColoredBox(
-                                color: Colors.red,
-                                child: ScrollableManager(
-                                  enableExpandedScroll: _enableExpandedScroll,
-                                  child: ListView.builder(
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    controller: ScrollController(),
-                                    itemCount: 25,
-                                    padding: const EdgeInsets.all(0),
-                                    itemBuilder: (context, index) => Material(
-                                      color: Colors.transparent,
-                                      child: ListTile(
-                                        title: Text(
-                                          "Item ${index + 1}",
-                                          style: const TextStyle(
-                                            color: Colors.white,
+                const SizedBox(height: 4),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: const ButtonStyle(
+                      backgroundColor: MaterialStatePropertyAll(Colors.red),
+                    ),
+                    onPressed: () => DraggableMenu.open(
+                      context,
+                      CustomDraggableMenu(
+                        uiType: _type,
+                        expand: _expand,
+                        fastDrag: _fastDrag,
+                        child: Padding(
+                          padding: const EdgeInsets.all(32),
+                          child: Center(
+                            child: Row(
+                              children: [
+                                Flexible(
+                                  child: ColoredBox(
+                                    color: Colors.red,
+                                    child: ScrollableManager(
+                                      enableExpandedScroll:
+                                          _enableExpandedScroll,
+                                      child: ListView.builder(
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        controller: ScrollController(),
+                                        itemCount: 25,
+                                        padding: const EdgeInsets.all(0),
+                                        itemBuilder: (context, index) =>
+                                            Material(
+                                          color: Colors.transparent,
+                                          child: ListTile(
+                                            title: Text(
+                                              "Item ${index + 1}",
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ),
-                            const SizedBox(width: 32),
-                            Flexible(
-                              child: ColoredBox(
-                                color: Colors.red,
-                                child: ScrollableManager(
-                                  enableExpandedScroll: _enableExpandedScroll,
-                                  child: ListView.builder(
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    controller: ScrollController(),
-                                    itemCount: 25,
-                                    padding: const EdgeInsets.all(0),
-                                    itemBuilder: (context, index) => Material(
-                                      color: Colors.transparent,
-                                      child: ListTile(
-                                        title: Text(
-                                          "Item ${index + 1}",
-                                          style: const TextStyle(
-                                            color: Colors.white,
+                                const SizedBox(width: 32),
+                                Flexible(
+                                  child: ColoredBox(
+                                    color: Colors.red,
+                                    child: ScrollableManager(
+                                      enableExpandedScroll:
+                                          _enableExpandedScroll,
+                                      child: ListView.builder(
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        controller: ScrollController(),
+                                        itemCount: 25,
+                                        padding: const EdgeInsets.all(0),
+                                        itemBuilder: (context, index) =>
+                                            Material(
+                                          color: Colors.transparent,
+                                          child: ListTile(
+                                            title: Text(
+                                              "Item ${index + 1}",
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
+                      barrier: _barrier,
                     ),
+                    child: const Text("Open the Menu with two Scrollable"),
                   ),
-                  barrier: _barrier,
                 ),
-                child: const Text("Open the Menu with two Scrollable"),
-              ),
-            ),
-            const SizedBox(height: 4),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: const ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll(Colors.purple),
-                ),
-                onPressed: () => DraggableMenu.open(
-                  context,
-                  StatusDraggableMenu(
-                    uiType: _type,
-                    expand: _expand,
-                    enableExpandedScroll: _enableExpandedScroll,
+                const SizedBox(height: 4),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: const ButtonStyle(
+                      backgroundColor: MaterialStatePropertyAll(Colors.purple),
+                    ),
+                    onPressed: () => DraggableMenu.open(
+                      context,
+                      StatusDraggableMenu(
+                        uiType: _type,
+                        expand: _expand,
+                        enableExpandedScroll: _enableExpandedScroll,
+                        fastDrag: _fastDrag,
+                      ),
+                      barrier: _barrier,
+                    ),
+                    child: const Text("Status Menu"),
                   ),
-                  barrier: _barrier,
                 ),
-                child: const Text("Status Menu"),
-              ),
+              ],
             ),
           ],
         ),
       ),
+    );
+  }
+
+  _boolRow(String title, bool button, Function(bool value) onPressed) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "$title:",
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.red,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () => setState(() {
+                  onPressed(true);
+                }),
+                style: button
+                    ? const ButtonStyle(
+                        backgroundColor: MaterialStatePropertyAll(Colors.green),
+                      )
+                    : null,
+                child: const Text("True"),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () => setState(() {
+                  onPressed(false);
+                }),
+                style: !button
+                    ? const ButtonStyle(
+                        backgroundColor: MaterialStatePropertyAll(Colors.green),
+                      )
+                    : null,
+                child: const Text("False"),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

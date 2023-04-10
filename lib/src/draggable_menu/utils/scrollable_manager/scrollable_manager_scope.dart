@@ -13,7 +13,7 @@ class ScrollableManagerScope extends InheritedWidget {
   }) : super(child: child);
 
   final void Function(double globalPosition)? onDragUpdate;
-  final void Function()? onDragEnd;
+  final void Function(DragEndDetails details)? onDragEnd;
   final void Function(double globalPosition)? onDragStart;
   final DraggableMenuStatus? status;
   final bool? willExpand;
