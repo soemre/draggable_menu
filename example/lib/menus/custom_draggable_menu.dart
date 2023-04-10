@@ -6,6 +6,7 @@ class CustomDraggableMenu extends StatelessWidget {
   final bool? expand;
   final Widget? child;
   final bool? fastDrag;
+  final bool? minimizeBeforeFastDrag;
 
   const CustomDraggableMenu({
     super.key,
@@ -13,6 +14,7 @@ class CustomDraggableMenu extends StatelessWidget {
     this.expand,
     this.child,
     this.fastDrag,
+    this.minimizeBeforeFastDrag,
   });
 
   @override
@@ -23,6 +25,7 @@ class CustomDraggableMenu extends StatelessWidget {
       expandedHeight: MediaQuery.of(context).size.height * 0.72,
       maxHeight: MediaQuery.of(context).size.height * 0.36,
       fastDrag: fastDrag,
+      minimizeBeforeFastDrag: minimizeBeforeFastDrag,
       child: child,
     );
   }

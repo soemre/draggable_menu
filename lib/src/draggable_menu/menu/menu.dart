@@ -123,6 +123,11 @@ class DraggableMenu extends StatefulWidget {
   /// By default, it is `1500`.
   final double? fastDragVelocity;
 
+  /// It specifies whether the Draggable Menu will be minimized when it has been dragged too fast or not when it's expanded.
+  ///
+  /// By default, it is `false`.
+  final bool? minimizeBeforeFastDrag;
+
   /// Creates a Draggable Menu widget.
   ///
   /// To push the Draggable Menu to the screen, you can use the `DraggableMenu`'s `open` and `openReplacement` methods.
@@ -174,6 +179,7 @@ class DraggableMenu extends StatefulWidget {
     this.blockMenuClosing,
     this.fastDrag,
     this.fastDragVelocity,
+    this.minimizeBeforeFastDrag,
   });
 
   /// Opens the given Draggable Menu using `Navigator`'s `push` method.
@@ -575,8 +581,11 @@ class _DraggableMenuState extends State<DraggableMenu>
     }
     if (details.velocity.pixelsPerSecond.dy >
         (widget.fastDragVelocity ?? 1500)) {
-      _close();
-      return true;
+      if ((widget.minimizeBeforeFastDrag == true && _currentHeight == null) ||
+          (widget.minimizeBeforeFastDrag == false)) {
+        _close();
+        return true;
+      }
     }
     return false;
   }

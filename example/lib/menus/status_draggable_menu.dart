@@ -2,17 +2,19 @@ import 'package:draggable_menu/draggable_menu.dart';
 import 'package:flutter/material.dart';
 
 class StatusDraggableMenu extends StatefulWidget {
-  final DraggableMenuUiType? uiType;
-  final bool? expand;
-  final bool? enableExpandedScroll;
-  final bool? fastDrag;
+  final DraggableMenuUiType uiType;
+  final bool expand;
+  final bool enableExpandedScroll;
+  final bool fastDrag;
+  final bool minimizeBeforeFastDrag;
 
   const StatusDraggableMenu({
     super.key,
-    this.uiType,
-    this.expand,
-    this.enableExpandedScroll,
-    this.fastDrag,
+    required this.uiType,
+    required this.expand,
+    required this.enableExpandedScroll,
+    required this.fastDrag,
+    required this.minimizeBeforeFastDrag,
   });
 
   @override
@@ -20,8 +22,8 @@ class StatusDraggableMenu extends StatefulWidget {
 }
 
 class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
-  Color? _color;
-  String? _text;
+  Color _color = Colors.amber;
+  String _text = "Minimized";
   double _value = 0;
 
   @override
@@ -73,6 +75,7 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
         expandedHeight: MediaQuery.of(context).size.height * 0.72,
         animationDuration: const Duration(seconds: 1),
         fastDrag: widget.fastDrag,
+        minimizeBeforeFastDrag: widget.minimizeBeforeFastDrag,
         addValueListener: (value) {
           setState(() {
             _value = value;
@@ -86,7 +89,7 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
               child: Column(
                 children: [
                   Text(
-                    _text ?? "When you move the menu it will show its status.",
+                    _text,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: Colors.white,
@@ -96,7 +99,7 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    "Menu Value: $_value\nUI Type: ${widget.uiType == DraggableMenuUiType.modern ? "Modern" : "Classic"}\nExpand: ${widget.expand == true ? "True" : "False"}\nenableExpandedScroll: ${widget.enableExpandedScroll == true ? "True" : "False"}",
+                    "Menu Value: $_value\nUI Type: ${widget.uiType == DraggableMenuUiType.modern ? "Modern" : widget.uiType == DraggableMenuUiType.softModern ? "Soft Modern" : "Classic"}\nExpand: ${widget.expand ? "True" : "False"}\nEnable Expanded Scroll: ${widget.enableExpandedScroll ? "True" : "False"}\nFast Drag: ${widget.fastDrag ? "True" : "False"}\nMinimize Before Fast Drag: ${widget.minimizeBeforeFastDrag ? "True" : "False"}",
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: Colors.white,
