@@ -125,6 +125,8 @@ class DraggableMenu extends StatefulWidget {
 
   /// It specifies whether the Draggable Menu will be minimized when it has been dragged too fast or not when it's expanded.
   ///
+  /// It'll only work if the `fastDrag` parameter has been set.
+  ///
   /// By default, it is `false`.
   final bool? minimizeBeforeFastDrag;
 
@@ -576,7 +578,7 @@ class _DraggableMenuState extends State<DraggableMenu>
 
   bool fastDrag(DragEndDetails details) {
     if (widget.fastDragVelocity != null) {
-      assert(widget.fastDragVelocity! < 0,
+      assert(widget.fastDragVelocity! >= 0,
           "The `fastDragVelocity` parameter can't be negative.");
     }
     if (details.velocity.pixelsPerSecond.dy >

@@ -1,9 +1,5 @@
-## 0.1.1
+## 0.2.0
 
-* Fixed the unnecessary `addValueListener` method calling issue.
+* Added the Fast Drag feature.
 
-* Changed the return type of the `open` and the `openReplacement` methods of the `DraggableMenu`.
-
-* Added the `blockMenuClosing` parameter to the `DraggableMenu`.
-
-* Pop area fix.
+* Changed the default barrier settings of the `open` method of the `DraggableMenu` to `true`. And that means it'll show barrier if it doesn't set to `false`.

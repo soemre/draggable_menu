@@ -64,6 +64,9 @@ Navigator.pop(context);
 | Usage | double? expandThreshold | Specifies the Expand Threshold of the Draggable Menu. Takes a value between `0` and `1`. |
 | Usage | double? minimizeThreshold | Specifies the Minimize Threshold of the Draggable Menu. Takes a value between `0` and `1`. |
 | Usage | bool? blockMenuClosing | It specifies whether the Draggable Menu can close itself by dragging down and taping outside of the Menu or not. |
+| Usage | bool? fastDrag | It specifies whether the Draggable Menu will be closed when it has been dragged too fast or not. By default, it is `true`. |
+| Usage | double? fastDragVelocity | Specifies the Fast Drag Velocity of the Draggable Menu. That means it defines how many velocities will pop the menu. Takes a value above `0`. If the value is negative, it will throw an error. |
+| Usage | bool? minimizeBeforeFastDrag | It specifies whether the Draggable Menu will be minimized when it has been dragged too fast or not when it's expanded. By default, it is `false`. |
 | UI | Widget? child | Adds a child inside the Draggable Menu's Default UI. |
 | UI | Color? color | Specifies the Background color of the Default UIs. |
 | UI | Color? accentColor | Specifies the Bar Item color of the Default UIs. |
