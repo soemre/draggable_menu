@@ -90,6 +90,11 @@ class DraggableMenu extends StatefulWidget {
   /// By default, it is `0.5`.
   final double? closeThreshold;
 
+  /// Specifies the Close Threshold of the Draggable Menu by giving it a fixed value.
+  ///
+  /// If it is not `null`, it will bypass both the default and the parameter percentage thresholds.
+  final double? fixedCloseThreshold;
+
   /// Specifies the Expand Threshold of the Draggable Menu.
   ///
   /// Takes a value between `0` and `1`.
@@ -97,12 +102,22 @@ class DraggableMenu extends StatefulWidget {
   /// By default, it is `1/3`.
   final double? expandThreshold;
 
+  /// Specifies the Expand Threshold of the Draggable Menu by giving it a fixed value.
+  ///
+  /// If it is not `null`, it will bypass both the default and the parameter percentage thresholds.
+  final double? fixedExpandThreshold;
+
   /// Specifies the Minimize Threshold of the Draggable Menu.
   ///
   /// Takes a value between `0` and `1`.
   ///
   /// By default, it is `1/3`.
   final double? minimizeThreshold;
+
+  /// Specifies the Minimize Threshold of the Draggable Menu by giving it a fixed value.
+  ///
+  /// If it is not `null`, it will bypass both the default and the parameter percentage thresholds.
+  final double? fixedMinimizeThreshold;
 
   /// It specifies whether the Draggable Menu can close itself by dragging down and taping outside of the Menu or not.
   ///
@@ -178,6 +193,9 @@ class DraggableMenu extends StatefulWidget {
     this.closeThreshold,
     this.expandThreshold,
     this.minimizeThreshold,
+    this.fixedCloseThreshold,
+    this.fixedExpandThreshold,
+    this.fixedMinimizeThreshold,
     this.blockMenuClosing,
     this.fastDrag,
     this.fastDragVelocity,
@@ -474,7 +492,9 @@ class _DraggableMenuState extends State<DraggableMenu>
     final double? widgetHeight = _widgetKey.currentContext?.size?.height;
     if (widgetHeight == null) return;
     if (_currentHeight == null) {
-      if ((-_value / widgetHeight > (widget.closeThreshold ?? (0.5)))) {
+      if (widget.fixedCloseThreshold == null
+          ? (-_value / widgetHeight > (widget.closeThreshold ?? (0.5)))
+          : -_value > widget.fixedCloseThreshold!) {
         _close();
         return;
       }
@@ -508,16 +528,20 @@ class _DraggableMenuState extends State<DraggableMenu>
       if (willExpand) {
         if (_isExpanded == false) {
           if (_currentHeight! - _initHeight! >
-              (_expandedHeight! - _initHeight!) *
-                  (widget.expandThreshold ?? (1 / 3))) {
+              (widget.fixedExpandThreshold == null
+                  ? (_expandedHeight! - _initHeight!) *
+                      (widget.expandThreshold ?? (1 / 3))
+                  : widget.fixedExpandThreshold!)) {
             _openExpanded();
           } else {
             _closeExpanded();
           }
         } else {
           if (_expandedHeight! - _currentHeight! >
-              (_expandedHeight! - _initHeight!) *
-                  (widget.minimizeThreshold ?? (1 / 3))) {
+              (widget.fixedMinimizeThreshold == null
+                  ? (_expandedHeight! - _initHeight!) *
+                      (widget.minimizeThreshold ?? (1 / 3))
+                  : widget.fixedMinimizeThreshold!)) {
             _closeExpanded();
           } else {
             _openExpanded();

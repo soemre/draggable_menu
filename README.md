@@ -1,8 +1,10 @@
 # Flutter Draggable Menu (draggable_menu)
-[![Pub](https://img.shields.io/badge/pub-v0.2.0-%237f7eff?style=flat&logo=flutter)](https://pub.dev/packages/draggable_menu)
-[![GitHub](https://img.shields.io/badge/GitHub-v0.2.0-%237f7eff?style=flat&logo=github)](https://github.com/emresoysuren/draggable_menu)
+[![Pub](https://img.shields.io/badge/pub-v0.3.0-%237f7eff?style=flat&logo=flutter)](https://pub.dev/packages/draggable_menu)
+[![GitHub](https://img.shields.io/badge/GitHub-v0.3.0-%237f7eff?style=flat&logo=github)](https://github.com/emresoysuren/draggable_menu)
 
 With `draggable_menu`, create Draggable Menus as you want and make your app look way better and more convenient.
+
+Create Draggable Menus like some popular apps like **Instagram**, **Snapchat**, **Facebook**, **Twitter** etc. You can even make your Draggable Menus look identical to them.
 
 `draggable_menu` also allows you to customize the UI and the animations. You can use one of the default themes or create your custom UI from scratch.
 
@@ -63,6 +65,9 @@ Navigator.pop(context);
 | Usage | double? closeThreshold | Specifies the Close Threshold of the Draggable Menu. Takes a value between `0` and `1`. |
 | Usage | double? expandThreshold | Specifies the Expand Threshold of the Draggable Menu. Takes a value between `0` and `1`. |
 | Usage | double? minimizeThreshold | Specifies the Minimize Threshold of the Draggable Menu. Takes a value between `0` and `1`. |
+| Usage | double? fixedCloseThreshold | Specifies the Close Threshold of the Draggable Menu by giving it a fixed value. |
+| Usage | double? fixedExpandThreshold | Specifies the Expand Threshold of the Draggable Menu by giving it a fixed value. |
+| Usage | double? fixedMinimizeThreshold | Specifies the Minimize Threshold of the Draggable Menu by giving it a fixed value. |
 | Usage | bool? blockMenuClosing | It specifies whether the Draggable Menu can close itself by dragging down and taping outside of the Menu or not. |
 | Usage | bool? fastDrag | It specifies whether the Draggable Menu will be closed when it has been dragged too fast or not. By default, it is `true`. |
 | Usage | double? fastDragVelocity | Specifies the Fast Drag Velocity of the Draggable Menu. That means it defines how many velocities will pop the menu. Takes a value above `0`. If the value is negative, it will throw an error. |
