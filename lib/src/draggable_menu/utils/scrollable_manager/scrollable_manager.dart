@@ -18,6 +18,9 @@ class ScrollableManager extends StatefulWidget {
   /// By default, it is `false`.
   final bool? enableExpandedScroll;
 
+  /// The `controller` parameter allows you to use a `ScrollController` with the scrollable under it.
+  final ScrollController? controller;
+
   /// Prefer using this just above scrollables.
   ///
   /// Do not forget to set the physics of the scrollable to `NeverScrollableScrollPhysics`.
@@ -50,6 +53,7 @@ class ScrollableManager extends StatefulWidget {
     super.key,
     required this.child,
     this.enableExpandedScroll,
+    this.controller,
   });
 
   @override
@@ -57,29 +61,36 @@ class ScrollableManager extends StatefulWidget {
 }
 
 class _ScrollableManagerState extends State<ScrollableManager> {
-  ScrollController? _controller;
+  late final ScrollController _controller =
+      widget.controller ?? ScrollController();
   bool isOverScrolling = false;
   Drag? drag;
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return ScrollConfiguration(
-      behavior: _DisabledScrollBehavior(
-        onControllerSet: (controller) {
-          _controller = controller;
-        },
-      ),
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onVerticalDragStart: (details) => onDragStart(details),
-        onVerticalDragUpdate: (details) => onDragUpdate(details),
-        onVerticalDragEnd: (details) => onDragEnd(details),
-        child: widget.child,
+    return PrimaryScrollController(
+      controller: _controller,
+      child: ScrollConfiguration(
+        behavior: const _DisabledScrollBehavior(),
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onVerticalDragStart: (details) => onDragStart(details),
+          onVerticalDragUpdate: (details) => onDragUpdate(details),
+          onVerticalDragEnd: (details) => onDragEnd(details),
+          child: widget.child,
+        ),
       ),
     );
   }
 
   onDragStart(DragStartDetails details) {
+    _throwIf();
     isOverScrolling = false;
     drag = null;
   }
@@ -121,20 +132,18 @@ class _ScrollableManagerState extends State<ScrollableManager> {
   }
 
   void _handleStart(DragUpdateDetails details) {
-    if (_controller?.position.atEdge == true) {
+    if (_controller.position.atEdge == true) {
       if (details.primaryDelta!.sign > 0 &&
-          _controller?.position.pixels ==
-              _controller?.position.minScrollExtent) {
+          _controller.position.pixels == _controller.position.minScrollExtent) {
         _startOverScrolling(details);
         return;
       } else if (details.primaryDelta!.sign < 0 &&
-          _controller?.position.pixels ==
-              _controller?.position.maxScrollExtent) {
+          _controller.position.pixels == _controller.position.maxScrollExtent) {
         _startOverScrolling(details);
         return;
       }
     }
-    drag = _controller?.position.drag(DragStartDetails(), () {
+    drag = _controller.position.drag(DragStartDetails(), () {
       drag = null;
     });
   }
@@ -145,19 +154,19 @@ class _ScrollableManagerState extends State<ScrollableManager> {
         .onDragStart
         ?.call(details.globalPosition.dy);
   }
+
+  _throwIf() {
+    assert(_controller.hasClients,
+        "The Scrollable Manager widget shouldn't be attached with any scrollable. Be sure you use one scrollable widget under it, and do not use any scroll controllers with the scrollable widget. If you want to use a scroll controller, give the controller to ScrollManager's controller parameter instead.");
+  }
 }
 
 class _DisabledScrollBehavior extends ScrollBehavior {
-  final Function(ScrollController controller)? onControllerSet;
-
-  const _DisabledScrollBehavior({this.onControllerSet});
+  const _DisabledScrollBehavior();
 
   @override
   Widget buildOverscrollIndicator(
       BuildContext context, Widget child, ScrollableDetails details) {
-    if (onControllerSet != null) {
-      onControllerSet!(details.controller);
-    }
     return child;
   }
 }

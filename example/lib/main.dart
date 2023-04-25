@@ -216,7 +216,6 @@ class _AppState extends State<App> {
                                         child: ListView.builder(
                                           physics:
                                               const NeverScrollableScrollPhysics(),
-                                          controller: ScrollController(),
                                           itemCount: 25,
                                           padding: const EdgeInsets.all(0),
                                           itemBuilder: (context, index) =>
@@ -245,7 +244,6 @@ class _AppState extends State<App> {
                                         child: ListView.builder(
                                           physics:
                                               const NeverScrollableScrollPhysics(),
-                                          controller: ScrollController(),
                                           itemCount: 25,
                                           padding: const EdgeInsets.all(0),
                                           itemBuilder: (context, index) =>

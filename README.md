@@ -196,7 +196,21 @@ DraggableMenu(
 )
 ```
 
-If there will be more than one `ScrollableManager` at the same time, give each scrollables different controllers.
+Use the `ScrollableManager` widget with one scrollable widget under it. If you want to control the Draggable Menu with multiple Scrollables, use the `ScrollableManager` widget above each scrollable you want to control the Draggable Menu with.
+
+Do not give a `ScrollController` to the scrollable widget under the `ScrollableManager` widget. If you want to use `ScrollController`, use the `ScrollController` under the `ScrollableManager` widget's controller parameter instead.
+
+```dart
+DraggableMenu(
+  child: ScrollableManager(
+    controller: ScrollController(), // Use the scroll controller here
+    child: ListView(
+      // Do not use the scroll controller here
+      physics: const NeverScrollableScrollPhysics(),
+    ), // You can use any scrollable widget
+  ),
+)
+```
 
 In short, do not forget to use `ScrollableManager` and set the physics of the scrollable you want to `NeverScrollableScrollPhysics`.
 
