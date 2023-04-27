@@ -6,7 +6,7 @@ class StatusDraggableMenu extends StatefulWidget {
   final bool enableExpandedScroll;
   final bool fastDrag;
   final bool minimizeBeforeFastDrag;
-  final CustomDraggableMenu customUi;
+  final CustomDraggableMenu ui;
 
   const StatusDraggableMenu({
     super.key,
@@ -14,7 +14,7 @@ class StatusDraggableMenu extends StatefulWidget {
     required this.enableExpandedScroll,
     required this.fastDrag,
     required this.minimizeBeforeFastDrag,
-    required this.customUi,
+    required this.ui,
   });
 
   @override
@@ -69,9 +69,9 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
             }
           });
         },
-        customUi: widget.customUi is ModernDraggableMenu
+        ui: widget.ui is ModernDraggableMenu
             ? ModernDraggableMenu(color: _color)
-            : widget.customUi is SoftModernDraggableMenu
+            : widget.ui is SoftModernDraggableMenu
                 ? SoftModernDraggableMenu(color: _color)
                 : ClassicDraggableMenu(color: _color),
         expandable: widget.expand,
@@ -102,7 +102,7 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    "Menu Value: $_value\nUI Type: ${widget.customUi is ModernDraggableMenu ? "Modern" : widget.customUi is SoftModernDraggableMenu ? "Soft Modern" : "Classic"}\nExpand: ${widget.expand ? "True" : "False"}\nEnable Expanded Scroll: ${widget.enableExpandedScroll ? "True" : "False"}\nFast Drag: ${widget.fastDrag ? "True" : "False"}\nMinimize Before Fast Drag: ${widget.minimizeBeforeFastDrag ? "True" : "False"}",
+                    "Menu Value: $_value\nUI Type: ${widget.ui is ModernDraggableMenu ? "Modern" : widget.ui is SoftModernDraggableMenu ? "Soft Modern" : "Classic"}\nExpand: ${widget.expand ? "True" : "False"}\nEnable Expanded Scroll: ${widget.enableExpandedScroll ? "True" : "False"}\nFast Drag: ${widget.fastDrag ? "True" : "False"}\nMinimize Before Fast Drag: ${widget.minimizeBeforeFastDrag ? "True" : "False"}",
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: Colors.white,

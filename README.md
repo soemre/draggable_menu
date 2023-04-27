@@ -73,7 +73,7 @@ Navigator.pop(context);
 | Usage | double? fastDragVelocity | Specifies the Fast Drag Velocity of the Draggable Menu. That means it defines how many velocities will pop the menu. Takes a value above `0`. If the value is negative, it will throw an error. |
 | Usage | bool? minimizeBeforeFastDrag | It specifies whether the Draggable Menu will be minimized when it has been dragged too fast or not when it's expanded. By default, it is `false`. |
 | UI | (required) Widget child | Adds a child inside the Draggable Menu's UI. |
-| UI | CustomDraggableMenu? customUi | Overrides the Classic Draggable Menu UI. |
+| UI | CustomDraggableMenu? ui | Overrides the Classic Draggable Menu UI. |
 | Listener | Function(DraggableMenuStatus status)? addStatusListener | Adds a listener to listen to its Status. |
 | Listener | Function(double menuValue)? addValueListener | Adds a listener to listen to its Menu Value. |
 | Animation | Duration? animationDuration | Specifies the duration of the Draggable Menu's animations. |
@@ -179,7 +179,7 @@ DraggableMenu(
 ---
 
 ## Using Scrollables
-While using scrollable with a Draggable Menu you need to add the `ScrollableManager` widget above the scrollable you want to control Draggable with and set the physics of the Scrollable (e.g. ListView) to `NeverScrollableScrollPhysics`. The `ScrollableManager` widget must be under a `DraggableMenu` widget. You can do it by just simply using your widgets under its `child` or `customUI` parameters.
+While using scrollable with a Draggable Menu you need to add the `ScrollableManager` widget above the scrollable you want to control Draggable with and set the physics of the Scrollable (e.g. ListView) to `NeverScrollableScrollPhysics`. The `ScrollableManager` widget must be under a `DraggableMenu` widget. You can do it by just simply using your widgets under its `child` or `ui` parameters.
 
 ```dart
 DraggableMenu(
@@ -265,9 +265,9 @@ The `-1` value stands for the Menu's `closed` position.
 ---
 
 ## Using Custom UI
-Create your own Draggable Menu UIs using the `customUi` parameter of the `DraggableMenu`. The `customUi` parameter allows you to override the `DraggableMenu`'s Classic Ui.
+Create your own Draggable Menu UIs using the `ui` parameter of the `DraggableMenu`. The `ui` parameter allows you to override the `DraggableMenu`'s Classic Ui.
 
-First, create a class that extends the `CustomDraggableMenu` class and override its `buildUi` method. After that, pass it to the `customUi` parameter.
+First, create a class that extends the `CustomDraggableMenu` class and override its `buildUi` method. After that, pass it to the `ui` parameter.
 
 ```dart
 class YourDraggableMenuUi extends CustomDraggableMenu {
@@ -284,7 +284,7 @@ class YourDraggableMenuUi extends CustomDraggableMenu {
 
 ```dart
 DraggableMenu(
-  customUi: customUi, // Pass the class you created
+  ui: ui, // Pass the class you created
   child: child,
 )
 ```
@@ -300,7 +300,7 @@ Note: *You can change some features of the pre-made UIs by using their parameter
 
 ```dart
 DraggableMenu(
-  customUi: SoftModernDraggableMenu();
+  ui: SoftModernDraggableMenu();
   child: child,
 )
 ```

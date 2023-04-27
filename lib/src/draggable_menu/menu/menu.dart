@@ -51,7 +51,7 @@ class DraggableMenu extends StatefulWidget {
   ///
   /// *Check out the [Draggable Menu Example](https://github.com/emresoysuren/draggable_menu/tree/main/example)
   /// app for more examples.*
-  final CustomDraggableMenu? customUi;
+  final CustomDraggableMenu? ui;
 
   /// Adds a listener to listen to its Status.
   ///
@@ -176,7 +176,7 @@ class DraggableMenu extends StatefulWidget {
     this.expandable,
     this.expandedHeight,
     required this.child,
-    this.customUi,
+    this.ui,
     this.addStatusListener,
     this.addValueListener,
     this.animationDuration,
@@ -390,7 +390,7 @@ class _DraggableMenuState extends State<DraggableMenu>
                 minHeight: _currentHeight ?? widget.minHeight ?? 240,
                 maxHeight:
                     _currentHeight ?? widget.maxHeight ?? double.infinity,
-                child: widget.customUi?.buildUi(
+                child: widget.ui?.buildUi(
                         context, widget.child, _status, _listenerValue) ??
                     const ClassicDraggableMenu().buildUi(
                         context, widget.child, _status, _listenerValue),
