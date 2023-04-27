@@ -38,7 +38,7 @@ class DraggableMenu extends StatefulWidget {
 
   /// Overrides the Classic Draggable Menu UI.
   ///
-  /// Thanks to the `customUi` parameter, you can create your custom UI from scratch.
+  /// Thanks to the `ui` parameter, you can create your custom UI from scratch.
   ///
   /// Create a class that extends `CustomDraggableMenu` and overrides `CustomDraggableMenu`'s `buildUi` method.
   /// And return your UI inside of it.
@@ -141,6 +141,13 @@ class DraggableMenu extends StatefulWidget {
   /// By default, it is `false`.
   final bool? minimizeBeforeFastDrag;
 
+  /// Overrides the Draggable Menu's UI and uses the widget given to the `customUi` parameter.
+  ///
+  /// If used, the `child` parameter of the `DraggableMenu` widget won't work.
+  /// 
+  /// Prefer using the `ui` parameter if you want to create your UI.
+  final Widget? customUi;
+
   /// Creates a Draggable Menu widget.
   ///
   /// To push the Draggable Menu to the screen, you can use the `DraggableMenu`'s `open` and `openReplacement` methods.
@@ -191,6 +198,7 @@ class DraggableMenu extends StatefulWidget {
     this.fastDrag,
     this.fastDragVelocity,
     this.minimizeBeforeFastDrag,
+    this.customUi,
   });
 
   /// Opens the given Draggable Menu using `Navigator`'s `push` method.
@@ -390,7 +398,8 @@ class _DraggableMenuState extends State<DraggableMenu>
                 minHeight: _currentHeight ?? widget.minHeight ?? 240,
                 maxHeight:
                     _currentHeight ?? widget.maxHeight ?? double.infinity,
-                child: widget.ui?.buildUi(
+                child: widget.customUi ??
+                    widget.ui?.buildUi(
                         context, widget.child, _status, _listenerValue) ??
                     const ClassicDraggableMenu().buildUi(
                         context, widget.child, _status, _listenerValue),

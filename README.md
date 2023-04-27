@@ -1,6 +1,6 @@
 # Flutter Draggable Menu (draggable_menu)
-[![Pub](https://img.shields.io/badge/pub-v0.3.0-%237f7eff?style=flat&logo=flutter)](https://pub.dev/packages/draggable_menu)
-[![GitHub](https://img.shields.io/badge/GitHub-v0.3.0-%237f7eff?style=flat&logo=github)](https://github.com/emresoysuren/draggable_menu)
+[![Pub](https://img.shields.io/badge/pub-v1.0.0-%237f7eff?style=flat&logo=flutter)](https://pub.dev/packages/draggable_menu)
+[![GitHub](https://img.shields.io/badge/GitHub-v1.0.0-%237f7eff?style=flat&logo=github)](https://github.com/emresoysuren/draggable_menu)
 
 With `draggable_menu`, create Draggable Menus as you want and make your app look way better and more convenient.
 
@@ -74,6 +74,7 @@ Navigator.pop(context);
 | Usage | bool? minimizeBeforeFastDrag | It specifies whether the Draggable Menu will be minimized when it has been dragged too fast or not when it's expanded. By default, it is `false`. |
 | UI | (required) Widget child | Adds a child inside the Draggable Menu's UI. |
 | UI | CustomDraggableMenu? ui | Overrides the Classic Draggable Menu UI. |
+| UI | Widget? customUi | Overrides the Draggable Menu's UI and uses the given widget. If used, the `child` parameter of the `DraggableMenu` widget won't work. |
 | Listener | Function(DraggableMenuStatus status)? addStatusListener | Adds a listener to listen to its Status. |
 | Listener | Function(double menuValue)? addValueListener | Adds a listener to listen to its Menu Value. |
 | Animation | Duration? animationDuration | Specifies the duration of the Draggable Menu's animations. |
@@ -162,16 +163,22 @@ DraggableMenu(
 ---
 
 ## Use Different UIs
-Use different UIs by setting the `uiType` parameter. The `uiType` parameter takes DraggableMenuUiType. And DraggableMenuUiType currently has these:
-* Classic
-* Modern
-* Soft Modern
+You can use different UIs rather than the default one. You can use pre-made UIs or create your own UI.
 
-The `uiType` param is optional, so if you don't use it, its default value is `DraggableMenuUiType.classic`.
+For creating your own UI, check out the `Create your custom UI` section at the end of this file. If you don't want to create your own UI, you can use one of the pre-made UIs.
+
+Choose one of the pre-made UIs and pass it to the `ui` parameter of the `DraggableMenu` widget.
+
+Pre-Made UIs:
+- `ClassicDraggableMenu`
+- `ModernDraggableMenu`
+- `SoftModernDraggableMenu`
+
+Note: *You can change some features of the pre-made UIs by using their parameters.*
 
 ```dart
 DraggableMenu(
-  uiType: DraggableMenuUiType.modern,
+  ui: SoftModernDraggableMenu();
   child: child,
 )
 ```
@@ -264,7 +271,7 @@ The `-1` value stands for the Menu's `closed` position.
 
 ---
 
-## Using Custom UI
+## Create your custom UI
 Create your own Draggable Menu UIs using the `ui` parameter of the `DraggableMenu`. The `ui` parameter allows you to override the `DraggableMenu`'s Classic Ui.
 
 First, create a class that extends the `CustomDraggableMenu` class and override its `buildUi` method. After that, pass it to the `ui` parameter.
@@ -302,6 +309,15 @@ Note: *You can change some features of the pre-made UIs by using their parameter
 DraggableMenu(
   ui: SoftModernDraggableMenu();
   child: child,
+)
+```
+
+You can use the `customUi` parameter as well. But it won't let you use the child that passed to the `DraggableMenu` widget. It's advantage is it is easy to use. Just give a widget, and override the `DraggableMenu`'s UI.
+
+```dart
+DraggableMenu(
+  customUi: yourUi;
+  child: child, // That won't work. Add your item inside of the customUi insted.
 )
 ```
 

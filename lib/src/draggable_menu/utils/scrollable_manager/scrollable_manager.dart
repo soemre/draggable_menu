@@ -157,7 +157,7 @@ class _ScrollableManagerState extends State<ScrollableManager> {
 
   _throwIf() {
     assert(_controller.hasClients,
-        "The Scrollable Manager widget shouldn't be attached with any scrollable. Be sure you use one scrollable widget under it, and do not use any scroll controllers with the scrollable widget. If you want to use a scroll controller, give the controller to ScrollManager's controller parameter instead.");
+        "The Scrollable Manager widget should be attached with a scrollable. Be sure you use one scrollable widget under it, and do not use any scroll controllers with the scrollable widget. If you want to use a scroll controller, give the controller to ScrollManager's controller parameter instead.");
   }
 }
 
