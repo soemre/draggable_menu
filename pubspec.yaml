@@ -1,6 +1,6 @@
 name: draggable_menu
-description: A draggable menu widget for flutter. Create Draggable Menus as you want and make your app look way better and more convenient.
-version: 0.3.0
+description: Create Draggable Menus like some popular apps like Instagram, Snapchat, Facebook, Twitter etc. You can even make your Draggable Menus look identical to them.
+version: 1.0.0
 repository: https://github.com/emresoysuren/draggable_menu
 
 environment:

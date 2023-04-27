@@ -1,6 +1,7 @@
+import 'package:draggable_menu/src/draggable_menu/menu/custom_draggable_menu.dart';
 import 'package:draggable_menu/src/draggable_menu/menu/enums/status.dart';
-import 'package:draggable_menu/src/draggable_menu/menu/enums/ui.dart';
-import 'package:draggable_menu/src/draggable_menu/menu/ui.dart';
+import 'package:draggable_menu/src/draggable_menu/menu/ui_formatter.dart';
+import 'package:draggable_menu/src/draggable_menu/menu/ui/classic.dart';
 import 'package:draggable_menu/src/draggable_menu/route.dart';
 import 'package:draggable_menu/src/draggable_menu/utils/scrollable_manager/scrollable_manager_scope.dart';
 import 'package:flutter/material.dart';
@@ -33,29 +34,24 @@ class DraggableMenu extends StatefulWidget {
   final double? expandedHeight;
 
   /// Adds a child inside the Draggable Menu's Default UI.
-  final Widget? child;
+  final Widget child;
 
-  /// Specifies the Background color of the Default UIs.
-  final Color? color;
-
-  /// Specifies the Bar Item color of the Default UIs.
-  final Color? accentColor;
-
-  /// Specifies the radius of the Default UIs.
-  final double? radius;
-
-  /// Specifies the Default UI Type.
-  ///
-  /// By default, it is `Classic`.
-  final DraggableMenuUiType? uiType;
-
-  /// Overrides the Default Bar Item of the Default UIs.
-  final Widget? barItem;
-
-  /// Overrides the Default UIs.
+  /// Overrides the Classic Draggable Menu UI.
   ///
   /// Thanks to the `customUi` parameter, you can create your custom UI from scratch.
-  final Widget? customUi;
+  ///
+  /// Create a class that extends `CustomDraggableMenu` and overrides `CustomDraggableMenu`'s `buildUi` method.
+  /// And return your UI inside of it.
+  ///
+  /// Or you can use pre-made UIs instead of creating from scratch.
+  /// Pre-Made UIs:
+  /// - `ClassicDraggableMenu`
+  /// - `ModernDraggableMenu`
+  /// - `SoftModernDraggableMenu`
+  ///
+  /// *Check out the [Draggable Menu Example](https://github.com/emresoysuren/draggable_menu/tree/main/example)
+  /// app for more examples.*
+  final CustomDraggableMenu? customUi;
 
   /// Adds a listener to listen to its Status.
   ///
@@ -155,7 +151,7 @@ class DraggableMenu extends StatefulWidget {
   /// While using scrollable with a Draggable Menu you need to add the `ScrollableManager` widget
   /// above the scrollable you want to control Draggable with and set the physics of the Scrollable (e.g. ListView)
   /// to `NeverScrollableScrollPhysics`. The `ScrollableManager` widget must be under a `DraggableMenu` widget.
-  /// You can do it by just simply using your widgets under its `child` or `customUI` parameters.
+  /// You can do it by just simply using your widgets under its `child` parameter.
   ///
   /// ```dart
   /// DraggableMenu(
@@ -172,19 +168,14 @@ class DraggableMenu extends StatefulWidget {
   ///
   /// ---
   ///
-  /// *For more info, check out the [GitHub Repository](https://github.com/emresoysuren/draggable_menu).*
+  /// *For more info, visit the [GitHub Repository](https://github.com/emresoysuren/draggable_menu).*
   const DraggableMenu({
     super.key,
     this.minHeight,
     this.maxHeight,
     this.expandable,
     this.expandedHeight,
-    this.child,
-    this.color,
-    this.accentColor,
-    this.radius,
-    this.uiType,
-    this.barItem,
+    required this.child,
     this.customUi,
     this.addStatusListener,
     this.addValueListener,
@@ -395,20 +386,14 @@ class _DraggableMenuState extends State<DraggableMenu>
               onDragStart: (globalPosition) => onDragStart(globalPosition),
               onDragUpdate: (globalPosition) => onDragUpdate(globalPosition),
               onDragEnd: (details) => onDragEnd(details),
-              child: DraggableMenuUi(
-                color: widget.color,
-                accentColor: widget.accentColor,
+              child: UiFormatter(
                 minHeight: _currentHeight ?? widget.minHeight ?? 240,
                 maxHeight:
                     _currentHeight ?? widget.maxHeight ?? double.infinity,
-                radius: widget.radius,
-                barItem: widget.barItem,
-                uiType: widget.uiType,
-                customUi: widget.customUi,
-                status: _status,
-                menuValue: _listenerValue,
-                curve: widget.curve,
-                child: widget.child,
+                child: widget.customUi?.buildUi(
+                        context, widget.child, _status, _listenerValue) ??
+                    const ClassicDraggableMenu().buildUi(
+                        context, widget.child, _status, _listenerValue),
               ),
             ),
           ),

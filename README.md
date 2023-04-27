@@ -72,13 +72,8 @@ Navigator.pop(context);
 | Usage | bool? fastDrag | It specifies whether the Draggable Menu will be closed when it has been dragged too fast or not. By default, it is `true`. |
 | Usage | double? fastDragVelocity | Specifies the Fast Drag Velocity of the Draggable Menu. That means it defines how many velocities will pop the menu. Takes a value above `0`. If the value is negative, it will throw an error. |
 | Usage | bool? minimizeBeforeFastDrag | It specifies whether the Draggable Menu will be minimized when it has been dragged too fast or not when it's expanded. By default, it is `false`. |
-| UI | Widget? child | Adds a child inside the Draggable Menu's Default UI. |
-| UI | Color? color | Specifies the Background color of the Default UIs. |
-| UI | Color? accentColor | Specifies the Bar Item color of the Default UIs. |
-| UI | double? radius | Specifies the radius of the Default UIs. |
-| UI | DraggableMenuUiType? uiType | Specifies the Default UI Type. |
-| UI | Widget? barItem | Overrides the Default Bar Item of the Default UIs. |
-| UI | Widget? customUi | Overrides the Default UIs. |
+| UI | (required) Widget child | Adds a child inside the Draggable Menu's UI. |
+| UI | CustomDraggableMenu? customUi | Overrides the Classic Draggable Menu UI. |
 | Listener | Function(DraggableMenuStatus status)? addStatusListener | Adds a listener to listen to its Status. |
 | Listener | Function(double menuValue)? addValueListener | Adds a listener to listen to its Menu Value. |
 | Animation | Duration? animationDuration | Specifies the duration of the Draggable Menu's animations. |
@@ -91,7 +86,7 @@ You can create a Draggable Menu by just using this:
 
 ```dart
 DraggableMenu(
-  child: child, // Optional
+  child: child,
 )
 ```
 
@@ -101,7 +96,7 @@ After that, you will probably want to push the Draggable Menu to the screen. To 
 DraggableMenu.open(
   context,
   DraggableMenu(
-    child: child, // Optional
+    child: child,
   ),
   barrier: barrier, // Optional. If it's true uses a root with barrier.
   barrierColor: barrierColor, // Optional. Changes the barrier's color.
@@ -116,7 +111,7 @@ You can make it return a value. Do it in the same way you do it with the `Naviga
 final returnValue = await DraggableMenu.open<T>(
   context,
   DraggableMenu(
-    child: child, // Optional
+    child: child,
   ),
 );
 ```
@@ -127,7 +122,7 @@ or do it using `Future` instead of using `async`
 DraggableMenu.open<T>(
   context,
   DraggableMenu(
-    child: child, // Optional
+    child: child,
   ),
 ).then((value) => null); // Add something to do 
 ```
@@ -160,7 +155,7 @@ DraggableMenu(
   expandedHeight: expandedHeight,// Mustn't be null or smaller than its widget's height or the "maxHeight" or the "minHeight" parameters. 
   maxHeight: maxHeight, // Optional
   minHeight: minHeight, // Optional
-  child: child, // Optional
+  child: child,
 )
 ```
 
@@ -177,7 +172,7 @@ The `uiType` param is optional, so if you don't use it, its default value is `Dr
 ```dart
 DraggableMenu(
   uiType: DraggableMenuUiType.modern,
-  child: child, // Optional
+  child: child,
 )
 ```
 
@@ -241,7 +236,7 @@ DraggableMenu(
     }
     // Add something to do when its status change
   }
-  child: child, // Optional
+  child: child,
 )
 ```
 
@@ -257,7 +252,7 @@ DraggableMenu(
   addValueListener: (menuValue) {
     // Add something to do when its status change
   }
-  child: child, // Optional
+  child: child,
 )
 ```
 
@@ -270,23 +265,43 @@ The `-1` value stands for the Menu's `closed` position.
 ---
 
 ## Using Custom UI
-Create your own Draggable Menu UIs by using the `customUi` parameter of the `DraggableMenu`.
+Create your own Draggable Menu UIs using the `customUi` parameter of the `DraggableMenu`. The `customUi` parameter allows you to override the `DraggableMenu`'s Classic Ui.
 
-To create it, give the `customUi` parameter a Widget. And by doing this, you'll override the `DraggableMenu`'s Default UIs.
+First, create a class that extends the `CustomDraggableMenu` class and override its `buildUi` method. After that, pass it to the `customUi` parameter.
+
+```dart
+class YourDraggableMenuUi extends CustomDraggableMenu {
+  @override
+  Widget buildUi(BuildContext context, Widget child,
+      DraggableMenuStatus? status, double menuValue) {
+    // Return Your Ui
+    return YourUi(
+      child: child, // Pass the `child` value to use the child passed the `DraggableMenu` widget.
+    );
+  }
+}
+```
 
 ```dart
 DraggableMenu(
-  customUi: customUi, // Give a widget to override the default UI
-  child: child, // Optional
+  customUi: customUi, // Pass the class you created
+  child: child,
 )
 ```
 
-If you just want to override the default UIs' bar item, use the `barItem` parameter of the `DraggableMenu`. This'll override the bar items of `DraggableMenu`'s Default UIs.
+Or you can use pre-made UIs instead of creating from scratch.
+
+Pre-Made UIs:
+- `ClassicDraggableMenu`
+- `ModernDraggableMenu`
+- `SoftModernDraggableMenu`
+
+Note: *You can change some features of the pre-made UIs by using their parameters.*
 
 ```dart
 DraggableMenu(
-  barItem: barItem, // Give a widget to override the default UIs' barItem
-  child: child, // Optional
+  customUi: SoftModernDraggableMenu();
+  child: child,
 )
 ```
 

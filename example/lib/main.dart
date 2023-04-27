@@ -16,7 +16,7 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  DraggableMenuUiType _type = DraggableMenuUiType.classic;
+  CustomDraggableMenu _type = const ClassicDraggableMenu();
   bool _expand = false;
   bool _barrier = true;
   bool _enableExpandedScroll = false;
@@ -71,9 +71,9 @@ class _AppState extends State<App> {
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () => setState(() {
-                            _type = DraggableMenuUiType.classic;
+                            _type = const ClassicDraggableMenu();
                           }),
-                          style: _type == DraggableMenuUiType.classic
+                          style: _type is ClassicDraggableMenu
                               ? const ButtonStyle(
                                   backgroundColor:
                                       MaterialStatePropertyAll(Colors.green),
@@ -86,9 +86,9 @@ class _AppState extends State<App> {
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () => setState(() {
-                            _type = DraggableMenuUiType.modern;
+                            _type = ModernDraggableMenu();
                           }),
-                          style: _type == DraggableMenuUiType.modern
+                          style: _type is ModernDraggableMenu
                               ? const ButtonStyle(
                                   backgroundColor:
                                       MaterialStatePropertyAll(Colors.green),
@@ -101,9 +101,9 @@ class _AppState extends State<App> {
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () => setState(() {
-                            _type = DraggableMenuUiType.softModern;
+                            _type = const SoftModernDraggableMenu();
                           }),
-                          style: _type == DraggableMenuUiType.softModern
+                          style: _type is SoftModernDraggableMenu
                               ? const ButtonStyle(
                                   backgroundColor:
                                       MaterialStatePropertyAll(Colors.green),
@@ -137,11 +137,12 @@ class _AppState extends State<App> {
                       ),
                       onPressed: () => DraggableMenu.open(
                         context,
-                        CustomDraggableMenu(
-                          uiType: _type,
+                        CustomMenu(
+                          customUi: _type,
                           expand: _expand,
                           fastDrag: _fastDrag,
                           minimizeBeforeFastDrag: _minimizeBeforeFastDrag,
+                          child: const SizedBox(),
                         ),
                         barrier: _barrier,
                       ),
@@ -157,8 +158,8 @@ class _AppState extends State<App> {
                       ),
                       onPressed: () => DraggableMenu.open(
                         context,
-                        CustomDraggableMenu(
-                          uiType: _type,
+                        CustomMenu(
+                          customUi: _type,
                           expand: _expand,
                           fastDrag: _fastDrag,
                           minimizeBeforeFastDrag: _minimizeBeforeFastDrag,
@@ -197,8 +198,8 @@ class _AppState extends State<App> {
                       ),
                       onPressed: () => DraggableMenu.open(
                         context,
-                        CustomDraggableMenu(
-                          uiType: _type,
+                        CustomMenu(
+                          customUi: _type,
                           expand: _expand,
                           fastDrag: _fastDrag,
                           minimizeBeforeFastDrag: _minimizeBeforeFastDrag,
@@ -283,7 +284,7 @@ class _AppState extends State<App> {
                       onPressed: () => DraggableMenu.open(
                         context,
                         StatusDraggableMenu(
-                          uiType: _type,
+                          customUi: _type,
                           expand: _expand,
                           enableExpandedScroll: _enableExpandedScroll,
                           fastDrag: _fastDrag,

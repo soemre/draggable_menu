@@ -1,24 +1,20 @@
+import 'package:draggable_menu/draggable_menu.dart';
 import 'package:draggable_menu/src/default/colors.dart';
 import 'package:draggable_menu/src/draggable_menu/menu/widgets/default_bar_item.dart';
 import 'package:flutter/material.dart';
 
-class ClassicUi extends StatelessWidget {
-  final Widget? child;
+class ClassicDraggableMenu extends CustomDraggableMenu {
   final Widget? barItem;
   final Color? accentColor;
   final Color? color;
   final double? radius;
 
-  const ClassicUi(
-      {super.key,
-      this.child,
-      this.barItem,
-      this.accentColor,
-      this.color,
-      this.radius});
+  const ClassicDraggableMenu(
+      {this.barItem, this.accentColor, this.color, this.radius});
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildUi(BuildContext context, Widget child, DraggableMenuStatus? status,
+      double menuValue) {
     return ClipRRect(
       borderRadius: BorderRadius.vertical(
         top: Radius.circular(radius ?? 16),
@@ -33,7 +29,7 @@ class ClassicUi extends StatelessWidget {
             Center(
               child: barItem ?? DefaultBarItem(color: accentColor),
             ),
-            if (child != null) Flexible(child: child!),
+            Flexible(child: child),
           ],
         ),
       ),

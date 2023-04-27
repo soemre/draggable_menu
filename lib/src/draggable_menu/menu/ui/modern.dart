@@ -1,7 +1,41 @@
 import 'package:draggable_menu/src/default/colors.dart';
+import 'package:draggable_menu/src/draggable_menu/menu/custom_draggable_menu.dart';
 import 'package:draggable_menu/src/draggable_menu/menu/enums/status.dart';
 import 'package:draggable_menu/src/draggable_menu/menu/widgets/default_bar_item.dart';
 import 'package:flutter/material.dart';
+
+class ModernDraggableMenu extends CustomDraggableMenu {
+  final Widget? barItem;
+  final Color? accentColor;
+  final Color? color;
+  final double? radius;
+  final Duration? animationDuration;
+  final Curve? curve;
+
+  ModernDraggableMenu({
+    this.barItem,
+    this.accentColor,
+    this.color,
+    this.radius,
+    this.animationDuration,
+    this.curve,
+  });
+
+  @override
+  Widget buildUi(BuildContext context, Widget child,
+      DraggableMenuStatus? status, double menuValue) {
+    return ModernUi(
+      status: status,
+      accentColor: accentColor,
+      animationDuration: animationDuration,
+      barItem: barItem,
+      color: color,
+      curve: curve,
+      radius: radius,
+      child: child,
+    );
+  }
+}
 
 class ModernUi extends StatefulWidget {
   final Widget? child;

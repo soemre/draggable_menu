@@ -1,26 +1,26 @@
 import 'package:draggable_menu/draggable_menu.dart';
 import 'package:flutter/material.dart';
 
-class CustomDraggableMenu extends StatelessWidget {
-  final DraggableMenuUiType? uiType;
+class CustomMenu extends StatelessWidget {
+  final CustomDraggableMenu? customUi;
   final bool? expand;
-  final Widget? child;
+  final Widget child;
   final bool? fastDrag;
   final bool? minimizeBeforeFastDrag;
 
-  const CustomDraggableMenu({
+  const CustomMenu({
     super.key,
-    this.uiType,
     this.expand,
-    this.child,
+    required this.child,
     this.fastDrag,
     this.minimizeBeforeFastDrag,
+    this.customUi,
   });
 
   @override
   Widget build(BuildContext context) {
     return DraggableMenu(
-      uiType: uiType,
+      customUi: customUi,
       expandable: expand,
       expandedHeight: MediaQuery.of(context).size.height * 0.72,
       maxHeight: MediaQuery.of(context).size.height * 0.36,
