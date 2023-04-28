@@ -7,10 +7,18 @@ import 'package:flutter/material.dart';
 abstract class CustomDraggableMenu {
   const CustomDraggableMenu();
 
-  /// You can listen to the Draggable Menu's current status from the `status` value and
-  /// current menuValue from the `menuValue` value.
+  /// You can listen to the Draggable Menu's current status with the `status` value and
+  /// current menuValue with the `menuValue` value.
   ///
   /// The `child` value gives the child passed to the `DraggableMenu` widget.
-  Widget buildUi(BuildContext context, Widget child,
-      DraggableMenuStatus? status, double menuValue);
+  ///
+  /// Use the `animationDuration` and the `curve` values to get Draggable Menu's current `animationDuration` and `curve`.
+  Widget buildUi(
+    BuildContext context,
+    Widget child,
+    DraggableMenuStatus? status,
+    double menuValue,
+    Duration animationDuration,
+    Curve curve,
+  );
 }

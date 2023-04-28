@@ -144,7 +144,7 @@ class DraggableMenu extends StatefulWidget {
   /// Overrides the Draggable Menu's UI and uses the widget given to the `customUi` parameter.
   ///
   /// If used, the `child` parameter of the `DraggableMenu` widget won't work.
-  /// 
+  ///
   /// Prefer using the `ui` parameter if you want to create your UI.
   final Widget? customUi;
 
@@ -400,9 +400,23 @@ class _DraggableMenuState extends State<DraggableMenu>
                     _currentHeight ?? widget.maxHeight ?? double.infinity,
                 child: widget.customUi ??
                     widget.ui?.buildUi(
-                        context, widget.child, _status, _listenerValue) ??
+                      context,
+                      widget.child,
+                      _status,
+                      _listenerValue,
+                      widget.animationDuration ??
+                          const Duration(milliseconds: 320),
+                      widget.curve ?? Curves.ease,
+                    ) ??
                     const ClassicDraggableMenu().buildUi(
-                        context, widget.child, _status, _listenerValue),
+                      context,
+                      widget.child,
+                      _status,
+                      _listenerValue,
+                      widget.animationDuration ??
+                          const Duration(milliseconds: 320),
+                      widget.curve ?? Curves.ease,
+                    ),
               ),
             ),
           ),

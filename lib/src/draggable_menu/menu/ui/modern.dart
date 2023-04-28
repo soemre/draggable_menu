@@ -5,26 +5,34 @@ import 'package:draggable_menu/src/draggable_menu/menu/widgets/default_bar_item.
 import 'package:flutter/material.dart';
 
 class ModernDraggableMenu extends CustomDraggableMenu {
+  /// Overrides the Default Bar Item of the UI.
   final Widget? barItem;
+
+  /// Specifies the Bar Item color of the UI.
   final Color? accentColor;
+
+  /// Specifies the Background color of the UI.
   final Color? color;
+
+  /// Specifies the radius of the UI.
   final double? radius;
-  final Duration? animationDuration;
-  final Curve? curve;
 
   ModernDraggableMenu({
     this.barItem,
     this.accentColor,
     this.color,
     this.radius,
-    this.animationDuration,
-    this.curve,
   });
 
   @override
-  Widget buildUi(BuildContext context, Widget child,
-      DraggableMenuStatus? status, double menuValue) {
-    return ModernUi(
+  Widget buildUi(
+      BuildContext context,
+      Widget child,
+      DraggableMenuStatus? status,
+      double menuValue,
+      Duration animationDuration,
+      Curve curve) {
+    return _ModernUi(
       status: status,
       accentColor: accentColor,
       animationDuration: animationDuration,
@@ -37,7 +45,7 @@ class ModernDraggableMenu extends CustomDraggableMenu {
   }
 }
 
-class ModernUi extends StatefulWidget {
+class _ModernUi extends StatefulWidget {
   final Widget? child;
   final Widget? barItem;
   final Color? accentColor;
@@ -47,8 +55,7 @@ class ModernUi extends StatefulWidget {
   final Duration? animationDuration;
   final Curve? curve;
 
-  const ModernUi({
-    super.key,
+  const _ModernUi({
     this.child,
     this.barItem,
     this.accentColor,
@@ -60,10 +67,10 @@ class ModernUi extends StatefulWidget {
   });
 
   @override
-  State<ModernUi> createState() => _ModernUiState();
+  State<_ModernUi> createState() => _ModernUiState();
 }
 
-class _ModernUiState extends State<ModernUi> with TickerProviderStateMixin {
+class _ModernUiState extends State<_ModernUi> with TickerProviderStateMixin {
   double _padding = 16;
   late final AnimationController _controller;
   late final Animation<double> _animation;
@@ -105,7 +112,7 @@ class _ModernUiState extends State<ModernUi> with TickerProviderStateMixin {
   }
 
   @override
-  void didUpdateWidget(ModernUi oldWidget) {
+  void didUpdateWidget(_ModernUi oldWidget) {
     if (oldWidget.status != widget.status) _notify(widget.status);
     super.didUpdateWidget(oldWidget);
   }
@@ -132,24 +139,20 @@ class _ModernUiState extends State<ModernUi> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(_padding),
-      child: ClipRRect(
+      child: Material(
         borderRadius: BorderRadius.vertical(
             top: Radius.circular(widget.radius ?? 16),
             bottom: Radius.circular(_radius ?? widget.radius ?? 16)),
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: widget.color ?? DefaultColors.primaryBackground,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Center(
-                child:
-                    widget.barItem ?? DefaultBarItem(color: widget.accentColor),
-              ),
-              if (widget.child != null) Flexible(child: widget.child!),
-            ],
-          ),
+        color: widget.color ?? DefaultColors.primaryBackground,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Center(
+              child:
+                  widget.barItem ?? DefaultBarItem(color: widget.accentColor),
+            ),
+            if (widget.child != null) Flexible(child: widget.child!),
+          ],
         ),
       ),
     );

@@ -169,15 +169,12 @@ class _AppState extends State<App> {
                               physics: const NeverScrollableScrollPhysics(),
                               itemCount: 50,
                               padding: const EdgeInsets.all(0),
-                              itemBuilder: (context, index) => Material(
-                                color: Colors.transparent,
-                                child: ListTile(
-                                  onTap: () {},
-                                  title: Text(
-                                    "Item ${index + 1}",
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                    ),
+                              itemBuilder: (context, index) => ListTile(
+                                onTap: () {},
+                                title: Text(
+                                  "Item ${index + 1}",
+                                  style: const TextStyle(
+                                    color: Colors.white,
                                   ),
                                 ),
                               ),
@@ -220,14 +217,11 @@ class _AppState extends State<App> {
                                           itemCount: 25,
                                           padding: const EdgeInsets.all(0),
                                           itemBuilder: (context, index) =>
-                                              Material(
-                                            color: Colors.transparent,
-                                            child: ListTile(
-                                              title: Text(
-                                                "Item ${index + 1}",
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                ),
+                                              ListTile(
+                                            title: Text(
+                                              "Item ${index + 1}",
+                                              style: const TextStyle(
+                                                color: Colors.white,
                                               ),
                                             ),
                                           ),
@@ -248,14 +242,11 @@ class _AppState extends State<App> {
                                           itemCount: 25,
                                           padding: const EdgeInsets.all(0),
                                           itemBuilder: (context, index) =>
-                                              Material(
-                                            color: Colors.transparent,
-                                            child: ListTile(
-                                              title: Text(
-                                                "Item ${index + 1}",
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                ),
+                                              ListTile(
+                                            title: Text(
+                                              "Item ${index + 1}",
+                                              style: const TextStyle(
+                                                color: Colors.white,
                                               ),
                                             ),
                                           ),
