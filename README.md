@@ -1,6 +1,6 @@
 # Flutter Draggable Menu (draggable_menu)
-[![Pub](https://img.shields.io/badge/pub-v1.0.0-%237f7eff?style=flat&logo=flutter)](https://pub.dev/packages/draggable_menu)
-[![GitHub](https://img.shields.io/badge/GitHub-v1.0.0-%237f7eff?style=flat&logo=github)](https://github.com/emresoysuren/draggable_menu)
+[![Pub](https://img.shields.io/badge/pub-v1.1.0-%237f7eff?style=flat&logo=flutter)](https://pub.dev/packages/draggable_menu)
+[![GitHub](https://img.shields.io/badge/GitHub-v1.1.0-%237f7eff?style=flat&logo=github)](https://github.com/emresoysuren/draggable_menu)
 
 With `draggable_menu`, create Draggable Menus as you want and make your app look way better and more convenient.
 
@@ -69,8 +69,11 @@ Navigator.pop(context);
 | Usage | double? fixedExpandThreshold | Specifies the Expand Threshold of the Draggable Menu by giving it a fixed value. |
 | Usage | double? fixedMinimizeThreshold | Specifies the Minimize Threshold of the Draggable Menu by giving it a fixed value. |
 | Usage | bool? blockMenuClosing | It specifies whether the Draggable Menu can close itself by dragging down and taping outside of the Menu or not. |
-| Usage | bool? fastDrag | It specifies whether the Draggable Menu will be closed when it has been dragged too fast or not. By default, it is `true`. |
-| Usage | double? fastDragVelocity | Specifies the Fast Drag Velocity of the Draggable Menu. That means it defines how many velocities will pop the menu. Takes a value above `0`. If the value is negative, it will throw an error. |
+| Usage | bool? fastDrag | It specifies whether the Draggable Menu will run fast drag gestures when fast-dragged. By default, it is `true`. |
+| Usage | double? fastDragVelocity | Specifies the Fast Drag Velocity of the Draggable Menu. That means it defines how many velocities will be the threshold to run fast-drag gestures. Takes a value above `0`. If the value is negative, it will throw an error. |
+| Usage | bool? fastDragClose | It specifies whether the Draggable Menu will close itself when it has been fast-dragged. By default, it is `true`. |
+| Usage | bool? fastDragMinimize | It specifies whether the Draggable Menu will minimize itself when it has been fast-dragged and it's expanded. By default, it is `true`. |
+| Usage | bool? fastDragExpand | It specifies whether the Draggable Menu will expand when it has been fast-dragged and can be expandable. By default, it is `true`. |
 | Usage | bool? minimizeBeforeFastDrag | It specifies whether the Draggable Menu will be minimized when it has been dragged too fast or not when it's expanded. By default, it is `false`. |
 | UI | (required) Widget child | Adds a child inside the Draggable Menu's UI. |
 | UI | CustomDraggableMenu? ui | Overrides the Classic Draggable Menu UI. |

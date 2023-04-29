@@ -140,6 +140,7 @@ class _ModernUiState extends State<_ModernUi> with TickerProviderStateMixin {
     return Padding(
       padding: EdgeInsets.all(_padding),
       child: Material(
+        animationDuration: Duration.zero,
         borderRadius: BorderRadius.vertical(
             top: Radius.circular(widget.radius ?? 16),
             bottom: Radius.circular(_radius ?? widget.radius ?? 16)),

@@ -28,6 +28,7 @@ class ClassicDraggableMenu extends CustomDraggableMenu {
       Duration animationDuration,
       Curve curve) {
     return Material(
+      animationDuration: Duration.zero,
       color: color ?? DefaultColors.primaryBackground,
       borderRadius: BorderRadius.vertical(top: Radius.circular(radius ?? 16)),
       child: Column(

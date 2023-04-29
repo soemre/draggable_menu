@@ -122,12 +122,12 @@ class DraggableMenu extends StatefulWidget {
   /// By default, it is `false`.
   final bool? blockMenuClosing;
 
-  /// It specifies whether the Draggable Menu will be closed when it has been dragged too fast or not.
+  /// It specifies whether the Draggable Menu will run fast drag gestures when fast-dragged.
   ///
   /// By default, it is `true`.
   final bool? fastDrag;
 
-  /// Specifies the Fast Drag Velocity of the Draggable Menu. That means it defines how many velocities will pop the menu.
+  /// Specifies the Fast Drag Velocity of the Draggable Menu. That means it defines how many velocities will be the threshold to run fast-drag gestures.
   ///
   /// Takes a value above `0`. If the value is negative, it will throw an error.
   ///
@@ -147,6 +147,21 @@ class DraggableMenu extends StatefulWidget {
   ///
   /// Prefer using the `ui` parameter if you want to create your UI.
   final Widget? customUi;
+
+  /// It specifies whether the Draggable Menu will close itself when it has been fast-dragged.
+  ///
+  /// By default, it is `true`.
+  final bool? fastDragClose;
+
+  /// It specifies whether the Draggable Menu will minimize itself when it has been fast-dragged and it's expanded.
+  ///
+  /// By default, it is `true`.
+  final bool? fastDragMinimize;
+
+  /// It specifies whether the Draggable Menu will expand when it has been fast-dragged and can be expandable.
+  ///
+  /// By default, it is `true`.
+  final bool? fastDragExpand;
 
   /// Creates a Draggable Menu widget.
   ///
@@ -199,6 +214,9 @@ class DraggableMenu extends StatefulWidget {
     this.fastDragVelocity,
     this.minimizeBeforeFastDrag,
     this.customUi,
+    this.fastDragClose,
+    this.fastDragMinimize,
+    this.fastDragExpand,
   });
 
   /// Opens the given Draggable Menu using `Navigator`'s `push` method.
@@ -496,7 +514,7 @@ class _DraggableMenuState extends State<DraggableMenu>
   }
 
   onDragEnd(DragEndDetails details) {
-    if (widget.fastDrag != false && fastDrag(details)) return;
+    if (fastDrag(details)) return;
     final double? widgetHeight = _widgetKey.currentContext?.size?.height;
     if (widgetHeight == null) return;
     if (_currentHeight == null) {
@@ -609,6 +627,7 @@ class _DraggableMenuState extends State<DraggableMenu>
   }
 
   bool fastDrag(DragEndDetails details) {
+    if (widget.fastDrag == false) return false;
     if (widget.fastDragVelocity != null) {
       assert(widget.fastDragVelocity! >= 0,
           "The `fastDragVelocity` parameter can't be negative.");
@@ -617,8 +636,24 @@ class _DraggableMenuState extends State<DraggableMenu>
         (widget.fastDragVelocity ?? 1500)) {
       if ((widget.minimizeBeforeFastDrag == true && _currentHeight == null) ||
           (widget.minimizeBeforeFastDrag == false)) {
-        _close();
-        return true;
+        if ((widget.fastDragClose != false)) {
+          _close();
+          return true;
+        }
+      } else if (widget.minimizeBeforeFastDrag == true &&
+          _currentHeight != null) {
+        if (willExpand && (widget.fastDragMinimize != false)) {
+          _closeExpanded();
+          return true;
+        }
+      }
+    } else if (details.velocity.pixelsPerSecond.dy <
+        -(widget.fastDragVelocity ?? 1500)) {
+      if (!_isExpanded) {
+        if (willExpand && (widget.fastDragExpand != false)) {
+          _openExpanded();
+          return true;
+        }
       }
     }
     return false;
