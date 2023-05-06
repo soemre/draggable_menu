@@ -447,7 +447,8 @@ class _DraggableMenuState extends State<DraggableMenu>
     _isExpanded = false;
     currentAnimation = 2;
     Animation<double> animation =
-        Tween<double>(begin: _currentHeight, end: _initHeight).animate(
+        Tween<double>(begin: _currentHeight ?? _initHeight, end: _initHeight)
+            .animate(
       _controller.drive(
         CurveTween(curve: widget.curve ?? Curves.ease),
       ),
@@ -486,8 +487,9 @@ class _DraggableMenuState extends State<DraggableMenu>
     _isExpanded = true;
     currentAnimation = 3;
 
-    Animation<double> animation =
-        Tween<double>(begin: _currentHeight, end: _expandedHeight).animate(
+    Animation<double> animation = Tween<double>(
+            begin: _currentHeight ?? _initHeight, end: _expandedHeight)
+        .animate(
       _controller.drive(
         CurveTween(curve: widget.curve ?? Curves.ease),
       ),
