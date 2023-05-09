@@ -1,6 +1,6 @@
 # Flutter Draggable Menu (draggable_menu)
-[![Pub](https://img.shields.io/badge/pub-v1.1.0-%237f7eff?style=flat&logo=flutter)](https://pub.dev/packages/draggable_menu)
-[![GitHub](https://img.shields.io/badge/GitHub-v1.1.0-%237f7eff?style=flat&logo=github)](https://github.com/emresoysuren/draggable_menu)
+[![Pub](https://img.shields.io/badge/pub-v2.0.0-%237f7eff?style=flat&logo=flutter)](https://pub.dev/packages/draggable_menu)
+[![GitHub](https://img.shields.io/badge/GitHub-v2.0.0-%237f7eff?style=flat&logo=github)](https://github.com/emresoysuren/draggable_menu)
 
 With `draggable_menu`, create Draggable Menus as you want and make your app look way better and more convenient.
 
@@ -228,11 +228,14 @@ Use the `addStatusListener` parameter to listen to the Draggable Menu's status.
 
 ### Dragable Menu's status are:
 * Closing
-* MayClose
+* Will Close
+* May Close
 * Canceling
 * Minimized
 * Minimizing
 * May Expand
+* Will Expand
+* Will Minimize
 * May Minimize
 * Expanding
 * Expanded
