@@ -25,6 +25,7 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
   Color _color = Colors.amber;
   String _text = "Minimized";
   double _value = 0;
+  double? _raw;
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +51,18 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
             if (status == DraggableMenuStatus.mayClose) {
               _color = Colors.green;
               _text = "May Close";
+            }
+            if (status == DraggableMenuStatus.willClose) {
+              _color = Colors.purple;
+              _text = "Will Close";
+            }
+            if (status == DraggableMenuStatus.willExpand) {
+              _color = Colors.purple;
+              _text = "Will Expand";
+            }
+            if (status == DraggableMenuStatus.willMinimize) {
+              _color = Colors.purple;
+              _text = "Will Minimize";
             }
             if (status == DraggableMenuStatus.mayExpand) {
               _color = Colors.green;
@@ -79,9 +92,10 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
         animationDuration: const Duration(seconds: 1),
         fastDrag: widget.fastDrag,
         minimizeBeforeFastDrag: widget.minimizeBeforeFastDrag,
-        addValueListener: (value) {
+        addValueListener: (value, raw) {
           setState(() {
             _value = value;
+            _raw = raw;
           });
         },
         child: Material(
@@ -102,7 +116,7 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    "Menu Value: $_value\nUI Type: ${widget.ui is ModernDraggableMenu ? "Modern" : widget.ui is SoftModernDraggableMenu ? "Soft Modern" : "Classic"}\nExpand: ${widget.expand ? "True" : "False"}\nEnable Expanded Scroll: ${widget.enableExpandedScroll ? "True" : "False"}\nFast Drag: ${widget.fastDrag ? "True" : "False"}\nMinimize Before Fast Drag: ${widget.minimizeBeforeFastDrag ? "True" : "False"}",
+                    "Menu Value: $_value\nRaw Value: $_raw\nUI Type: ${widget.ui is ModernDraggableMenu ? "Modern" : widget.ui is SoftModernDraggableMenu ? "Soft Modern" : "Classic"}\nExpand: ${widget.expand ? "True" : "False"}\nEnable Expanded Scroll: ${widget.enableExpandedScroll ? "True" : "False"}\nFast Drag: ${widget.fastDrag ? "True" : "False"}\nMinimize Before Fast Drag: ${widget.minimizeBeforeFastDrag ? "True" : "False"}",
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: Colors.white,

@@ -120,6 +120,7 @@ class _ModernUiState extends State<_ModernUi> with TickerProviderStateMixin {
   _notify(DraggableMenuStatus? status) {
     if (status != null) {
       if (status == DraggableMenuStatus.mayExpand ||
+          status == DraggableMenuStatus.willExpand ||
           status == DraggableMenuStatus.expanding ||
           status == DraggableMenuStatus.expanded) {
         _controller.forward();

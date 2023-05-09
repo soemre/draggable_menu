@@ -16,7 +16,7 @@ abstract class CustomDraggableMenu {
   Widget buildUi(
     BuildContext context,
     Widget child,
-    DraggableMenuStatus? status,
+    DraggableMenuStatus status,
     double menuValue,
     Duration animationDuration,
     Curve curve,
