@@ -1,4 +1,7 @@
-# 2.0.0 Release
+# 2.0.1 Release
+- `fastDrag` issue debug
+
+# Changes in 2.0.0 Release
 - Fixed some issues by changing its movement logic
 - Added new status to the Draggable Menu. Now you can detect whether the Menu will do the "expand, minimize and close" gestures.
 

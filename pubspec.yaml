@@ -1,6 +1,6 @@
 name: draggable_menu
 description: Create Draggable Menus like some popular apps like Instagram, Snapchat, Facebook, Twitter etc. You can even make your Draggable Menus look identical to them.
-version: 2.0.0
+version: 2.0.1
 repository: https://github.com/emresoysuren/draggable_menu
 
 environment:
