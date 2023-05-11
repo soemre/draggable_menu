@@ -680,7 +680,7 @@ class _DraggableMenuState extends State<DraggableMenu>
     if (details.velocity.pixelsPerSecond.dy >
         (widget.fastDragVelocity ?? 1500)) {
       if ((widget.minimizeBeforeFastDrag == true && _boxHeight == null) ||
-          (widget.minimizeBeforeFastDrag != false)) {
+          (widget.minimizeBeforeFastDrag != true)) {
         if ((widget.fastDragClose != false)) {
           _close();
           return true;

@@ -1,4 +1,4 @@
-# 2.0.1 Release
+# 2.0.2 Release
 - `fastDrag` issue debug
 
 # Changes in 2.0.0 Release
