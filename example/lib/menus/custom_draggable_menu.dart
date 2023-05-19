@@ -21,8 +21,9 @@ class CustomMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return DraggableMenu(
       ui: ui,
-      expandable: expand,
-      expandedHeight: MediaQuery.of(context).size.height * 0.72,
+      levels: [
+        DraggableMenuLevel(height: MediaQuery.of(context).size.height * 0.72)
+      ],
       maxHeight: MediaQuery.of(context).size.height * 0.36,
       fastDrag: fastDrag,
       minimizeBeforeFastDrag: minimizeBeforeFastDrag,

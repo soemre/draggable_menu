@@ -87,8 +87,13 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
             : widget.ui is SoftModernDraggableMenu
                 ? SoftModernDraggableMenu(color: _color)
                 : ClassicDraggableMenu(color: _color),
-        expandable: widget.expand,
-        expandedHeight: MediaQuery.of(context).size.height * 0.72,
+        levels: [
+          DraggableMenuLevel(height: MediaQuery.of(context).size.height * 0.50),
+          DraggableMenuLevel(height: MediaQuery.of(context).size.height * 0.75),
+          DraggableMenuLevel(height: MediaQuery.of(context).size.height * 1),
+        ],
+        maxHeight: MediaQuery.of(context).size.height * 0.25,
+        minHeight: MediaQuery.of(context).size.height * 0.25,
         animationDuration: const Duration(seconds: 1),
         fastDrag: widget.fastDrag,
         minimizeBeforeFastDrag: widget.minimizeBeforeFastDrag,
