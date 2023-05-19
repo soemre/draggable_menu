@@ -2,7 +2,6 @@ import 'package:draggable_menu/draggable_menu.dart';
 import 'package:flutter/material.dart';
 
 class StatusDraggableMenu extends StatefulWidget {
-  final bool expand;
   final bool enableExpandedScroll;
   final bool fastDrag;
   final bool minimizeBeforeFastDrag;
@@ -10,7 +9,6 @@ class StatusDraggableMenu extends StatefulWidget {
 
   const StatusDraggableMenu({
     super.key,
-    required this.expand,
     required this.enableExpandedScroll,
     required this.fastDrag,
     required this.minimizeBeforeFastDrag,
@@ -23,16 +21,16 @@ class StatusDraggableMenu extends StatefulWidget {
 
 class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
   Color _color = Colors.amber;
-  String _text = "Minimized";
+  String _text = "Minimized (At Level 0)";
   double _value = 0;
   double? _raw;
 
   @override
   Widget build(BuildContext context) {
-    double pageSize =
+    final double pageSize =
         MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
     return DraggableMenu(
-        addStatusListener: (status) {
+        addStatusListener: (status, level) {
           setState(() {
             if (status == DraggableMenuStatus.canceling) {
               _color = Colors.blue;
@@ -44,7 +42,7 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
             }
             if (status == DraggableMenuStatus.expanded) {
               _color = Colors.amber;
-              _text = "Expanded";
+              _text = "Expanded (At Level $level)";
             }
             if (status == DraggableMenuStatus.expanding) {
               _color = Colors.blue;
@@ -76,7 +74,7 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
             }
             if (status == DraggableMenuStatus.minimized) {
               _color = Colors.amber;
-              _text = "Minimized";
+              _text = "Minimized (At Level $level)";
             }
             if (status == DraggableMenuStatus.minimizing) {
               _color = Colors.blue;
@@ -121,7 +119,7 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    "Menu Value: $_value\nRaw Value: $_raw\nUI Type: ${widget.ui is ModernDraggableMenu ? "Modern" : widget.ui is SoftModernDraggableMenu ? "Soft Modern" : "Classic"}\nExpand: ${widget.expand ? "True" : "False"}\nEnable Expanded Scroll: ${widget.enableExpandedScroll ? "True" : "False"}\nFast Drag: ${widget.fastDrag ? "True" : "False"}\nMinimize Before Fast Drag: ${widget.minimizeBeforeFastDrag ? "True" : "False"}",
+                    "Menu Value: $_value\nRaw Value: $_raw\nUI Type: ${widget.ui is ModernDraggableMenu ? "Modern" : widget.ui is SoftModernDraggableMenu ? "Soft Modern" : "Classic"}\nEnable Expanded Scroll: ${widget.enableExpandedScroll ? "True" : "False"}\nFast Drag: ${widget.fastDrag ? "True" : "False"}\nMinimize Before Fast Drag: ${widget.minimizeBeforeFastDrag ? "True" : "False"}",
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: Colors.white,

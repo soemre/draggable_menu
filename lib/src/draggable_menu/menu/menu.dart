@@ -54,7 +54,7 @@ class DraggableMenu extends StatefulWidget {
   ///
   /// *To understand better the usage of the "Status Listeners",
   /// check out the [Draggable Menu Example](https://github.com/emresoysuren/draggable_menu/tree/main/example) app.*
-  final Function(DraggableMenuStatus status)? addStatusListener;
+  final Function(DraggableMenuStatus status, int level)? addStatusListener;
 
   /// Adds a listener to listen to its Menu Value.
   ///
@@ -64,7 +64,7 @@ class DraggableMenu extends StatefulWidget {
   ///
   /// *To understand better the usage of the "Value Listeners",
   /// check out the [Draggable Menu Example](https://github.com/emresoysuren/draggable_menu/tree/main/example) app.*
-  final Function(double menuValue, double raw)? addValueListener;
+  final Function(double menuValue, double? raw)? addValueListener;
 
   /// Specifies the duration of the Draggable Menu's animations.
   ///
@@ -274,7 +274,7 @@ class _DraggableMenuState extends State<DraggableMenu>
   double? _boxHeight;
   int? currentAnimation;
   DraggableMenuStatus _status = DraggableMenuStatus.minimized;
-  double _listenerValue = 0;
+  double _menuValue = 0;
   double? _ref;
   double? _init;
   double? _defH;
@@ -315,19 +315,25 @@ class _DraggableMenuState extends State<DraggableMenu>
     _notifyValueListener();
   }
 
-  _menuPos() {
-    if (_defH == null) return;
+  double? _raw() {
+    if (_defH == null) return null;
     return _value + (_boxHeight ?? _defH)!;
   }
 
   _notifyValueListener() {
-    final double value = _menuValue();
-    if (_listenerValue == value) return;
-    _listenerValue = value;
-    widget.addValueListener?.call(_listenerValue, _menuPos());
+    final double value = _getMenuValue();
+    if (_menuValue == value) return;
+    _menuValue = value;
+    widget.addValueListener?.call(_menuValue, _raw());
   }
 
-  double _menuValue() {
+  _notifyStatusListener(DraggableMenuStatus status) {
+    if (_status == status) return;
+    _status = status;
+    widget.addStatusListener?.call(status, atLevel);
+  }
+
+  double _getMenuValue() {
     double value = 0;
     _defH ??= _widgetKey.currentContext?.size?.height;
     if (_boxHeight == null || _boxHeight == _defH) {
@@ -389,14 +395,8 @@ class _DraggableMenuState extends State<DraggableMenu>
     }
   }
 
-  _notifyStatusListener(DraggableMenuStatus status) {
-    if (_status == status) return;
-    _status = status;
-    if (widget.addStatusListener != null) widget.addStatusListener!(status);
-  }
-
   void _expandInit() {
-    levels = [];
+    if (levels.isNotEmpty) levels.clear();
     if (widget.levels?.isNotEmpty != true || widget.maxHeight != null) {
       for (DraggableMenuLevel level in widget.levels!) {
         if (level.height > widget.maxHeight!) levels.add(level);
@@ -404,15 +404,6 @@ class _DraggableMenuState extends State<DraggableMenu>
     }
     willExpand = levels.isNotEmpty;
     levels.sort((a, b) => a.height.compareTo(b.height));
-  }
-
-  @override
-  void didUpdateWidget(covariant DraggableMenu oldWidget) {
-    if (oldWidget.levels != widget.levels) {
-      // TODO is that necessary?
-      _expandInit();
-    }
-    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -462,7 +453,9 @@ class _DraggableMenuState extends State<DraggableMenu>
                       context,
                       widget.child,
                       _status,
-                      _listenerValue,
+                      atLevel,
+                      _menuValue,
+                      _raw(),
                       widget.animationDuration ??
                           const Duration(milliseconds: 320),
                       widget.curve ?? Curves.ease,
@@ -471,7 +464,9 @@ class _DraggableMenuState extends State<DraggableMenu>
                       context,
                       widget.child,
                       _status,
-                      _listenerValue,
+                      atLevel,
+                      _menuValue,
+                      _raw(),
                       widget.animationDuration ??
                           const Duration(milliseconds: 320),
                       widget.curve ?? Curves.ease,
@@ -516,10 +511,13 @@ class _DraggableMenuState extends State<DraggableMenu>
             _boxHeight = null;
           }
         }
-        // if (_value == 0 && _boxHeight == null) {
-        //   _notifyStatusListener(DraggableMenuStatus.minimized);
-        // }
-        // TODO check its status
+        if (_raw() == _levelHeight(level)) {
+          if (_raw() != levels.last.height) {
+            _notifyStatusListener(DraggableMenuStatus.minimized);
+          } else {
+            _notifyStatusListener(DraggableMenuStatus.expanded);
+          }
+        }
       }
     });
     _controller.reset();

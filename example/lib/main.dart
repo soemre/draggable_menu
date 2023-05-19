@@ -17,7 +17,6 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   CustomDraggableMenu _ui = const ClassicDraggableMenu();
-  bool _expand = false;
   bool _barrier = true;
   bool _enableExpandedScroll = false;
   bool _fastDrag = true;
@@ -137,7 +136,6 @@ class _AppState extends State<App> {
                         context,
                         CustomMenu(
                           ui: _ui,
-                          expand: _expand,
                           fastDrag: _fastDrag,
                           minimizeBeforeFastDrag: _minimizeBeforeFastDrag,
                           child: const SizedBox(),
@@ -158,14 +156,13 @@ class _AppState extends State<App> {
                         context,
                         CustomMenu(
                           ui: _ui,
-                          expand: _expand,
                           fastDrag: _fastDrag,
                           minimizeBeforeFastDrag: _minimizeBeforeFastDrag,
                           child: ScrollableManager(
                             enableExpandedScroll: _enableExpandedScroll,
                             child: ListView.builder(
                               physics: const NeverScrollableScrollPhysics(),
-                              itemCount: 50,
+                              itemCount: 25,
                               padding: const EdgeInsets.all(0),
                               itemBuilder: (context, index) => ListTile(
                                 onTap: () {},
@@ -195,7 +192,6 @@ class _AppState extends State<App> {
                         context,
                         CustomMenu(
                           ui: _ui,
-                          expand: _expand,
                           fastDrag: _fastDrag,
                           minimizeBeforeFastDrag: _minimizeBeforeFastDrag,
                           child: Padding(
@@ -274,7 +270,6 @@ class _AppState extends State<App> {
                         context,
                         StatusDraggableMenu(
                           ui: _ui,
-                          expand: _expand,
                           enableExpandedScroll: _enableExpandedScroll,
                           fastDrag: _fastDrag,
                           minimizeBeforeFastDrag: _minimizeBeforeFastDrag,

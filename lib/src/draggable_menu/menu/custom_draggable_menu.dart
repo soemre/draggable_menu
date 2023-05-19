@@ -17,7 +17,9 @@ abstract class CustomDraggableMenu {
     BuildContext context,
     Widget child,
     DraggableMenuStatus status,
+    int level,
     double menuValue,
+    double? raw,
     Duration animationDuration,
     Curve curve,
   );

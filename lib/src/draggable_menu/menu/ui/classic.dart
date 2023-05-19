@@ -21,12 +21,15 @@ class ClassicDraggableMenu extends CustomDraggableMenu {
 
   @override
   Widget buildUi(
-      BuildContext context,
-      Widget child,
-      DraggableMenuStatus? status,
-      double menuValue,
-      Duration animationDuration,
-      Curve curve) {
+    BuildContext context,
+    Widget child,
+    DraggableMenuStatus status,
+    int level,
+    double menuValue,
+    double? raw,
+    Duration animationDuration,
+    Curve curve,
+  ) {
     return Material(
       animationDuration: Duration.zero,
       color: color ?? DefaultColors.primaryBackground,

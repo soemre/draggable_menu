@@ -25,12 +25,15 @@ class SoftModernDraggableMenu extends CustomDraggableMenu {
 
   @override
   Widget buildUi(
-      BuildContext context,
-      Widget child,
-      DraggableMenuStatus? status,
-      double menuValue,
-      Duration animationDuration,
-      Curve curve) {
+    BuildContext context,
+    Widget child,
+    DraggableMenuStatus status,
+    int level,
+    double menuValue,
+    double? raw,
+    Duration animationDuration,
+    Curve curve,
+  ) {
     // Do not use abs() instead of (menuValue < 0 ? 0 : menuValue)
     return Padding(
       padding: EdgeInsets.all(16 * (1 - (menuValue < 0 ? 0 : menuValue))),
