@@ -35,8 +35,6 @@ class _AppState extends State<App> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _boolRow("Expand", _expand, (value) => _expand = value),
-              const SizedBox(height: 8),
               _boolRow(
                 "Enable Expanded Scroll",
                 _enableExpandedScroll,

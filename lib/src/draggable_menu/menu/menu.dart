@@ -279,7 +279,6 @@ class _DraggableMenuState extends State<DraggableMenu>
   double? _init;
   double? _defH;
   double? _pos;
-  double? _menuPos;
   int atLevel = 0;
   late bool willExpand;
   List<DraggableMenuLevel> levels = [];
@@ -312,80 +311,82 @@ class _DraggableMenuState extends State<DraggableMenu>
   }
 
   _notifyListeners() {
-    _setMenuPos();
     _checkStatus();
     _notifyValueListener();
   }
 
-  _setMenuPos() {
+  _menuPos() {
     if (_defH == null) return;
-    _menuPos = _value + (_boxHeight ?? _defH)!;
+    return _value + (_boxHeight ?? _defH)!;
   }
 
   _notifyValueListener() {
-    if (_menuPos == null) return;
     final double value = _menuValue();
     if (_listenerValue == value) return;
     _listenerValue = value;
-    widget.addValueListener?.call(_listenerValue, _menuPos!);
+    widget.addValueListener?.call(_listenerValue, _menuPos());
   }
 
   double _menuValue() {
     double value = 0;
-    // _defH ??= _widgetKey.currentContext?.size?.height;
-    // if (_boxHeight == null || _boxHeight == _defH) {
-    //   if (_value != 0) {
-    //     value = (_value / _defH!);
-    //   }
-    // } else if (_boxHeight != null) {
-    //   value = ((_boxHeight! - _defH!) / (widget.expandedHeight! - _defH!));
-    // }
+    _defH ??= _widgetKey.currentContext?.size?.height;
+    if (_boxHeight == null || _boxHeight == _defH) {
+      if (_value != 0) {
+        value = (_value / _defH!);
+      }
+    } else if (_boxHeight != null && levels.isNotEmpty) {
+      value = ((_boxHeight! - _defH!) / (levels.last.height - _defH!));
+    }
     return value;
   }
 
   void _checkStatus() {
-    // if (_controller.isAnimating || _status == DraggableMenuStatus.closing) {
-    //   return;
-    // }
-    // if (_defH == null) return;
-    // if (_menuPos == null) return;
-    // if (_menuPos! < _defH!) {
-    //   if (widget.fixedCloseThreshold == null
-    //       ? (-_value / _defH! > (widget.closeThreshold ?? (0.5)))
-    //       : -_value > widget.fixedCloseThreshold!) {
-    //     _notifyStatusListener(DraggableMenuStatus.willClose);
-    //   } else {
-    //     _notifyStatusListener(DraggableMenuStatus.mayClose);
-    //   }
-    // } else if (!willExpand || (_boxHeight == null)) {
-    //   _notifyStatusListener(DraggableMenuStatus.minimized);
-    // } else {
-    //   if ((_menuPos! >= _expandedHeight!) && _isExpanded) {
-    //     _notifyStatusListener(DraggableMenuStatus.expanded);
-    //   } else {
-    //     if (_isExpanded) {
-    //       if (_expandedHeight! - _boxHeight! >
-    //           (widget.fixedMinimizeThreshold == null
-    //               ? (_expandedHeight! - _defH!) *
-    //                   (widget.minimizeThreshold ?? (1 / 3))
-    //               : widget.fixedMinimizeThreshold!)) {
-    //         _notifyStatusListener(DraggableMenuStatus.willMinimize);
-    //       } else {
-    //         _notifyStatusListener(DraggableMenuStatus.mayMinimize);
-    //       }
-    //     } else {
-    //       if (_boxHeight! - _defH! >
-    //           (widget.fixedExpandThreshold == null
-    //               ? (_expandedHeight! - _defH!) *
-    //                   (widget.expandThreshold ?? (1 / 3))
-    //               : widget.fixedExpandThreshold!)) {
-    //         _notifyStatusListener(DraggableMenuStatus.willExpand);
-    //       } else {
-    //         _notifyStatusListener(DraggableMenuStatus.mayExpand);
-    //       }
-    //     }
-    //   }
-    // }
+    if (_controller.isAnimating || _status == DraggableMenuStatus.closing) {
+      return;
+    }
+    if (_defH == null) return;
+    if (_value < 0) {
+      if (widget.fixedCloseThreshold == null
+          ? (-_value / _defH! > (widget.closeThreshold ?? (0.5)))
+          : -_value > widget.fixedCloseThreshold!) {
+        _notifyStatusListener(DraggableMenuStatus.willClose);
+      } else {
+        _notifyStatusListener(DraggableMenuStatus.mayClose);
+      }
+    } else if (!willExpand || (_boxHeight == null)) {
+      _notifyStatusListener(DraggableMenuStatus.minimized);
+    } else if (_boxHeight != null) {
+      // Upper Part
+      if (levels.isNotEmpty &&
+          (_boxHeight! >= levels.last.height) &&
+          (atLevel == levels.length)) {
+        _notifyStatusListener(DraggableMenuStatus.expanded);
+      } else {
+        if (_boxHeight! < _levelHeight(atLevel)) {
+          if (_levelHeight(atLevel) - _boxHeight! >
+              (widget.fixedMinimizeThreshold == null
+                  ? (_levelHeight(atLevel) - _levelHeight(atLevel - 1)) *
+                      (widget.minimizeThreshold ?? (1 / 3))
+                  : widget.fixedMinimizeThreshold!)) {
+            _notifyStatusListener(DraggableMenuStatus.willMinimize);
+          } else {
+            _notifyStatusListener(DraggableMenuStatus.mayMinimize);
+          }
+        } else if (_boxHeight! > _levelHeight(atLevel)) {
+          if (_boxHeight! - _levelHeight(atLevel) >
+              (widget.fixedExpandThreshold == null
+                  ? (_levelHeight(atLevel + 1) - _levelHeight(atLevel)) *
+                      (widget.expandThreshold ?? (1 / 3))
+                  : widget.fixedExpandThreshold!)) {
+            _notifyStatusListener(DraggableMenuStatus.willExpand);
+          } else {
+            _notifyStatusListener(DraggableMenuStatus.mayExpand);
+          }
+        } else if (_boxHeight! == _levelHeight(atLevel)) {
+          _notifyStatusListener(DraggableMenuStatus.minimized);
+        }
+      }
+    }
   }
 
   _notifyStatusListener(DraggableMenuStatus status) {
@@ -451,7 +452,11 @@ class _DraggableMenuState extends State<DraggableMenu>
               onDragEnd: (details) => onDragEnd(details),
               child: UiFormatter(
                 maxHeight: _boxHeight ?? widget.maxHeight ?? double.infinity,
-                minHeight: _boxHeight ?? widget.minHeight ?? 240,
+                minHeight: _boxHeight ??
+                    widget.minHeight ??
+                    ((widget.maxHeight != null && widget.maxHeight! < 240)
+                        ? widget.maxHeight!
+                        : 240),
                 child: widget.customUi ??
                     widget.ui?.buildUi(
                       context,
@@ -518,22 +523,24 @@ class _DraggableMenuState extends State<DraggableMenu>
       }
     });
     _controller.reset();
-    // _notifyStatusListener(DraggableMenuStatus.minimizing);
     _controller.forward();
   }
 
   void _minimize() {
     if ((_boxHeight ?? _defH) == _defH) return;
+    _notifyStatusListener(DraggableMenuStatus.minimizing);
     animateTo(atLevel - 1, 2);
   }
 
   void _expand() {
     if ((_boxHeight ?? _defH) == levels.last.height) return;
+    _notifyStatusListener(DraggableMenuStatus.expanding);
     animateTo(atLevel + 1, 3);
   }
 
-  void _normailze() {
+  void _cancel() {
     if ((_boxHeight ?? _defH) == _levelHeight(atLevel)) return;
+    _notifyStatusListener(DraggableMenuStatus.canceling);
     animateTo(atLevel, 4);
   }
 
@@ -583,21 +590,21 @@ class _DraggableMenuState extends State<DraggableMenu>
                   : widget.fixedExpandThreshold!)) {
             _expand();
           } else {
-            _normailze();
+            _cancel();
           }
         } else if (_pos! < _levelHeight(atLevel)) {
           if (_levelHeight(atLevel) - _pos! >
-              (widget.fixedExpandThreshold == null
+              (widget.fixedMinimizeThreshold == null
                   ? (_levelHeight(atLevel) - _levelHeight(atLevel - 1)) *
-                      (widget.expandThreshold ?? (1 / 3))
-                  : widget.fixedExpandThreshold!)) {
+                      (widget.minimizeThreshold ?? (1 / 3))
+                  : widget.fixedMinimizeThreshold!)) {
             _minimize();
           } else {
-            _normailze();
+            _cancel();
           }
         }
       } else {
-        _normailze();
+        _cancel();
       }
     }
   }

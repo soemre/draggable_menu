@@ -29,6 +29,8 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
 
   @override
   Widget build(BuildContext context) {
+    double pageSize =
+        MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
     return DraggableMenu(
         addStatusListener: (status) {
           setState(() {
@@ -88,12 +90,10 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
                 ? SoftModernDraggableMenu(color: _color)
                 : ClassicDraggableMenu(color: _color),
         levels: [
-          DraggableMenuLevel(height: MediaQuery.of(context).size.height * 0.50),
-          DraggableMenuLevel(height: MediaQuery.of(context).size.height * 0.75),
-          DraggableMenuLevel(height: MediaQuery.of(context).size.height * 1),
+          DraggableMenuLevel(height: pageSize * 2 / 3),
+          DraggableMenuLevel(height: pageSize),
         ],
-        maxHeight: MediaQuery.of(context).size.height * 0.25,
-        minHeight: MediaQuery.of(context).size.height * 0.25,
+        maxHeight: pageSize * 1 / 3,
         animationDuration: const Duration(seconds: 1),
         fastDrag: widget.fastDrag,
         minimizeBeforeFastDrag: widget.minimizeBeforeFastDrag,
