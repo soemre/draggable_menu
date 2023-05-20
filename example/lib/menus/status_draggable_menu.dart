@@ -24,6 +24,7 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
   String _text = "Minimized (At Level 0)";
   double _value = 0;
   double? _raw;
+  double _levelValue = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -95,10 +96,11 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
         animationDuration: const Duration(seconds: 1),
         fastDrag: widget.fastDrag,
         minimizeBeforeFastDrag: widget.minimizeBeforeFastDrag,
-        addValueListener: (value, raw) {
+        addValueListener: (value, raw, levelValue) {
           setState(() {
             _value = value;
             _raw = raw;
+            _levelValue = levelValue;
           });
         },
         child: Material(
@@ -119,7 +121,7 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    "Menu Value: $_value\nRaw Value: $_raw\nUI Type: ${widget.ui is ModernDraggableMenu ? "Modern" : widget.ui is SoftModernDraggableMenu ? "Soft Modern" : "Classic"}\nEnable Expanded Scroll: ${widget.enableExpandedScroll ? "True" : "False"}\nFast Drag: ${widget.fastDrag ? "True" : "False"}\nMinimize Before Fast Drag: ${widget.minimizeBeforeFastDrag ? "True" : "False"}",
+                    "Menu Value: ${_value.toStringAsFixed(8)}\nRaw Value: ${_raw?.toStringAsFixed(8)}\nLevel Value: ${_levelValue.toStringAsFixed(8)}\nUI Type: ${widget.ui is ModernDraggableMenu ? "Modern" : widget.ui is SoftModernDraggableMenu ? "Soft Modern" : "Classic"}\nEnable Expanded Scroll: ${widget.enableExpandedScroll ? "True" : "False"}\nFast Drag: ${widget.fastDrag ? "True" : "False"}\nMinimize Before Fast Drag: ${widget.minimizeBeforeFastDrag ? "True" : "False"}",
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: Colors.white,

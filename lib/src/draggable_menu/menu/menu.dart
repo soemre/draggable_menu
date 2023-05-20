@@ -64,7 +64,8 @@ class DraggableMenu extends StatefulWidget {
   ///
   /// *To understand better the usage of the "Value Listeners",
   /// check out the [Draggable Menu Example](https://github.com/emresoysuren/draggable_menu/tree/main/example) app.*
-  final Function(double menuValue, double? raw)? addValueListener;
+  final Function(double menuValue, double? raw, double levelValue)?
+      addValueListener;
 
   /// Specifies the duration of the Draggable Menu's animations.
   ///
@@ -324,7 +325,7 @@ class _DraggableMenuState extends State<DraggableMenu>
     final double value = _getMenuValue();
     if (_menuValue == value) return;
     _menuValue = value;
-    widget.addValueListener?.call(_menuValue, _raw());
+    widget.addValueListener?.call(_menuValue, _raw(), _levelValue());
   }
 
   _notifyStatusListener(DraggableMenuStatus status) {
@@ -344,6 +345,14 @@ class _DraggableMenuState extends State<DraggableMenu>
       value = ((_boxHeight! - _defH!) / (levels.last.height - _defH!));
     }
     return value;
+  }
+
+  double _levelValue() {
+    if (_value != 0) {
+      return _getMenuValue();
+    } else {
+      return _menuValue * levels.length;
+    }
   }
 
   void _checkStatus() {

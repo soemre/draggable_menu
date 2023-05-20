@@ -36,13 +36,15 @@ class ModernDraggableMenu extends CustomDraggableMenu {
     Curve curve,
   ) {
     return _ModernUi(
-      status: status,
+      menuValue: menuValue,
       accentColor: accentColor,
       animationDuration: animationDuration,
       barItem: barItem,
       color: color,
       curve: curve,
       radius: radius,
+      status: status,
+      level: level,
       child: child,
     );
   }
@@ -54,7 +56,9 @@ class _ModernUi extends StatefulWidget {
   final Color? accentColor;
   final Color? color;
   final double? radius;
-  final DraggableMenuStatus? status;
+  final DraggableMenuStatus status;
+  final int level;
+  final double menuValue;
   final Duration? animationDuration;
   final Curve? curve;
 
@@ -64,7 +68,9 @@ class _ModernUi extends StatefulWidget {
     this.accentColor,
     this.color,
     this.radius,
-    this.status,
+    required this.menuValue,
+    required this.status,
+    required this.level,
     this.animationDuration,
     this.curve,
   });
@@ -116,20 +122,26 @@ class _ModernUiState extends State<_ModernUi> with TickerProviderStateMixin {
 
   @override
   void didUpdateWidget(_ModernUi oldWidget) {
-    if (oldWidget.status != widget.status) _notify(widget.status);
+    if (oldWidget.menuValue != widget.menuValue) {
+      _notify(widget.menuValue, widget.status, widget.level);
+    }
     super.didUpdateWidget(oldWidget);
   }
 
-  _notify(DraggableMenuStatus? status) {
-    if (status != null) {
-      if (status == DraggableMenuStatus.mayExpand ||
-          status == DraggableMenuStatus.willExpand ||
-          status == DraggableMenuStatus.expanding ||
-          status == DraggableMenuStatus.expanded) {
-        _controller.forward();
-      } else {
+  _notify(double menuValue, DraggableMenuStatus status, int level) {
+    if (menuValue > 0) {
+      if ((level == 1 &&
+              (status == DraggableMenuStatus.mayMinimize ||
+                  status == DraggableMenuStatus.willMinimize)) ||
+          (level == 0 &&
+              (status == DraggableMenuStatus.canceling ||
+                  status == DraggableMenuStatus.minimizing))) {
         _controller.reverse();
+      } else {
+        _controller.forward();
       }
+    } else {
+      _controller.reverse();
     }
   }
 
