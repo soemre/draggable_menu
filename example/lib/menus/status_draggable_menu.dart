@@ -92,7 +92,7 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
           DraggableMenuLevel(height: pageSize * 2 / 3),
           DraggableMenuLevel(height: pageSize),
         ],
-        maxHeight: pageSize * 1 / 3,
+        defaultHeight: pageSize * 1 / 3,
         animationDuration: const Duration(seconds: 1),
         fastDrag: widget.fastDrag,
         minimizeBeforeFastDrag: widget.minimizeBeforeFastDrag,

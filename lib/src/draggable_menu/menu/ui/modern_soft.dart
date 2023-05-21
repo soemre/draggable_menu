@@ -31,18 +31,21 @@ class SoftModernDraggableMenu extends CustomDraggableMenu {
     int level,
     double menuValue,
     double? raw,
+    double levelValue,
     Duration animationDuration,
     Curve curve,
   ) {
     // Do not use abs() instead of (menuValue < 0 ? 0 : menuValue)
     return Padding(
-      padding: EdgeInsets.all(16 * (1 - (menuValue < 0 ? 0 : menuValue))),
+      padding: EdgeInsets.all(
+          16 * (1 - (levelValue < 0 ? 0 : (levelValue < 1 ? levelValue : 1)))),
       child: Material(
         animationDuration: Duration.zero,
         borderRadius: BorderRadius.vertical(
             top: Radius.circular(radius ?? 16),
-            bottom: Radius.circular(
-                (radius ?? 16) * (1 - (menuValue < 0 ? 0 : menuValue)))),
+            bottom: Radius.circular((radius ?? 16) *
+                (1 -
+                    (levelValue < 0 ? 0 : (levelValue < 1 ? levelValue : 1))))),
         color: color ?? DefaultColors.primaryBackground,
         child: Column(
           mainAxisSize: MainAxisSize.min,

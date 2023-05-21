@@ -20,6 +20,7 @@ abstract class CustomDraggableMenu {
     int level,
     double menuValue,
     double? raw,
+    double levelValue,
     Duration animationDuration,
     Curve curve,
   );

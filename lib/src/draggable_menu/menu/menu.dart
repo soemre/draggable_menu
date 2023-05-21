@@ -9,17 +9,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 class DraggableMenu extends StatefulWidget {
-  /// It specifies the min-height of the Draggable Menu.
-  ///
-  /// If the child's height is higher, it will take its child's height instead.
-  final double? minHeight;
-
-  /// It specifies the max-height of the Draggable Menu's minimized status (Not Expanded).
+  /// It specifies the max-height of the Draggable Menu's minimized at level 0 status (Not Expanded).
   ///
   /// When the menu is expanded, it takes its `expandedHeight` parameter's value as its height.
   ///
   /// To be able to use an expandable draggable menu, the `expandedHeight` parameter must be higher than the `maxHeight` parameter.
-  final double? maxHeight;
+  /// TODO
+  final double? defaultHeight;
+
+  /// TODO
+  final bool? allowToShrink;
 
   /// It specifies the height of the Draggable Menu when it's expanded.
   ///
@@ -60,7 +59,9 @@ class DraggableMenu extends StatefulWidget {
   ///
   /// Takes a value between `-1` and `1`.
   ///
-  /// The `0` value stands for the Menu's `minimized` position. The `1` value stands for the Menu's `expanded` position. The `-1` value stands for the Menu's `closed` position.
+  /// For the menuValue, the `0` value stands for the Menu's `minimized at level 0` position. The `1` value stands for the Menu's `expanded` position. The `-1` value stands for the Menu's `closed` position.
+  ///
+  /// For the levelValue, the whole numbers stands for the Menu's levels. The `-1` value stands for the Menu's `closed` position.
   ///
   /// *To understand better the usage of the "Value Listeners",
   /// check out the [Draggable Menu Example](https://github.com/emresoysuren/draggable_menu/tree/main/example) app.*
@@ -191,8 +192,7 @@ class DraggableMenu extends StatefulWidget {
   /// *For more info, visit the [GitHub Repository](https://github.com/emresoysuren/draggable_menu).*
   const DraggableMenu({
     super.key,
-    this.minHeight,
-    this.maxHeight,
+    this.defaultHeight,
     required this.child,
     this.ui,
     this.addStatusListener,
@@ -214,6 +214,7 @@ class DraggableMenu extends StatefulWidget {
     this.fastDragMinimize,
     this.fastDragExpand,
     this.levels,
+    this.allowToShrink,
   });
 
   /// Opens the given Draggable Menu using `Navigator`'s `push` method.
@@ -406,9 +407,16 @@ class _DraggableMenuState extends State<DraggableMenu>
 
   void _expandInit() {
     if (levels.isNotEmpty) levels.clear();
-    if (widget.levels?.isNotEmpty != true || widget.maxHeight != null) {
+    if (widget.levels?.isNotEmpty == true) {
+      assert(
+        widget.defaultHeight != null,
+        "You must set an defaultHeight parameter to use the expand feature.",
+      );
       for (DraggableMenuLevel level in widget.levels!) {
-        if (level.height > widget.maxHeight!) levels.add(level);
+        if (level.height > widget.defaultHeight! &&
+            !levels.any((element) => element.height == level.height)) {
+          levels.add(level);
+        }
       }
     }
     willExpand = levels.isNotEmpty;
@@ -451,12 +459,12 @@ class _DraggableMenuState extends State<DraggableMenu>
               onDragUpdate: (globalPosition) => onDragUpdate(globalPosition),
               onDragEnd: (details) => onDragEnd(details),
               child: UiFormatter(
-                maxHeight: _boxHeight ?? widget.maxHeight ?? double.infinity,
+                maxHeight:
+                    _boxHeight ?? widget.defaultHeight ?? double.infinity,
                 minHeight: _boxHeight ??
-                    widget.minHeight ??
-                    ((widget.maxHeight != null && widget.maxHeight! < 240)
-                        ? widget.maxHeight!
-                        : 240),
+                    (widget.allowToShrink == true
+                        ? 0
+                        : widget.defaultHeight ?? 240),
                 child: widget.customUi ??
                     widget.ui?.buildUi(
                       context,
@@ -465,6 +473,7 @@ class _DraggableMenuState extends State<DraggableMenu>
                       atLevel,
                       _menuValue,
                       _raw(),
+                      _levelValue(),
                       widget.animationDuration ??
                           const Duration(milliseconds: 320),
                       widget.curve ?? Curves.ease,
@@ -476,6 +485,7 @@ class _DraggableMenuState extends State<DraggableMenu>
                       atLevel,
                       _menuValue,
                       _raw(),
+                      _levelValue(),
                       widget.animationDuration ??
                           const Duration(milliseconds: 320),
                       widget.curve ?? Curves.ease,

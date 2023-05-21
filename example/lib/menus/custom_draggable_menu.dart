@@ -25,7 +25,7 @@ class CustomMenu extends StatelessWidget {
         DraggableMenuLevel(height: pageSize * 2 / 3),
         DraggableMenuLevel(height: pageSize),
       ],
-      maxHeight: pageSize * 1 / 3,
+      defaultHeight: pageSize * 1 / 3,
       fastDrag: fastDrag,
       minimizeBeforeFastDrag: minimizeBeforeFastDrag,
       child: child,
