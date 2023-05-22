@@ -1,12 +1,22 @@
 # Flutter Draggable Menu (draggable_menu)
-[![Pub](https://img.shields.io/badge/pub-v2.0.2-%237f7eff?style=flat&logo=flutter)](https://pub.dev/packages/draggable_menu)
-[![GitHub](https://img.shields.io/badge/GitHub-v2.0.2-%237f7eff?style=flat&logo=github)](https://github.com/emresoysuren/draggable_menu)
+[![Pub](https://img.shields.io/badge/pub-v3.0.0-%237f7eff?style=flat&logo=flutter)](https://pub.dev/packages/draggable_menu)
+[![GitHub](https://img.shields.io/badge/GitHub-v3.0.0-%237f7eff?style=flat&logo=github)](https://github.com/emresoysuren/draggable_menu)
 
 With `draggable_menu`, create Draggable Menus as you want and make your app look way better and more convenient.
 
 Create Draggable Menus like some popular apps like **Instagram**, **Snapchat**, **Facebook**, **Twitter** etc. You can even make your Draggable Menus look identical to them.
 
 `draggable_menu` also allows you to customize the UI and the animations. You can use one of the default themes or create your custom UI from scratch.
+
+## Features
+- Fully customizable UI
+- Fully customizable levels
+- Fully customizable animations
+- Compatible with the scrollable usage 
+- Fast Drag Gestures
+- Has multiple listeners to listen to its values
+- You can use it without any configurations
+- Contains pre-build UIs
 
 | Modern | Modern (Expandable) | Classic | Classic (Expandable) |
 |---|---|---|---|

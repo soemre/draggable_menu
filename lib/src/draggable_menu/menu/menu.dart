@@ -274,7 +274,7 @@ class _DraggableMenuState extends State<DraggableMenu>
   late Ticker _ticker;
   final _widgetKey = GlobalKey();
   double? _boxHeight;
-  int? currentAnimation;
+  Function()? currentAnimation;
   DraggableMenuStatus _status = DraggableMenuStatus.minimized;
   double _menuValue = 0;
   double? _ref;
@@ -500,7 +500,7 @@ class _DraggableMenuState extends State<DraggableMenu>
 
   animateTo(int level, int id) {
     atLevel = level;
-    currentAnimation = id;
+    currentAnimation?.call();
     Animation<double> animation = Tween<double>(
       begin: _boxHeight ?? _defH,
       end: _levelHeight(level),
@@ -510,21 +510,19 @@ class _DraggableMenuState extends State<DraggableMenu>
       ),
     );
     callback() {
-      if (currentAnimation == id) {
-        if (_boxHeight != null) {
-          if (_boxHeight! <= _defH!) {
-            _boxHeight = null;
-            return;
-          }
+      if (_boxHeight != null) {
+        if (_boxHeight! <= _defH!) {
+          _boxHeight = null;
+          return;
         }
-        _boxHeight = animation.value;
       }
+      _boxHeight = animation.value;
     }
 
+    currentAnimation = () => animation.removeListener(callback);
     animation.addListener(callback);
     animation.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        animation.removeListener(callback);
         if (_boxHeight != null) {
           if (_boxHeight! <= _defH!) {
             _boxHeight = null;
@@ -572,7 +570,7 @@ class _DraggableMenuState extends State<DraggableMenu>
         return;
       }
       if (_value == 0) return;
-      currentAnimation = 1;
+      currentAnimation?.call();
       Animation<double> animation =
           Tween<double>(begin: _value, end: 0).animate(
         _controller.drive(
@@ -580,11 +578,10 @@ class _DraggableMenuState extends State<DraggableMenu>
         ),
       );
       callback() {
-        if (currentAnimation == 1) {
-          _value = animation.value;
-        }
+        _value = animation.value;
       }
 
+      currentAnimation = () => animation.removeListener(callback);
       animation.addListener(callback);
       animation.addStatusListener((status) {
         if (status == AnimationStatus.completed) {
