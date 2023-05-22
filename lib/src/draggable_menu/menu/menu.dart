@@ -9,24 +9,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 class DraggableMenu extends StatefulWidget {
-  /// It specifies the max-height of the Draggable Menu's minimized at level 0 status (Not Expanded).
+  /// It specifies the `default height` (`Level 0`) of the `Draggable Menu`.
   ///
-  /// When the menu is expanded, it takes its `expandedHeight` parameter's value as its height.
+  /// By default, it is `240` (Unlike the `defaultHeight` parameter, your widget's height can pass this value.),
+  /// but if you use an expandable feature, you must provide a value.
   ///
-  /// To be able to use an expandable draggable menu, the `expandedHeight` parameter must be higher than the `maxHeight` parameter.
-  /// TODO
+  /// If the levels parameter's set but the `defaultHeight` isn't, it will throw an error.
   final double? defaultHeight;
 
-  /// TODO
+  /// If it is `true`, the widget will be at its minimum height.
+  ///
+  /// By default, it is `false`.
   final bool? allowToShrink;
 
-  /// It specifies the height of the Draggable Menu when it's expanded.
+  /// This is the parameter to use the `expand` feature.
   ///
-  /// The `expandedHeight` parameter must be provided to use an expandable draggable menu. If it's `null`, the Draggable Menu will be not expandable.
+  /// Provide `DraggableMenuLevel` objects inside of it to create a level and customize its height.
+  /// And you must also provide the `defaultHeight` parameter to use it.
   ///
-  /// To be able to use an expandable draggable menu, the `expandedHeight` parameter must be higher than the `maxHeight` parameter,
-  /// and the `expandable` parameter mustn't be null.
-  /// TODO
+  /// The lowest object you pass will be used as `Level 1` of the `Draggable Menu`'s level.
+  ///
+  /// If you don't set the `defaultHeight` parameter,
+  /// it'll throw an error.
   final List<DraggableMenuLevel>? levels;
 
   /// Adds a child inside the Draggable Menu's Default UI.
@@ -57,11 +61,11 @@ class DraggableMenu extends StatefulWidget {
 
   /// Adds a listener to listen to its Menu Value.
   ///
-  /// Takes a value between `-1` and `1`.
+  /// The `menuValue` value takes a value between `-1` and `1`.
+  /// And the `0` value stands for the Menu's `minimized at level 0` position. The `1` value stands for the Menu's `expanded` position. The `-1` value stands for the Menu's `closed` position.
   ///
-  /// For the menuValue, the `0` value stands for the Menu's `minimized at level 0` position. The `1` value stands for the Menu's `expanded` position. The `-1` value stands for the Menu's `closed` position.
-  ///
-  /// For the levelValue, the whole numbers stands for the Menu's levels. The `-1` value stands for the Menu's `closed` position.
+  /// The `levelValue` value takes a value between `-1` and `∞`. (For example, the `3` value is stands for the `Level 3`.)
+  /// And the whole numbers stands for the Menu's levels. The `-1` value stands for the Menu's `closed` position.
   ///
   /// *To understand better the usage of the "Value Listeners",
   /// check out the [Draggable Menu Example](https://github.com/emresoysuren/draggable_menu/tree/main/example) app.*

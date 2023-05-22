@@ -4,7 +4,7 @@
 
 With `draggable_menu`, create Draggable Menus as you want and make your app look way better and more convenient.
 
-Create Draggable Menus like some popular apps like **Instagram**, **Snapchat**, **Facebook**, **Twitter** etc. You can even make your Draggable Menus look identical to them.
+Create Draggable Menus like some popular apps like **Instagram**, **Snapchat**, **Facebook**, **Twitter**, **Youtube** etc. You can even make your Draggable Menus look identical to them.
 
 `draggable_menu` also allows you to customize the UI and the animations. You can use one of the default themes or create your custom UI from scratch.
 
@@ -68,10 +68,9 @@ Navigator.pop(context);
 
 | Category | Parameters | Description |
 |---|---|---|
-| Constraints | double? minHeight | It specifies the min-height of the Draggable Menu. If the child's height is higher, it will take its child's height instead. |
-| Constraints | double? maxHeight | It specifies the max-height of the Draggable Menu's minimized status (Not Expanded). When the menu is expanded, it takes its `expandedHeight` parameter's value as its height. To be able to use an expandable draggable menu, the `expandedHeight` parameter must be higher than the `maxHeight` parameter. |
-| Constraints | double? expandedHeight | It specifies the height of the Draggable Menu when it's expanded. To be able to use an expandable draggable menu, the `expandedHeight` parameter must be higher than the `maxHeight` parameter, and the `expandable` parameter mustn't be null. |
-| Usage | bool? expandable | It specifies whether the Draggable Menu will be expandable or not. The `expandedHeight` parameter must be provided to use an expandable draggable menu. |
+| Usage | double? defaultHeight | It specifies the `default height` (`Level 0`) of the `Draggable Menu`. By default, it is `240` (Unlike the `defaultHeight` parameter, your widget's height can pass this value.), but if you use an expandable feature, you must provide a value. If the levels parameter's set but the `defaultHeight` isn't, it will throw an error. |
+| Usage | bool? allowToShrink | If it is `true`, the widget will be at its minimum height. By default, it is `false`. |
+| Usage | List\<DraggableMenuLevel>? levels | This is the parameter to use the `expand` feature. Provide `DraggableMenuLevel` objects inside of it to create a level and customize its height. And you must also provide the `defaultHeight` parameter to use it. If you don't set the `defaultHeight` parameter, it'll throw an error. The lowest object you pass will be used as `Level 1` of the `Draggable Menu`'s level. |
 | Usage | double? closeThreshold | Specifies the Close Threshold of the Draggable Menu. Takes a value between `0` and `1`. |
 | Usage | double? expandThreshold | Specifies the Expand Threshold of the Draggable Menu. Takes a value between `0` and `1`. |
 | Usage | double? minimizeThreshold | Specifies the Minimize Threshold of the Draggable Menu. Takes a value between `0` and `1`. |
@@ -88,8 +87,8 @@ Navigator.pop(context);
 | UI | (required) Widget child | Adds a child inside the Draggable Menu's UI. |
 | UI | CustomDraggableMenu? ui | Overrides the Classic Draggable Menu UI. |
 | UI | Widget? customUi | Overrides the Draggable Menu's UI and uses the given widget. If used, the `child` parameter of the `DraggableMenu` widget won't work. |
-| Listener | Function(DraggableMenuStatus status)? addStatusListener | Adds a listener to listen to its Status. |
-| Listener | Function(double menuValue)? addValueListener | Adds a listener to listen to its Menu Value. |
+| Listener | Function(DraggableMenuStatus status, int level)? addStatusListener | Adds a listener to listen to its Status. |
+| Listener | Function(double menuValue, double? raw, double levelValue)? addValueListener | Adds a listener to listen to its Menu Value. |
 | Animation | Duration? animationDuration | Specifies the duration of the Draggable Menu's animations. |
 | Animation | Curve? curve | Specifies the curve of the Draggable Menu's animations. |
 
@@ -112,7 +111,7 @@ DraggableMenu.open(
   DraggableMenu(
     child: child,
   ),
-  barrier: barrier, // Optional. If it's true uses a root with barrier.
+  barrier: barrier, // Optional. If it's true use a root with a barrier.
   barrierColor: barrierColor, // Optional. Changes the barrier's color.
   animationDuration: animationDuration, // Optional. Specifies its animation's duration.
   curve: animationDuration, // Optional. Specifies its animation's curve.
@@ -253,7 +252,7 @@ Use the `addStatusListener` parameter to listen to the Draggable Menu's status.
 You can point them out with `DraggableMenuStatus` like:
 ```dart
 DraggableMenu(
-  addStatusListener: (status) {
+  addStatusListener: (status, level) {
     if (status == DraggableMenuStatus.mayExpand) {
       // Add something to do when its status is mayExpand
     }
@@ -272,18 +271,25 @@ It takes a `double` value between `-1` and `1`.
 
 ```dart
 DraggableMenu(
-  addValueListener: (menuValue) {
-    // Add something to do when its status change
+  addValueListener: (menuValue, raw, levelValue) {
+    // Add something to do when its value change
   }
   child: child,
 )
 ```
+The `menuValue` value takes a value between `-1` and `1`.
 
-The `0` value stands for the Menu's `minimized` position.
+The `levelValue` value takes a value between `-1` and `∞`.
 
-The `1` value stands for the Menu's `expanded` position.
 
-The `-1` value stands for the Menu's `closed` position.
+### For the `menuValue` value:
+- The `1` value stands for the Menu's `expanded` position.
+- The `0` value stands for the Menu's `minimized` position.
+- The `-1` value stands for the Menu's `closed` position.
+
+### For the `levelValue` value:
+- The whole numbers stand for the `DraggableMenu`'s levels. (For example, the `3` value stands for the `Level 3`.)
+- The `-1` value stands for the Menu's `closed` position.
 
 ---
 
@@ -295,8 +301,17 @@ First, create a class that extends the `CustomDraggableMenu` class and override 
 ```dart
 class YourDraggableMenuUi extends CustomDraggableMenu {
   @override
-  Widget buildUi(BuildContext context, Widget child,
-      DraggableMenuStatus? status, double menuValue) {
+  Widget buildUi(
+    BuildContext context,
+    Widget child,
+    DraggableMenuStatus status,
+    int level,
+    double menuValue,
+    double? raw,
+    double levelValue,
+    Duration animationDuration,
+    Curve curve,
+  ) {
     // Return Your Ui
     return YourUi(
       child: child, // Pass the `child` value to use the child passed the `DraggableMenu` widget.
@@ -328,12 +343,12 @@ DraggableMenu(
 )
 ```
 
-You can use the `customUi` parameter as well. But it won't let you use the child that passed to the `DraggableMenu` widget. It's advantage is it is easy to use. Just give a widget, and override the `DraggableMenu`'s UI.
+You can use the `customUi` parameter as well. But it won't let you use the child that passed to the `DraggableMenu` widget. Its advantage is it is easy to use. Just give a widget, and override the `DraggableMenu`'s UI.
 
 ```dart
 DraggableMenu(
   customUi: yourUi;
-  child: child, // That won't work. Add your item inside of the customUi insted.
+  child: child, // That won't work. Add your item inside of the customUi instead.
 )
 ```
 
