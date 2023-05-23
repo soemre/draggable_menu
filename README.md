@@ -1,6 +1,6 @@
 # Flutter Draggable Menu (draggable_menu)
-[![Pub](https://img.shields.io/badge/pub-v3.0.1-%237f7eff?style=flat&logo=flutter)](https://pub.dev/packages/draggable_menu)
-[![GitHub](https://img.shields.io/badge/GitHub-v3.0.1-%237f7eff?style=flat&logo=github)](https://github.com/emresoysuren/draggable_menu)
+[![Pub](https://img.shields.io/badge/pub-v3.0.2-%237f7eff?style=flat&logo=flutter)](https://pub.dev/packages/draggable_menu)
+[![GitHub](https://img.shields.io/badge/GitHub-v3.0.2-%237f7eff?style=flat&logo=github)](https://github.com/emresoysuren/draggable_menu)
 
 With `draggable_menu`, create Draggable Menus as you want and make your app look way better and more convenient.
 
@@ -18,9 +18,9 @@ Create Draggable Menus like some popular apps like **Instagram**, **Snapchat**, 
 - You can use it without any configurations
 - Contains pre-build UIs
 
-| Modern | Modern (Expandable) | Classic | Classic (Expandable) |
-|---|---|---|---|
-|<img height="320" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/modern-1.gif?raw=true">|<img height="320" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/modern-2.gif?raw=true">|<img height="320" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/classic-1.gif?raw=true">|<img height="320" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/classic-2.gif?raw=true">|
+| Classic UI | Modern UI (with Scrollable) | Soft Modern UI (with Status) |
+|---|---|---|
+|<img height="360" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/video-1.gif?raw=true">|<img height="360" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/video-2.gif?raw=true">|<img height="360" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/video-3.gif?raw=true">|
 
 # Quick Start
 To start as fast as possible, you need to know how to create, open and close it.

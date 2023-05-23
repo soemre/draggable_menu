@@ -1,6 +1,6 @@
-# 3.0.1 Release
+# 3.0.2 Release
 
-- Readme update
+- Readme videos update
 
 ## Changes in the 3.0.0 Release
 
