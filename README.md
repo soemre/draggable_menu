@@ -1,6 +1,6 @@
 # Flutter Draggable Menu (draggable_menu)
-[![Pub](https://img.shields.io/badge/pub-v3.0.0-%237f7eff?style=flat&logo=flutter)](https://pub.dev/packages/draggable_menu)
-[![GitHub](https://img.shields.io/badge/GitHub-v3.0.0-%237f7eff?style=flat&logo=github)](https://github.com/emresoysuren/draggable_menu)
+[![Pub](https://img.shields.io/badge/pub-v3.0.1-%237f7eff?style=flat&logo=flutter)](https://pub.dev/packages/draggable_menu)
+[![GitHub](https://img.shields.io/badge/GitHub-v3.0.1-%237f7eff?style=flat&logo=github)](https://github.com/emresoysuren/draggable_menu)
 
 With `draggable_menu`, create Draggable Menus as you want and make your app look way better and more convenient.
 
@@ -157,17 +157,20 @@ Navigator.pop<T>(context, value);
 
 ---
 
-## Use the Expandable Draggable Menu
-To do that, first, you should set the `expandable` parameter to true, and then set the value of the `expandedHeight` parameter.
+## Use the Levels (Expandable Draggable Menu)
+First, provide the `defaultHeight` parameter to set its `Level 0` height. And then, give `DraggableMenuLevel` objects to the `levels` parameter to define the `DraggableMenu`'s levels.
 
-The `expandedHeight` parameter mustn't be null or smaller than the child's height or the `maxHeight` or the `minHeight` parameters.
+Define the levels' height in the `DraggableMenuLevel`'s `height` parameter.
+
+If the `defaultHeight` parameter isn't provided, it'll throw an error.
 
 ```dart
 DraggableMenu(
-  expandable: true,
-  expandedHeight: expandedHeight,// Mustn't be null or smaller than its widget's height or the "maxHeight" or the "minHeight" parameters. 
-  maxHeight: maxHeight, // Optional
-  minHeight: minHeight, // Optional
+  defaultHeight: defaultHeight, // Provide a height value for Level 0
+  levels: [
+    DraggableMenuLevel(height: height),
+    ] 
+  allowToShrink: allowToShrink, // Optional. Allows you to minimize your widget at Level 0
   child: child,
 )
 ```

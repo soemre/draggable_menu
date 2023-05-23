@@ -1,4 +1,8 @@
-# 3.0.0 Release
+# 3.0.1 Release
+
+- Readme update
+
+## Changes in the 3.0.0 Release
 
 - Removed the `minHeight`, `maxHeight`, `expandedHeight`, and `expandable` parameters.
 
