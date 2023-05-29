@@ -1,3 +1,4 @@
+import 'package:draggable_menu/src/draggable_menu/menu/controller.dart';
 import 'package:draggable_menu/src/draggable_menu/menu/custom_draggable_menu.dart';
 import 'package:draggable_menu/src/draggable_menu/menu/draggable_menu_level.dart';
 import 'package:draggable_menu/src/draggable_menu/menu/enums/status.dart';
@@ -9,13 +10,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 class DraggableMenu extends StatefulWidget {
-  /// It specifies the `default height` (`Level 0`) of the `Draggable Menu`.
-  ///
-  /// By default, it is `240` (Unlike the `defaultHeight` parameter, your widget's height can pass this value.),
-  /// but if you use an expandable feature, you must provide a value.
-  ///
-  /// If the levels parameter's set but the `defaultHeight` isn't, it will throw an error.
-  final double? defaultHeight;
+  // /// It specifies the `default height` (`Level 0`) of the `Draggable Menu`.
+  // ///
+  // /// By default, it is `240` (Unlike the `defaultHeight` parameter, your widget's height can pass this value.),
+  // /// but if you use an expandable feature, you must provide a value.
+  // ///
+  // /// If the levels parameter's set but the `defaultHeight` isn't, it will throw an error.
+  // final double? defaultHeight;
 
   /// If it is `true`, the widget will be at its minimum height.
   ///
@@ -35,6 +36,9 @@ class DraggableMenu extends StatefulWidget {
 
   /// Adds a child inside the Draggable Menu's Default UI.
   final Widget child;
+
+  /// TODO
+  final DraggableMenuController? controller;
 
   /// Overrides the Classic Draggable Menu UI.
   ///
@@ -196,7 +200,6 @@ class DraggableMenu extends StatefulWidget {
   /// *For more info, visit the [GitHub Repository](https://github.com/emresoysuren/draggable_menu).*
   const DraggableMenu({
     super.key,
-    this.defaultHeight,
     required this.child,
     this.ui,
     this.addStatusListener,
@@ -219,6 +222,7 @@ class DraggableMenu extends StatefulWidget {
     this.fastDragExpand,
     this.levels,
     this.allowToShrink,
+    this.controller,
   });
 
   /// Opens the given Draggable Menu using `Navigator`'s `push` method.
@@ -273,7 +277,7 @@ class DraggableMenu extends StatefulWidget {
 
 class _DraggableMenuState extends State<DraggableMenu>
     with TickerProviderStateMixin {
-  late final AnimationController _controller;
+  late final AnimationController _animationController;
   double _value = 0;
   late Ticker _ticker;
   final _widgetKey = GlobalKey();
@@ -288,12 +292,14 @@ class _DraggableMenuState extends State<DraggableMenu>
   int atLevel = 0;
   late bool willExpand;
   List<DraggableMenuLevel> levels = [];
+  DraggableMenuLevel? defaultLevel;
 
   @override
   void initState() {
     super.initState();
-    _expandInit();
-    _controller = AnimationController(
+    _controllerInit();
+    _levelsInit();
+    _animationController = AnimationController(
       vsync: this,
       duration: widget.animationDuration ?? const Duration(milliseconds: 320),
     );
@@ -314,6 +320,11 @@ class _DraggableMenuState extends State<DraggableMenu>
       });
     });
     _ticker.start();
+  }
+
+  _controllerInit() {
+    widget.controller?.init((int level) => animateTo(level));
+    widget.controller?.addListener(() => setState(() {}));
   }
 
   _notifyListeners() {
@@ -346,7 +357,7 @@ class _DraggableMenuState extends State<DraggableMenu>
       if (_value != 0) {
         value = (_value / _defH!);
       }
-    } else if (_boxHeight != null && levels.isNotEmpty) {
+    } else if (_boxHeight != null && levels.isNotEmpty && willExpand) {
       value = ((_boxHeight! - _defH!) / (levels.last.height - _defH!));
     }
     return value;
@@ -361,7 +372,8 @@ class _DraggableMenuState extends State<DraggableMenu>
   }
 
   void _checkStatus() {
-    if (_controller.isAnimating || _status == DraggableMenuStatus.closing) {
+    if (_animationController.isAnimating ||
+        _status == DraggableMenuStatus.closing) {
       return;
     }
     if (_defH == null) return;
@@ -377,7 +389,8 @@ class _DraggableMenuState extends State<DraggableMenu>
       _notifyStatusListener(DraggableMenuStatus.minimized);
     } else if (_boxHeight != null) {
       // Upper Part
-      if (levels.isNotEmpty &&
+      if (willExpand &&
+          levels.isNotEmpty &&
           (_boxHeight! >= levels.last.height) &&
           (atLevel == levels.length)) {
         _notifyStatusListener(DraggableMenuStatus.expanded);
@@ -409,28 +422,24 @@ class _DraggableMenuState extends State<DraggableMenu>
     }
   }
 
-  void _expandInit() {
+  void _levelsInit() {
     if (levels.isNotEmpty) levels.clear();
     if (widget.levels?.isNotEmpty == true) {
-      assert(
-        widget.defaultHeight != null,
-        "You must set an defaultHeight parameter to use the expand feature.",
-      );
       for (DraggableMenuLevel level in widget.levels!) {
-        if (level.height > widget.defaultHeight! &&
-            !levels.any((element) => element.height == level.height)) {
+        if (!levels.any((element) => element.height == level.height)) {
           levels.add(level);
         }
       }
+      levels.sort((a, b) => a.height.compareTo(b.height));
+      defaultLevel = levels.first;
     }
-    willExpand = levels.isNotEmpty;
-    levels.sort((a, b) => a.height.compareTo(b.height));
+    willExpand = (levels.isNotEmpty && levels.length > 1);
   }
 
   @override
   void dispose() {
     _ticker.dispose();
-    _controller.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -464,11 +473,11 @@ class _DraggableMenuState extends State<DraggableMenu>
               onDragEnd: (details) => onDragEnd(details),
               child: UiFormatter(
                 maxHeight:
-                    _boxHeight ?? widget.defaultHeight ?? double.infinity,
+                    _boxHeight ?? defaultLevel?.height ?? double.infinity,
                 minHeight: _boxHeight ??
                     (widget.allowToShrink == true
                         ? 0
-                        : widget.defaultHeight ?? 240),
+                        : defaultLevel?.height ?? 240),
                 child: widget.customUi ??
                     widget.ui?.buildUi(
                       context,
@@ -502,14 +511,14 @@ class _DraggableMenuState extends State<DraggableMenu>
     );
   }
 
-  animateTo(int level, int id) {
+  animateTo(int level) {
     atLevel = level;
     currentAnimation?.call();
     Animation<double> animation = Tween<double>(
       begin: _boxHeight ?? _defH,
       end: _levelHeight(level),
     ).animate(
-      _controller.drive(
+      _animationController.drive(
         CurveTween(curve: widget.curve ?? Curves.ease),
       ),
     );
@@ -541,26 +550,26 @@ class _DraggableMenuState extends State<DraggableMenu>
         }
       }
     });
-    _controller.reset();
-    _controller.forward();
+    _animationController.reset();
+    _animationController.forward();
   }
 
   void _minimize() {
     if ((_boxHeight ?? _defH) == _defH) return;
     _notifyStatusListener(DraggableMenuStatus.minimizing);
-    animateTo(atLevel - 1, 2);
+    animateTo(atLevel - 1);
   }
 
   void _expand() {
     if ((_boxHeight ?? _defH) == levels.last.height) return;
     _notifyStatusListener(DraggableMenuStatus.expanding);
-    animateTo(atLevel + 1, 3);
+    animateTo(atLevel + 1);
   }
 
   void _cancel() {
     if ((_boxHeight ?? _defH) == _levelHeight(atLevel)) return;
     _notifyStatusListener(DraggableMenuStatus.canceling);
-    animateTo(atLevel, 4);
+    animateTo(atLevel);
   }
 
   onDragEnd(DragEndDetails details) {
@@ -577,7 +586,7 @@ class _DraggableMenuState extends State<DraggableMenu>
       currentAnimation?.call();
       Animation<double> animation =
           Tween<double>(begin: _value, end: 0).animate(
-        _controller.drive(
+        _animationController.drive(
           CurveTween(curve: widget.curve ?? Curves.ease),
         ),
       );
@@ -595,9 +604,9 @@ class _DraggableMenuState extends State<DraggableMenu>
           }
         }
       });
-      _controller.reset();
+      _animationController.reset();
       _notifyStatusListener(DraggableMenuStatus.canceling);
-      _controller.forward();
+      _animationController.forward();
     } else {
       if (willExpand) {
         if ((_pos! > _levelHeight(atLevel)) && (_pos! <= levels.last.height)) {
@@ -661,7 +670,7 @@ class _DraggableMenuState extends State<DraggableMenu>
   }
 
   onDragStart(double globalPosition) {
-    if (_controller.isAnimating) _controller.stop();
+    if (_animationController.isAnimating) _animationController.stop();
     _ref = globalPosition;
     _defH ??= _widgetKey.currentContext?.size?.height;
     _init = _value + (_boxHeight ?? _defH)!;

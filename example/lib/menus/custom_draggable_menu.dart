@@ -17,15 +17,13 @@ class CustomMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double pageSize =
-        MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
     return DraggableMenu(
       ui: ui,
       levels: [
-        DraggableMenuLevel(height: pageSize * 2 / 3),
-        DraggableMenuLevel(height: pageSize),
+        DraggableMenuLevel.ratio(ratio: 1 / 3),
+        DraggableMenuLevel.ratio(ratio: 2 / 3),
+        DraggableMenuLevel.ratio(ratio: 1),
       ],
-      defaultHeight: pageSize * 1 / 3,
       fastDrag: fastDrag,
       minimizeBeforeFastDrag: minimizeBeforeFastDrag,
       child: child,

@@ -6,3 +6,4 @@ export 'src/draggable_menu/menu/ui.dart';
 export 'src/draggable_menu/utils/scrollable_manager/scrollable_manager.dart';
 export 'src/draggable_menu/menu/custom_draggable_menu.dart';
 export 'src/draggable_menu/menu/draggable_menu_level.dart';
+export 'src/draggable_menu/menu/controller.dart';
