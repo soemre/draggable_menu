@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'dart:ui';
 
 class DraggableMenuLevel {
   final double height;
@@ -7,9 +7,9 @@ class DraggableMenuLevel {
 
   DraggableMenuLevel.ratio({required double ratio})
       : height = (ratio *
-            (WidgetsBinding.instance.window.physicalSize.height -
-                WidgetsBinding.instance.window.padding.top) /
-            WidgetsBinding.instance.window.devicePixelRatio) {
+            (PlatformDispatcher.instance.views.first.physicalSize.height -
+                PlatformDispatcher.instance.views.first.padding.top) /
+            PlatformDispatcher.instance.views.first.devicePixelRatio) {
     assert(
       (ratio <= 1 && ratio >= 0),
       "Ratio parameter must take a value between 0 and 1.",

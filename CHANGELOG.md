@@ -1,4 +1,8 @@
-# 4.0.0 Release
+# 4.0.1 Release
+
+- Changed `WidgetsBinding.instance.window` with `PlatformDispatcher.instance.views.first`.
+
+## 4.0.0 Release Notes
 
 - Added `DraggableMenuController` to manage the `DraggableMenu`.
 
