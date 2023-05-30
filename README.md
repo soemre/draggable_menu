@@ -12,6 +12,7 @@ Create Draggable Menus like some popular apps like **Instagram**, **Snapchat**, 
 - Fully customizable UI
 - Fully customizable levels
 - Fully customizable animations
+- Controllable with its controller
 - Compatible with the scrollable usage 
 - Fast Drag Gestures
 - Has multiple listeners to listen to its values
@@ -20,7 +21,7 @@ Create Draggable Menus like some popular apps like **Instagram**, **Snapchat**, 
 
 | Classic UI | Modern UI (with Scrollable) | Soft Modern UI (with Status) |
 |---|---|---|
-|<img height="400" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/video-1.gif?raw=true">|<img height="400" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/video-2.gif?raw=true">|<img height="400" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/video-3.gif?raw=true">|
+|<img width="200" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/video-1.gif?raw=true">|<img width="200" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/video-2.gif?raw=true">|<img width="200" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/video-3.gif?raw=true">|
 
 # Quick Start
 To start as fast as possible, you need to know how to create, open and close it.
@@ -68,9 +69,8 @@ Navigator.pop(context);
 
 | Category | Parameters | Description |
 |---|---|---|
-| Usage | double? defaultHeight | It specifies the `default height` (`Level 0`) of the `Draggable Menu`. By default, it is `240` (Unlike the `defaultHeight` parameter, your widget's height can pass this value.), but if you use an expandable feature, you must provide a value. If the levels parameter's set but the `defaultHeight` isn't, it will throw an error. |
 | Usage | bool? allowToShrink | If it is `true`, the widget will be at its minimum height. By default, it is `false`. |
-| Usage | List\<DraggableMenuLevel>? levels | This is the parameter to use the `expand` feature. Provide `DraggableMenuLevel` objects inside of it to create a level and customize its height. And you must also provide the `defaultHeight` parameter to use it. If you don't set the `defaultHeight` parameter, it'll throw an error. The lowest object you pass will be used as `Level 1` of the `Draggable Menu`'s level. |
+| Usage | List\<DraggableMenuLevel>? levels | This is the parameter to use the `expand` feature and to define a level. If you want a fixed height for the `Level 0`, provide a Level as well. Provide `DraggableMenuLevel` objects inside of it to create a level and customize its height. The lowest object you pass will be `Level 0` of the `Draggable Menu`'s level. You must provide at least two levels to use the `expand` feature. By default, `Level 0`'s height is `240` (Unlike the `DraggableMenuLevel`s, your widget's height can pass this value.). |
 | Usage | double? closeThreshold | Specifies the Close Threshold of the Draggable Menu. Takes a value between `0` and `1`. |
 | Usage | double? expandThreshold | Specifies the Expand Threshold of the Draggable Menu. Takes a value between `0` and `1`. |
 | Usage | double? minimizeThreshold | Specifies the Minimize Threshold of the Draggable Menu. Takes a value between `0` and `1`. |
@@ -91,6 +91,7 @@ Navigator.pop(context);
 | Listener | Function(double menuValue, double? raw, double levelValue)? addValueListener | Adds a listener to listen to its Menu Value. |
 | Animation | Duration? animationDuration | Specifies the duration of the Draggable Menu's animations. |
 | Animation | Curve? curve | Specifies the curve of the Draggable Menu's animations. |
+| Controller | DraggableMenuController? controller | Provide the `DraggableMenuController` to the `controller` parameter to control the `DraggableMenu` widget. |
 
 # How To Use
 
@@ -158,22 +159,27 @@ Navigator.pop<T>(context, value);
 ---
 
 ## Use the Levels (Expandable Draggable Menu)
-First, provide the `defaultHeight` parameter to set its `Level 0` height. And then, give `DraggableMenuLevel` objects to the `levels` parameter to define the `DraggableMenu`'s levels.
+You can use the `expand` feature of the `DraggableMenu` by defining levels.
 
-Define the levels' height in the `DraggableMenuLevel`'s `height` parameter.
+To do that. First, create levels by providing `DraggableMenuLevel`s to the `levels` parameter and define their heights.
 
-If the `defaultHeight` parameter isn't provided, it'll throw an error.
+The lowest object you pass will be `Level 0` of the `Draggable Menu`'s level. So you must provide at least two levels to use the `expand` feature.
 
 ```dart
 DraggableMenu(
-  defaultHeight: defaultHeight, // Provide a height value for Level 0
   levels: [
     DraggableMenuLevel(height: height),
-    ] 
-  allowToShrink: allowToShrink, // Optional. Allows you to minimize your widget at Level 0
+    DraggableMenuLevel.ratio(ratio: ratio),
+  ],
   child: child,
 )
 ```
+
+You can set `Level 0`'s height (The `DraggableMenu`'s default height) by creating a level. By default, `Level 0`'s height is `240` (Unlike the `DraggableMenuLevel`s, your widget's height can pass this value.).
+
+You can use `DraggableMenuLevel.ratio()` to define the level's height with ratio. The `ratio` parameter can only take a value between 0 and 1. 
+
+You can create as many levels as you want. But the levels that have same height will count as one level. And the levels that you provided are sorted from smallest to largest.
 
 ---
 
@@ -354,6 +360,29 @@ DraggableMenu(
   child: child, // That won't work. Add your item inside of the customUi instead.
 )
 ```
+
+---
+
+## Using Controller
+You can use `DraggableMenuController` to control the `DraggableMenu` widget.
+
+Provide the `DraggableMenuController` to the `controller` parameter of the `DraggableMenu`.
+
+```dart
+DraggableMenu(
+  controller: _controller; // Provide the DraggableMenuController here
+  child: child,
+)
+```
+
+And use one of the methods of the `DraggableMenuController` to control the `DraggableMenu` widget. For example:
+
+```dart
+onTap: () => _controller.animateTo(1);
+```
+
+### Methods:
+- **animateTo()** - *Animates to given level.*
 
 ---
 

@@ -6,6 +6,7 @@ class StatusDraggableMenu extends StatefulWidget {
   final bool fastDrag;
   final bool minimizeBeforeFastDrag;
   final CustomDraggableMenu ui;
+  final DraggableMenuController? controller;
 
   const StatusDraggableMenu({
     super.key,
@@ -13,6 +14,7 @@ class StatusDraggableMenu extends StatefulWidget {
     required this.fastDrag,
     required this.minimizeBeforeFastDrag,
     required this.ui,
+    this.controller,
   });
 
   @override
@@ -29,6 +31,7 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
   @override
   Widget build(BuildContext context) {
     return DraggableMenu(
+        controller: widget.controller,
         addStatusListener: (status, level) {
           setState(() {
             if (status == DraggableMenuStatus.canceling) {

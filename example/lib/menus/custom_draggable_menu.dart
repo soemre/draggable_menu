@@ -6,6 +6,7 @@ class CustomMenu extends StatelessWidget {
   final Widget child;
   final bool? fastDrag;
   final bool? minimizeBeforeFastDrag;
+  final DraggableMenuController? controller;
 
   const CustomMenu({
     super.key,
@@ -13,11 +14,13 @@ class CustomMenu extends StatelessWidget {
     this.fastDrag,
     this.minimizeBeforeFastDrag,
     this.ui,
+    this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
     return DraggableMenu(
+      controller: controller,
       ui: ui,
       levels: [
         DraggableMenuLevel.ratio(ratio: 1 / 3),

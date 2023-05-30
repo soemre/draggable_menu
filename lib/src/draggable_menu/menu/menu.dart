@@ -10,34 +10,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 class DraggableMenu extends StatefulWidget {
-  // /// It specifies the `default height` (`Level 0`) of the `Draggable Menu`.
-  // ///
-  // /// By default, it is `240` (Unlike the `defaultHeight` parameter, your widget's height can pass this value.),
-  // /// but if you use an expandable feature, you must provide a value.
-  // ///
-  // /// If the levels parameter's set but the `defaultHeight` isn't, it will throw an error.
-  // final double? defaultHeight;
-
   /// If it is `true`, the widget will be at its minimum height.
   ///
   /// By default, it is `false`.
   final bool? allowToShrink;
 
-  /// This is the parameter to use the `expand` feature.
+  /// This is the parameter to use the `expand` feature and to define a level. If you want a fixed height for the `Level 0`, provide a Level as well.
   ///
   /// Provide `DraggableMenuLevel` objects inside of it to create a level and customize its height.
-  /// And you must also provide the `defaultHeight` parameter to use it.
+  /// The lowest object you pass will be `Level 0` of the `Draggable Menu`'s level. You must provide at least two levels to use the `expand` feature.
   ///
-  /// The lowest object you pass will be used as `Level 1` of the `Draggable Menu`'s level.
-  ///
-  /// If you don't set the `defaultHeight` parameter,
-  /// it'll throw an error.
+  /// By default, `Level 0`'s height is `240` (Unlike the `DraggableMenuLevel`s, your widget's height can pass this value.).
   final List<DraggableMenuLevel>? levels;
 
   /// Adds a child inside the Draggable Menu's Default UI.
   final Widget child;
 
-  /// TODO
+  /// You can use `DraggableMenuController` to control the `DraggableMenu` widget.
+  ///
+  /// Provide the `DraggableMenuController` to the `controller` parameter.
+  /// And use one of the methods of the `DraggableMenuController` to control the `DraggableMenu` widget. For example:
+  ///
+  /// ```dart
+  /// onTap: () => _controller.animateTo(1);
+  /// ```
   final DraggableMenuController? controller;
 
   /// Overrides the Classic Draggable Menu UI.
@@ -367,7 +363,7 @@ class _DraggableMenuState extends State<DraggableMenu>
     if (_value != 0) {
       return _getMenuValue();
     } else {
-      return _menuValue * levels.length;
+      return _menuValue * ((levels.length - 1) <= 0 ? 0 : (levels.length - 1));
     }
   }
 
@@ -392,7 +388,7 @@ class _DraggableMenuState extends State<DraggableMenu>
       if (willExpand &&
           levels.isNotEmpty &&
           (_boxHeight! >= levels.last.height) &&
-          (atLevel == levels.length)) {
+          (atLevel == (levels.length - 1))) {
         _notifyStatusListener(DraggableMenuStatus.expanded);
       } else {
         if (_boxHeight! < _levelHeight(atLevel)) {
@@ -512,6 +508,7 @@ class _DraggableMenuState extends State<DraggableMenu>
   }
 
   animateTo(int level) {
+    assert(level < levels.length, "There is no level called Level $level.");
     atLevel = level;
     currentAnimation?.call();
     Animation<double> animation = Tween<double>(
@@ -638,7 +635,7 @@ class _DraggableMenuState extends State<DraggableMenu>
 
   double _levelHeight(int level) {
     if (level == 0) return _defH!;
-    return levels[level - 1].height;
+    return levels[level].height;
   }
 
   void onDragUpdate(double globalPosition) {
@@ -701,7 +698,7 @@ class _DraggableMenuState extends State<DraggableMenu>
       }
     } else if (details.velocity.pixelsPerSecond.dy <
         -(widget.fastDragVelocity ?? 1500)) {
-      if (atLevel != levels.length) {
+      if (atLevel != (levels.length - 1)) {
         if (willExpand && (widget.fastDragExpand != false)) {
           _expand();
           return true;
@@ -726,7 +723,7 @@ class _DraggableMenuState extends State<DraggableMenu>
       return;
     }
     int cLevel = 0;
-    for (int i = 0; i < levels.length + 1; i++) {
+    for (int i = 0; i < levels.length; i++) {
       if (_pos! < _levelHeight(i)) break;
       cLevel = i;
     }

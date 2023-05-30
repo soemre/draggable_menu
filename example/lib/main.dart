@@ -16,6 +16,7 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
+  final _controller = DraggableMenuController();
   CustomDraggableMenu _ui = const ClassicDraggableMenu();
   bool _barrier = true;
   bool _enableExpandedScroll = false;
@@ -23,10 +24,35 @@ class _AppState extends State<App> {
   bool _minimizeBeforeFastDrag = false;
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Draggable Menu Example"),
+      appBar: PreferredSize(
+        preferredSize: const Size(double.infinity, 64),
+        child: SafeArea(
+          child: Container(
+            margin: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.indigoAccent,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const Center(
+              child: Text(
+                "Draggable Menu Example App",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -58,7 +84,7 @@ class _AppState extends State<App> {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.red,
+                      color: Colors.indigoAccent,
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -71,11 +97,8 @@ class _AppState extends State<App> {
                             _ui = const ClassicDraggableMenu();
                           }),
                           style: _ui is ClassicDraggableMenu
-                              ? const ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStatePropertyAll(Colors.green),
-                                )
-                              : null,
+                              ? style(Colors.deepOrange)
+                              : style(Colors.indigoAccent),
                           child: const Text("Classic"),
                         ),
                       ),
@@ -86,11 +109,8 @@ class _AppState extends State<App> {
                             _ui = ModernDraggableMenu();
                           }),
                           style: _ui is ModernDraggableMenu
-                              ? const ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStatePropertyAll(Colors.green),
-                                )
-                              : null,
+                              ? style(Colors.deepOrange)
+                              : style(Colors.indigoAccent),
                           child: const Text("Modern"),
                         ),
                       ),
@@ -101,11 +121,8 @@ class _AppState extends State<App> {
                             _ui = const SoftModernDraggableMenu();
                           }),
                           style: _ui is SoftModernDraggableMenu
-                              ? const ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStatePropertyAll(Colors.green),
-                                )
-                              : null,
+                              ? style(Colors.deepOrange)
+                              : style(Colors.indigoAccent),
                           child: const Text("Soft Modern"),
                         ),
                       ),
@@ -122,16 +139,14 @@ class _AppState extends State<App> {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.red,
+                      color: Colors.indigoAccent,
                     ),
                   ),
                   const SizedBox(height: 2),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      style: const ButtonStyle(
-                        backgroundColor: MaterialStatePropertyAll(Colors.red),
-                      ),
+                      style: style(Colors.indigoAccent),
                       onPressed: () => DraggableMenu.open(
                         context,
                         CustomMenu(
@@ -149,9 +164,67 @@ class _AppState extends State<App> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      style: const ButtonStyle(
-                        backgroundColor: MaterialStatePropertyAll(Colors.red),
+                      style: style(Colors.indigoAccent),
+                      onPressed: () => DraggableMenu.open(
+                        context,
+                        CustomMenu(
+                          controller: _controller,
+                          ui: _ui,
+                          fastDrag: _fastDrag,
+                          minimizeBeforeFastDrag: _minimizeBeforeFastDrag,
+                          child: ScrollableManager(
+                            enableExpandedScroll: _enableExpandedScroll,
+                            child: SingleChildScrollView(
+                              physics: const NeverScrollableScrollPhysics(),
+                              child: Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child: ElevatedButton(
+                                        style: style(Colors.indigoAccent),
+                                        onPressed: () =>
+                                            _controller.animateTo(0),
+                                        child: const Text("Animate To Level 0"),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child: ElevatedButton(
+                                        style: style(Colors.indigoAccent),
+                                        onPressed: () =>
+                                            _controller.animateTo(1),
+                                        child: const Text("Animate To Level 1"),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child: ElevatedButton(
+                                        style: style(Colors.indigoAccent),
+                                        onPressed: () =>
+                                            _controller.animateTo(2),
+                                        child: const Text("Animate To Level 2"),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        barrier: _barrier,
                       ),
+                      child: const Text("Test the Controller"),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: style(Colors.indigoAccent),
                       onPressed: () => DraggableMenu.open(
                         context,
                         CustomMenu(
@@ -185,9 +258,7 @@ class _AppState extends State<App> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      style: const ButtonStyle(
-                        backgroundColor: MaterialStatePropertyAll(Colors.red),
-                      ),
+                      style: style(Colors.indigoAccent),
                       onPressed: () => DraggableMenu.open(
                         context,
                         CustomMenu(
@@ -201,7 +272,7 @@ class _AppState extends State<App> {
                                 children: [
                                   Flexible(
                                     child: ColoredBox(
-                                      color: Colors.red,
+                                      color: Colors.indigoAccent,
                                       child: ScrollableManager(
                                         enableExpandedScroll:
                                             _enableExpandedScroll,
@@ -226,7 +297,7 @@ class _AppState extends State<App> {
                                   const SizedBox(width: 32),
                                   Flexible(
                                     child: ColoredBox(
-                                      color: Colors.red,
+                                      color: Colors.indigoAccent,
                                       child: ScrollableManager(
                                         enableExpandedScroll:
                                             _enableExpandedScroll,
@@ -262,10 +333,7 @@ class _AppState extends State<App> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      style: const ButtonStyle(
-                        backgroundColor:
-                            MaterialStatePropertyAll(Colors.purple),
-                      ),
+                      style: style(Colors.deepOrange),
                       onPressed: () => DraggableMenu.open(
                         context,
                         StatusDraggableMenu(
@@ -297,7 +365,7 @@ class _AppState extends State<App> {
           style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Colors.red,
+            color: Colors.indigoAccent,
           ),
         ),
         const SizedBox(height: 2),
@@ -310,10 +378,8 @@ class _AppState extends State<App> {
                   onPressed(true);
                 }),
                 style: button
-                    ? const ButtonStyle(
-                        backgroundColor: MaterialStatePropertyAll(Colors.green),
-                      )
-                    : null,
+                    ? style(Colors.deepOrange)
+                    : style(Colors.indigoAccent),
                 child: const Text("True"),
               ),
             ),
@@ -324,16 +390,28 @@ class _AppState extends State<App> {
                   onPressed(false);
                 }),
                 style: !button
-                    ? const ButtonStyle(
-                        backgroundColor: MaterialStatePropertyAll(Colors.green),
-                      )
-                    : null,
+                    ? style(Colors.deepOrange)
+                    : style(Colors.indigoAccent),
                 child: const Text("False"),
               ),
             ),
           ],
         ),
       ],
+    );
+  }
+
+  ButtonStyle style(Color color) {
+    return ButtonStyle(
+      backgroundColor: MaterialStatePropertyAll(color),
+      padding: const MaterialStatePropertyAll(EdgeInsets.all(12)),
+      shape: const MaterialStatePropertyAll(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(32),
+          ),
+        ),
+      ),
     );
   }
 }
