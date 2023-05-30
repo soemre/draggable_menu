@@ -1,3 +1,5 @@
+<img src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/cover.png?raw=true">
+
 # Flutter Draggable Menu (draggable_menu)
 [![Pub](https://img.shields.io/badge/pub-v4.0.0-%237f7eff?style=flat&logo=flutter)](https://pub.dev/packages/draggable_menu)
 [![GitHub](https://img.shields.io/badge/GitHub-v4.0.0-%237f7eff?style=flat&logo=github)](https://github.com/emresoysuren/draggable_menu)
