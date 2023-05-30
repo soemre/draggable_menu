@@ -1,8 +1,15 @@
-<img src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/cover.png?raw=true">
+<img src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/cover.png?raw=true" style="display: block; margin-left: auto; margin-right: auto;">
+
+<p align="center">
+  <a href="https://pub.dev/packages/draggable_menu">
+    <img src="https://img.shields.io/badge/pub-v4.0.0-%237f7eff?style=flat&logo=flutter">
+  </a>
+  <a href="https://github.com/emresoysuren/draggable_menu">
+    <img src="https://img.shields.io/badge/GitHub-v4.0.0-%237f7eff?style=flat&logo=github">
+  </a>
+</p>
 
 # Flutter Draggable Menu (draggable_menu)
-[![Pub](https://img.shields.io/badge/pub-v4.0.0-%237f7eff?style=flat&logo=flutter)](https://pub.dev/packages/draggable_menu)
-[![GitHub](https://img.shields.io/badge/GitHub-v4.0.0-%237f7eff?style=flat&logo=github)](https://github.com/emresoysuren/draggable_menu)
 
 With `draggable_menu`, create Draggable Menus as you want and make your app look way better and more convenient.
 
