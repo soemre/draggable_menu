@@ -1,6 +1,10 @@
-# 4.0.1 Release
+# 4.1.0 Release
 
-- Changed `WidgetsBinding.instance.window` with `PlatformDispatcher.instance.views.first`.
+- Fixed the `blockMenuClosing` feature issue
+
+- Optimized the whole menu code
+
+- Organized the whole menu code
 
 ## 4.0.0 Release Notes
 

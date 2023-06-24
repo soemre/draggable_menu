@@ -2,10 +2,10 @@
 
 <p align="center">
   <a href="https://pub.dev/packages/draggable_menu">
-    <img src="https://img.shields.io/badge/pub-v4.0.1-%237f7eff?style=flat&logo=flutter">
+    <img src="https://img.shields.io/badge/pub-v4.1.0-%237f7eff?style=flat&logo=flutter">
   </a>
   <a href="https://github.com/emresoysuren/draggable_menu">
-    <img src="https://img.shields.io/badge/GitHub-v4.0.1-%237f7eff?style=flat&logo=github">
+    <img src="https://img.shields.io/badge/GitHub-v4.1.0-%237f7eff?style=flat&logo=github">
   </a>
 </p>
 
@@ -18,6 +18,7 @@ Create Draggable Menus like some popular apps like **Instagram**, **Snapchat**, 
 `draggable_menu` also allows you to customize the UI and the animations. You can use one of the default themes or create your custom UI from scratch.
 
 ## Features
+- Expandable
 - Fully customizable UI
 - Fully customizable levels
 - Fully customizable animations
@@ -26,17 +27,19 @@ Create Draggable Menus like some popular apps like **Instagram**, **Snapchat**, 
 - Fast Drag Gestures
 - Has multiple listeners to listen to its values
 - You can use it without any configurations
-- Contains pre-build UIs
+- Contains pre-build UIs and route
+
+**Contributions are welcome. And you can support it by giving it a star on `GitHub` or liking it in `pub.dev`.**
 
 | Classic UI | Modern UI (with Scrollable) | Soft Modern UI (with Status) |
 |---|---|---|
 |<img width="200" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/video-1.gif?raw=true">|<img width="200" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/video-2.gif?raw=true">|<img width="200" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/video-3.gif?raw=true">|
 
-# Quick Start
-To start as fast as possible, you need to know how to create, open and close it.
+# Getting Started
+Let's teach you how to create, open and close the DraggableMenu.
 
 ## Create the Draggable Menu
-Create a Draggable Menu widget with a child.
+Create a Draggable Menu widget and pass your child to its `child` parameter.
 
 ```dart
 DraggableMenu(
@@ -65,13 +68,15 @@ DraggableMenu.open(
 )
 ```
 
-Note: *The `DraggableMenu.open()` shouldn't be in the same place as the `MaterialApp` widget.*
+Note: *The `DraggableMenu.open()` needs a Navigator to push the Menu.*
 
 If you want to close the menu programmatically close it by calling the `Navigator`'s `pop` method.
 
 ```dart
 Navigator.pop(context);
 ```
+
+**And before you go, you might want to change it's color or other parameters about the `DraggableMenu`'s `UI`. To configure them check the `Use Different UIs or Edit The Current UI` section.**
 
 
 # Parameters of DraggableMenu
@@ -192,7 +197,7 @@ You can create as many levels as you want. But the levels that have same height 
 
 ---
 
-## Use Different UIs
+## Use Different UIs or Edit The Current UI (eg. Change its color etc.)
 You can use different UIs rather than the default one. You can use pre-made UIs or create your own UI.
 
 For creating your own UI, check out the `Create your custom UI` section at the end of this file. If you don't want to create your own UI, you can use one of the pre-made UIs.
@@ -204,11 +209,13 @@ Pre-Made UIs:
 - `ModernDraggableMenu`
 - `SoftModernDraggableMenu`
 
-Note: *You can change some features of the pre-made UIs by using their parameters.*
+You can change the UIs' colors by using their parameters.
 
 ```dart
 DraggableMenu(
-  ui: SoftModernDraggableMenu();
+  ui: SoftModernDraggableMenu(
+    color: color, // Changes the UI's (Draggable Menu's) background color.
+  );
   child: child,
 )
 ```
