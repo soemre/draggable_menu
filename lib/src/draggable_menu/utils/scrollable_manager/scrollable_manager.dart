@@ -105,7 +105,7 @@ class _ScrollableManagerState extends State<ScrollableManager> {
       drag!.update(details);
     } else {
       if ((widget.enableExpandedScroll != true) ||
-          (ScrollableManagerScope.of(context).willExpand != true)) {
+          (ScrollableManagerScope.of(context).canExpand != true)) {
         _handleStart(details);
       } else {
         // if enableExpandedScroll == true

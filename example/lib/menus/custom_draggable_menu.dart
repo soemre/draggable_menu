@@ -4,15 +4,15 @@ import 'package:flutter/material.dart';
 class CustomMenu extends StatelessWidget {
   final CustomDraggableMenu? ui;
   final Widget child;
-  final bool? fastDrag;
-  final bool? minimizeBeforeFastDrag;
+  final bool fastDrag;
+  final bool minimizeBeforeFastDrag;
   final DraggableMenuController? controller;
 
   const CustomMenu({
     super.key,
     required this.child,
-    this.fastDrag,
-    this.minimizeBeforeFastDrag,
+    required this.fastDrag,
+    required this.minimizeBeforeFastDrag,
     this.ui,
     this.controller,
   });

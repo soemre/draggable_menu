@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class ScrollableManagerScope extends InheritedWidget {
   const ScrollableManagerScope({
-    this.willExpand,
+    this.canExpand,
     this.status,
     this.onDragUpdate,
     this.onDragEnd,
@@ -16,13 +16,13 @@ class ScrollableManagerScope extends InheritedWidget {
   final void Function(DragEndDetails details)? onDragEnd;
   final void Function(double globalPosition)? onDragStart;
   final DraggableMenuStatus? status;
-  final bool? willExpand;
+  final bool? canExpand;
 
   static ScrollableManagerScope of(BuildContext context) {
     final ScrollableManagerScope? result =
         context.dependOnInheritedWidgetOfExactType<ScrollableManagerScope>();
-    if (result == null) throw "Result can't be null.";
-    return result;
+    assert(result != null, "Result can't be null.");
+    return result!;
   }
 
   @override

@@ -159,8 +159,9 @@ class _ModernUiState extends State<_ModernUi> with TickerProviderStateMixin {
       child: Material(
         animationDuration: Duration.zero,
         borderRadius: BorderRadius.vertical(
-            top: Radius.circular(widget.radius ?? 16),
-            bottom: Radius.circular(_radius ?? widget.radius ?? 16)),
+          top: Radius.circular(widget.radius ?? 16),
+          bottom: Radius.circular(_radius ?? widget.radius ?? 16),
+        ),
         color: widget.color ?? DefaultColors.primaryBackground,
         child: Column(
           mainAxisSize: MainAxisSize.min,

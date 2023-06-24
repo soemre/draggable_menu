@@ -40,7 +40,7 @@ Create a Draggable Menu widget with a child.
 
 ```dart
 DraggableMenu(
-  child: child, // Optional
+  child: child,
 )
 ```
 
@@ -51,7 +51,7 @@ Open the menu by calling Draggable Menu's static `open` method.
 DraggableMenu.open(
   context,
   DraggableMenu(
-    child: child, // Optional
+    child: child,
   ),
 )
 ```
