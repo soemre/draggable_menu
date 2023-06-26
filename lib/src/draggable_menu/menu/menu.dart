@@ -57,7 +57,7 @@ class DraggableMenu extends StatefulWidget {
   ///
   /// *To understand better the usage of the "Status Listeners",
   /// check out the [Draggable Menu Example](https://github.com/emresoysuren/draggable_menu/tree/main/example) app.*
-  final Function(DraggableMenuStatus status, int level)? addStatusListener;
+  final void Function(DraggableMenuStatus status, int level)? addStatusListener;
 
   /// Adds a listener to listen to its Menu Value.
   ///
@@ -69,7 +69,7 @@ class DraggableMenu extends StatefulWidget {
   ///
   /// *To understand better the usage of the "Value Listeners",
   /// check out the [Draggable Menu Example](https://github.com/emresoysuren/draggable_menu/tree/main/example) app.*
-  final Function(double menuValue, double? raw, double levelValue)?
+  final void Function(double menuValue, double? raw, double levelValue)?
       addValueListener;
 
   /// Specifies the duration of the Draggable Menu's animations.
@@ -461,7 +461,7 @@ class _DraggableMenuState extends State<DraggableMenu>
 
     // CLOSE
     _notifyStatusListener(DraggableMenuStatus.closing);
-    Navigator.pop(context);
+    Navigator.maybePop(context);
   }
 
   // FAST DRAG
@@ -708,40 +708,47 @@ class _DraggableMenuState extends State<DraggableMenu>
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onVerticalDragStart: (details) => _onDragStart(details.globalPosition.dy),
-      onVerticalDragUpdate: (details) =>
-          _onDragUpdate(details.globalPosition.dy),
-      onVerticalDragEnd: (details) => _onDragEnd(details),
-      child: Stack(
-        children: [
-          GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTapUp: (details) {
-              _close();
-            },
-            child: const SizedBox(
-              height: double.infinity,
-              width: double.infinity,
-            ),
-          ),
-          Positioned(
-            key: _widgetKey,
-            bottom: _bottom,
-            child: ScrollableManagerScope(
-              status: _status,
-              canExpand: _canExpand,
-              onDragStart: (globalPosition) => _onDragStart(globalPosition),
-              onDragUpdate: (globalPosition) => _onDragUpdate(globalPosition),
-              onDragEnd: (details) => _onDragEnd(details),
-              child: UiFormatter(
-                maxHeight: _boxHeight ?? _maxHeight,
-                minHeight: _boxHeight ?? _minHeight,
-                child: _ui,
+    return WillPopScope(
+      onWillPop: () async {
+        _notifyStatusListener(DraggableMenuStatus.closing);
+        return true;
+      },
+      child: GestureDetector(
+        onVerticalDragStart: (details) =>
+            _onDragStart(details.globalPosition.dy),
+        onVerticalDragUpdate: (details) =>
+            _onDragUpdate(details.globalPosition.dy),
+        onVerticalDragEnd: (details) => _onDragEnd(details),
+        child: Stack(
+          children: [
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTapUp: (details) {
+                _close();
+              },
+              child: const SizedBox(
+                height: double.infinity,
+                width: double.infinity,
               ),
             ),
-          ),
-        ],
+            Positioned(
+              key: _widgetKey,
+              bottom: _bottom,
+              child: ScrollableManagerScope(
+                status: _status,
+                canExpand: _canExpand,
+                onDragStart: (globalPosition) => _onDragStart(globalPosition),
+                onDragUpdate: (globalPosition) => _onDragUpdate(globalPosition),
+                onDragEnd: (details) => _onDragEnd(details),
+                child: UiFormatter(
+                  maxHeight: _boxHeight ?? _maxHeight,
+                  minHeight: _boxHeight ?? _minHeight,
+                  child: _ui,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
