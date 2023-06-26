@@ -1,6 +1,6 @@
-# 4.1.2 Release
+# 4.1.3 Release
 
-- Handled the native pop to notify the status listeners as closing.
+- The notify status listeners method of the animations is moved inside of the `animateTo` method.
 
 ## 4.0.0 Release Notes
 

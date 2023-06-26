@@ -273,14 +273,14 @@ class DraggableMenu extends StatefulWidget {
 
 class _DraggableMenuState extends State<DraggableMenu>
     with TickerProviderStateMixin {
-  // VARIBLES | START
+  // Varibles | Start
 
-  // FOR ANIMATION
+  // For animation
   late final AnimationController _animationController;
   late Ticker _ticker;
   Function()? _removeLastAnimation;
 
-  // MENU VALUES
+  // Menu Values
   double? _boxHeight;
   double _bottom = 0;
   int _currentLevel = 0;
@@ -288,36 +288,36 @@ class _DraggableMenuState extends State<DraggableMenu>
   List<DraggableMenuLevel> levels = [];
   final _widgetKey = GlobalKey();
 
-  // MOVEMENT VALUES
+  // Movement Values
   double? _startPosition;
   double? _startValue;
 
-  // STATUS VALUES
+  // Status Values
   DraggableMenuStatus _status = DraggableMenuStatus.minimized;
   double? _valueLog;
 
-  // VARIBLES | END
+  // Varibles | End
 
-  // FUNCTIONAL METHODS | START
+  // Functional Methods | Start
 
-  // INIT
+  // Init
 
   void _defaultHeightInit() =>
       SchedulerBinding.instance.addPostFrameCallback((_) {
-        // SET THE CURRENT HEIGHT AS DEFAULT HEIGHT BEFORE IT CHANGES
+        // Set the current height as the default height before it changes
         _defaultHeight = _widgetKey.currentContext!.size!.height;
       });
 
   void _controllerInit() {
-    // INITILIZES THE CONTROLLER (PASSES THE ANIMETTO METHOD)
+    // Initilizes the controller (Passes the _animeteTo method)
     widget.controller?.init((int level) => _animateTo(level));
 
-    // LISTENS THE CONTROLLER
+    // Adds itself as listener to the controller
     widget.controller?.addListener(() => setState(() {}));
   }
 
   void _levelsInit() {
-    // CHECK IF THERE IS ANY LEVEL GIVEN TO THE LEVELS PARAMETER
+    // Check if there is any level given to the levels parameter
     if (widget.levels?.isNotEmpty == true) {
       // DO NOT ADD THE LEVELS WITH SAME HEIGHT
       for (DraggableMenuLevel level in widget.levels!) {
@@ -326,86 +326,94 @@ class _DraggableMenuState extends State<DraggableMenu>
         }
       }
 
-      // SORTS THE LEVELS WITH THEIR HEIGHTS
+      // Sorts the levels with their heights
       levels.sort((a, b) => a.height.compareTo(b.height));
     }
   }
 
-  // ASSIGN THE ANIMATION CONTROLLER TO THE VARIBLE
+  // Assign the animation controller to the varible
   void _animationControllerInit() => _animationController =
       AnimationController(vsync: this, duration: _animationDuraiton);
 
   void _tickerInit() {
-    // CREATE THE TICKER AND ASSIGN IT TO THE VARIBLE
+    // Create the ticker and assign it to the varible
     _ticker = createTicker((_) {
       setState(() {
-        // DEBUG BEFORE DISPLAY THE NEW STATE
+        // Debug before display the new state
         _debug();
 
-        // NOTIFY THE LISTENERS BEFORE DISPLAY THE NEW STATE
+        // Notify the listeners before display the new state
         _notifyListeners();
       });
     });
 
-    // START THE TICKER
+    // Start the ticker
     _ticker.start();
   }
 
-  // DEBUG
+  // Debug
 
   void _debug() {
-    // DEBUG THE BOTTOM VALUE
+    // Debug the _bottom value
     if (_bottom > 0) _bottom = 0;
 
-    // DEBUG THE BOXHEIGHT VALUE
+    // Debug the _boxHeight value
     if (_boxHeight != null) {
       if (_lastLevelHeight < _boxHeight!) {
-        // CANNOT BE HEIGHER THE LAST LEVEL
+        // Cannot be heigher than the last level
         _boxHeight = _lastLevelHeight;
         _notifyStatusListener(DraggableMenuStatus.expanded);
       } else if (_boxHeight! <= _levelHeight(0)) {
-        // VALUE CANNOT BE EQUAL OR LOWER THAN THE LEVEL 0
+        // Value cannot be equal or lower than the level 0
         _boxHeight = null;
       }
     }
   }
 
-  // LISTENERS
+  // Listeners
 
   void _notifyListeners() {
-    // CHECK THE STATUS AND NOTIFY ITS LISTENERS
+    // Check the status and notify its listeners
     _checkStatus();
 
-    // NOTIFY THE LOSTENERS WITH NEW VALUES
+    // Notify the listeners with new values
     _notifyValueListener();
   }
 
-  // NOTIFIES THE VALUE LISTENERS
+  // Notify the value listeners
   _notifyValueListener() {
     if (_valueLog == _value) return;
     _valueLog = _value;
     return widget.addValueListener?.call(_menuValue, _value, _levelValue);
   }
 
-  // ANIMATETO METHOD
+  // _animateTo Method
 
   void _animateTo(int level) {
-    // ASSERT THE GIVEN LEVEL IS VALID
+    // Assert if the given level is valid
     _assertLevel(level);
 
-    // SET THE GIVEN LEVEL AS THE CURRENT LEVEL
+    if (level < _currentLevel) {
+      _notifyStatusListener(DraggableMenuStatus.minimizing);
+    } else if (level == _currentLevel) {
+      _notifyStatusListener(DraggableMenuStatus.canceling);
+    } else {
+      _notifyStatusListener(DraggableMenuStatus.expanding);
+    }
+
+    // Set the given level as the current level
     _currentLevel = level;
 
-    // REMOVE THE LAST ANIMATIONS LISTENER IF IT'S STILL LISTENING
+    // Remove the last animations listener if it's still listening
     _removeLastAnimation?.call();
 
-    // ASSIGN THE ANIMATION AND CALLBACK VALUES
+    // Assign the animation and callback values
 
     final Animation<double> animation =
         Tween<double>(begin: _value, end: _levelHeight(level)).animate(
       _animationController.drive(CurveTween(curve: _animationCurve)),
     );
-    // REFLECT TO THE VALUE CHANGES
+    // Reflect to the value changes
     void callback() {
       if (animation.value <= _levelHeight(0)) {
         _bottom = animation.value - _levelHeight(0);
@@ -416,84 +424,81 @@ class _DraggableMenuState extends State<DraggableMenu>
       }
     }
 
-    // STORE THE REMOVE LISTENER CALLBACK
+    // Store the remove listener callback
     _removeLastAnimation = () => animation.removeListener(callback);
 
-    // ADD CALLBACK AS THE LISTENER
+    // Add callback as the listener
     animation.addListener(callback);
 
-    // RUN THE ANIMATION
+    // Run the animation
     _animationController.reset();
     _animationController.forward();
   }
 
-  // DEFAULT ANIMATE METHODS
+  // Default animate methods
   void _minimize() {
-    // IF ITS HEIGHT IS NOT BIGGER THAN THE LEVEL 0 DO NOT TRY TO MINIMIZE IT
+    // If its height is not bigger than the level 0. Don't try to minimize it.
     if (!_atUpperPart) return;
 
-    // MINIMIZE
-    _notifyStatusListener(DraggableMenuStatus.minimizing);
+    // Minimize
     _animateTo(_currentLevel - 1);
   }
 
   void _expand() {
-    // IF IT IS ALREADY EXPANDED. DON'T TRY TO EXPAND IT
+    // If it is already expanded. Don't try to expand it.
     if (_isExpanded) return;
 
-    // EXPAND
-    _notifyStatusListener(DraggableMenuStatus.expanding);
+    // Expand
     _animateTo(_currentLevel + 1);
   }
 
   void _cancel() {
-    // IF IT IS ALREADY STABLE. DON'T TRY TO STABILIZE IT
+    // If it is already stable. Don't try to stabilize it
     if (_isStable) return;
 
-    // CANCEL (STABILIZE)
-    _notifyStatusListener(DraggableMenuStatus.canceling);
+    // Cancel (Stabilize)
     _animateTo(_currentLevel);
   }
 
   void _close() {
-    // THE blockMenuClosing PARAMETER WILL CANCEL THE OPERATION
+    // The blockMenuClosing parameter can cancel the operation
     if (widget.blockMenuClosing) return _cancel();
 
-    // CLOSE
+    // Close
     _notifyStatusListener(DraggableMenuStatus.closing);
     Navigator.maybePop(context);
   }
 
-  // FAST DRAG
+  // Fast Drag
   bool _fastDrag(DragEndDetails details) {
-    // CHECK THE WIDGET PARAMETERS
+    // Check the widget parameters
     if (!widget.fastDrag) return false;
     assert(
       !_fastDragVelocity.isNegative,
       "The `fastDragVelocity` parameter can't be negative.",
     );
 
-    // OPERATION
+    // Operation
     final double velocity = details.velocity.pixelsPerSecond.dy;
     if (velocity > _fastDragVelocity) {
-      // FAST DRAGGING TO DOWN
+      // Fast dragging to down
       if ((_minimizeBeforeFastDrag && _boxHeight == null) ||
           !_minimizeBeforeFastDrag) {
-        // UNDER THE LEVEL 0 OR WILL CLOSE WHEN DRAG FAST
+        // Under the level 0 or will close when drag fast
         if (widget.fastDragClose) {
           _close();
           return true;
         }
       } else if (_minimizeBeforeFastDrag && _boxHeight != null) {
-        // ABOVE THE LEVEL 0
+        // Above the level 0
         if (widget.fastDragMinimize) {
           _minimize();
           return true;
         }
       }
     } else if (velocity < -_fastDragVelocity) {
-      // FAST DRAGGING TO UP
-      // CANNOT BE AT THE LAST LEVEL
+      // Fast dragging to up
+      // Cannot be at the last level
       if (!_atMaxLevel && widget.fastDragExpand) {
         _expand();
         return true;
@@ -507,27 +512,27 @@ class _DraggableMenuState extends State<DraggableMenu>
     assert(_startValue != null);
 
     if (ghostValue <= _levelHeight(0)) {
-      // GHOST VALUE IS AT OR UNDER THE LEVEL 0
+      // Ghost value is at or under the level 0
       _bottom = -(_levelHeight(0) - ghostValue);
       _boxHeight = null;
     } else {
-      // GHOST VALUE IS ABOVE THE LEVEL 0
+      // Ghost value is above the level 0
       _bottom = 0;
       if (ghostValue < _lastLevelHeight) {
-        // GHOST LEVEL IS AT OR UNDER THE LAST LEVEL
-        // IF IT'S EXPANDABLE THIS WILL RUN
+        // Ghost level is at or under the last level
+        // If it's expandable, run this.
         _boxHeight = ghostValue;
       } else {
-        // GHOST LEVEL IS ABOVE THE LAST LEVEL
-        // IF IT'S NOT EXPANDABLE THIS WILL RUN
+        // Ghost level is above the last level
+        // If it's not expandable, run this.
         _boxHeight = _lastLevelHeight;
-        // INCREASE THE POSITION IF IT GOES ABOVE THE LAST LEVEL
+        // Increase the position if it goes above the last level
         _startPosition = position + (_lastLevelHeight - _startValue!);
       }
     }
   }
 
-  /// ASSERT THE GIVEN LEVEL IS VALID
+  /// Assert the given level is valid
   void _assertLevel(int level) {
     assert(
       (level <= levels.length && 0 <= level),
@@ -535,38 +540,38 @@ class _DraggableMenuState extends State<DraggableMenu>
     );
   }
 
-  // USE THIS INSTEAD OF _defaultHeight FOR READABILITY
+  // Use this instead of _defaultHeight for readability
   double _levelHeight(int level) {
-    // ASSERT THE GIVEN LEVEL IS VALID
+    // Assert the given level is valid
     _assertLevel(level);
-    // FOR LEVEL 0, READS THE _defaultHeight VALUE INSTEAD OF THE LEVEL INSIDE THE LEVELS LIST
-    // BECAUSE THE _defaultHeight PARAMETER WILL TAKE THE LEVEL'S HEIGHT WITH OTHER PARAMETERS INFLUENCE (LIKE allowToShrink)
+    // For level 0, reads the _defaultHeight value instead of the level inside the levels list
+    // Because the _defaultHeight parameter will take the level's height with other parameters influence (eg. allowToShrink)
     if (level == 0) return _defaultHeight!;
     return levels[level].height;
   }
 
   void _updateCurrentLevel() {
-    // STARTS AS -1. BECAUSE THE FOR LOOP CANNOT CHECK WHAT LEVELS ARE LOWER THAN THE POSITIONs UNDER THE LEVEL 0
-    // CAUSE THERE IS NO SUCH LEVEL EXISTS
+    // Starts as -1. Because the for loop cannot check what level are lower than the positions under the level 0.
+    // Cause there is no such level exists
     int newLevel = -1;
-    // FIND THE LEVELS UNDER CURRENT SIZE
+    // Find the levels under current size
     for (int i = 0; i < levels.length; i++) {
       if (_value < _levelHeight(i)) break;
       newLevel = i;
     }
-    // IF IT COMES FROM ANOTHER LEVEL ABOVE FOUND LEVEL
-    // IT MUST BE STILL AT THE SAME LEVEL. BUT MAYBE IT'S TRYING TO MINIMIZE ITSELF
+    // If is comes from another level above found level
+    // It must be still at the same level. But maybe it's trying to minimize itself.
     if (_currentLevel > newLevel) {
       newLevel = newLevel + 1;
     }
 
-    // DUE TO THE FIRST ASSIGNMENT WE NEED TO CHECK IF IT'S LOWER THAN 0 OR NOT
+    // Due to the first assignment, we need to check if it's lower than 0.
     _currentLevel = newLevel < 0 ? 0 : newLevel;
   }
 
-  // FUNCTIONAL METHODS | END
+  // Functional Methods | End
 
-  // GETTERS | START
+  // Getters | Start
 
   Curve get _animationCurve => widget.curve ?? Curves.ease;
 
@@ -589,20 +594,20 @@ class _DraggableMenuState extends State<DraggableMenu>
 
   double get _upperPartHeight => _lastLevelHeight - _levelHeight(0);
 
-  /// IS THE MENU AT THE UPPER PART
+  /// Is the menu at the upper part
   ///
-  /// IT'S A NULL CHECK DO NOT USE IT LIKE IT'S A SIZE CHECK
+  /// It's just a null check, do not use it like it's a size check
   bool get _atUpperPart => _boxHeight != null;
 
   /// Visual size of the menu
-  /// DO NOT USE IT INSIDE THE BUILD METHOD
+  /// Don't use it inside the build method
   double get _value => _bottom + (_boxHeight ?? _levelHeight(0));
 
-  /// IT'S LIKE _value BUT IT RETURNS IT NULLABLE
+  /// It's like _value but it returns it nullable
   ///
-  /// IT'S CREATED TO USE THE GETTER INSIDE THE BUILD METHOD
+  /// It's created to use the getter inside the build method
   ///
-  /// ONLY USE IT INSIDE THE BUILD METHOD
+  /// Only use it inside the build method
   double? get _raw {
     if (_defaultHeight == null) return null;
     return _bottom + (_boxHeight ?? _defaultHeight!);
@@ -613,7 +618,7 @@ class _DraggableMenuState extends State<DraggableMenu>
 
   double get _lastLevelHeight => _levelHeight(_lastLevel);
 
-  /// LEVEL HEIGHT VALUE PASSED WITH THE LEVELS PARAMETER
+  /// Level height value passed with the levels parameter
   double? get _passedFirstLevelHeight {
     if (levels.isEmpty) return null;
     return levels.first.height;
@@ -623,52 +628,52 @@ class _DraggableMenuState extends State<DraggableMenu>
 
   bool get _atMaxLevel => _currentLevel == _lastLevel;
 
-  // NUMBER OF THE AVALIABLE LEVELS & LAST LEVEL NUMBER
+  // Number of the avaliable level (Last level number)
   int get _lastLevel => (levels.length - 1) <= 0 ? 0 : (levels.length - 1);
 
   bool get _isUnderLevel => _value < _currentLevelHeight;
 
-  // PARAMETER GETTERS
+  // Parameter Getters
   bool get _minimizeBeforeFastDrag =>
       widget.blockMenuClosing ? true : widget.minimizeBeforeFastDrag;
 
   double get _fastDragVelocity => widget.fastDragVelocity ?? 1500;
 
-  // STATUS CHECK GETTERS
-  /// WILL THE MENU MINIMIZE ITSELF WHEN IT'S RELEASED
+  // Status Check Getters
+  /// Will the menu minimize itself when it's released
   bool get _willMinimize =>
       _levelHeight(_currentLevel) - _value >
       (widget.fixedMinimizeThreshold ??
           (_levelHeight(_currentLevel) - _levelHeight(_currentLevel - 1)) *
               (widget.minimizeThreshold ?? (1 / 3)));
 
-  /// WILL THE MENU EXPAND ITSELF WHEN IT'S RELEASED
+  /// Will the menu expand itself when it's released
   bool get _willExpand =>
       _value - _levelHeight(_currentLevel) >
       (widget.fixedExpandThreshold ??
           (_levelHeight(_currentLevel + 1) - _levelHeight(_currentLevel)) *
               (widget.expandThreshold ?? (1 / 3)));
 
-  /// WILL THE MENU CLOSE ITSELF WHEN IT'S RELEASED
+  /// Will the menu close itself when it's released
   bool get _willClose => widget.fixedCloseThreshold == null
       ? (-_bottom / _levelHeight(0) > (widget.closeThreshold ?? (0.5)))
       : -_bottom > widget.fixedCloseThreshold!;
 
-  /// IS THE MENU MOVING BY ITSELF
+  /// Is the menu moving by itself (Like animating or pop)
   bool get _isMoving =>
       _animationController.isAnimating ||
       _status == DraggableMenuStatus.closing;
 
-  /// IS THE MENU STABLE (MEANS IS THE MENU AT ANY LEVEL)
+  /// Is the menu stable (It means "Is the menu at any level?")
   bool get _isStable => _currentLevelHeight == _value;
 
-  /// IS THE MENU EXPANDED
+  /// Is the menu expanded
   bool get _isExpanded {
     if (levels.length < 2) return false;
     return _value == _lastLevelHeight;
   }
 
-  // UI GETTER
+  // UI Getter
   Widget get _ui =>
       widget.customUi ??
       (widget.ui ?? _defaultUi).buildUi(
@@ -683,18 +688,18 @@ class _DraggableMenuState extends State<DraggableMenu>
         widget.curve ?? Curves.ease,
       );
 
-  // DEFINED MENU UI
+  // Defined Menu UI
   CustomDraggableMenu get _defaultUi => const ClassicDraggableMenu();
 
-  // CONSTRAINS
+  // Constrains
   double get _minHeight =>
       widget.allowToShrink ? 0 : _passedFirstLevelHeight ?? 240;
 
   double get _maxHeight => _passedFirstLevelHeight ?? double.infinity;
 
-  // GETTERS | END
+  // Getters | End
 
-  // CLASS FUNCTIONS SECTION | START
+  // Class Functions Section | Start
 
   @override
   void initState() {
@@ -760,128 +765,121 @@ class _DraggableMenuState extends State<DraggableMenu>
     super.dispose();
   }
 
-  // CLASS FUNCTIONS SECTION | END
+  // Class Functions Section | End
 
-  // MAIN MOVEMENT SECTION | START
+  // Main Movement Section | Start
 
   void _onDragStart(double globalPosition) {
-    // STOP ANIMATIONS
+    // Stop animations
     if (_animationController.isAnimating) _animationController.stop();
 
-    // MOVMENT INIT
+    // Movement init
     _startPosition = globalPosition;
     _startValue = _value;
   }
 
   void _onDragUpdate(double globalPosition) {
-    // ASSERT | START
-
-    // ASSERT THE NEEDED VALUES
+    // Assert the needed values
     assert(_startPosition != null);
     assert(_startValue != null);
 
-    // ASSERT | END
-
-    // LIVE MOVEMENT SECTION | START
-
-    // CALCULATE THE DELTA FROM THE BEGINNING
+    // Calculate the delta from the beginning
     final double delta = _startPosition! - globalPosition;
-    // GHOST VALUE
+
+    // Ghost value
     final double ghostValue = _startValue! + delta;
     _convertGhost(ghostValue, globalPosition);
 
-    // UPDATE THE CURRENT LEVEL AFTER SETTING THE POSITION
+    // Update the current level after setting the position
     _updateCurrentLevel();
-
-    // LIVE MOVEMENT SECTION | END
   }
 
   void _onDragEnd(DragEndDetails details) {
-    // IF IT CAN STABLE IT SELF BY DOING FAST DRAG DO NOT ANYTHING MORE
+    // If it can stable itself by doing fast drag don't do anyting
     if (_fastDrag(details)) return;
 
-    // IF IT'S ALREADY STABLE DO NOT DO ANYTHING
+    // If it's already stable don't do anything
     if (_isStable) return;
 
-    // IT'S UNSTABLE. STABLEIZE IT.
+    // It's unstable. Stabilize it.
     if (_bottom < 0) {
-      // THE DOWN SIDE OF THE DRAGGABLE MENU
+      // The down side of the draggable menu
       if (_willClose) {
         _close();
       } else {
         _cancel();
       }
     } else {
-      // THE UP SIDE OF THE DRAGGABLE MENU
+      // The up side of the draggable menu
       if (_isUnderLevel) {
-        // THE DOWN SIDE OF THE CURRENT LEVEL
+        // The down side of the current level
         if (_willMinimize) {
           _minimize();
         } else {
           _cancel();
         }
       } else {
-        // THE UP SIDE OF THE CURRENT LEVEL
+        // The up side of the current level
         if (!_atMaxLevel) {
-          // THIS PART IS LOWER THAN THE MAX LEVEL
+          // This part is lower than the max level
           if (_willExpand) {
             _expand();
           } else {
             _cancel();
           }
         } else {
-          // THIS PART IS HIGHER THAN THE MAX LEVEL
-          // KEEP THIS TO AVOID POSSIBLE BUGS
+          // This part is higher than the max level
+          // Keep this to avoid possible bugs
           _debug();
         }
       }
     }
   }
 
-  // MAIN MOVEMENT SECTION | END
+  // Main Movement Section | End
 
-  // STATUS SECTION | START
+  // Status Section | Start
 
   void _checkStatus() {
-    // IF IT'S MOVING DO NOT CHANGE ITS STATUS WITH STATIC STATUS
+    // If it's moving don't change its status with static status
     if (_isMoving) return;
     if (_isStable) {
-      // STABLE
+      // The Menu is stable
       if (_isExpanded) {
         _notifyStatusListener(DraggableMenuStatus.expanded);
       } else {
         _notifyStatusListener(DraggableMenuStatus.minimized);
       }
     } else {
-      // UNSTABLE
+      // The menu is unstable
       if (_bottom < 0) {
-        // THE DOWN SIDE OF THE DRAGGABLE MENU
+        // The down side of the menu
         if (_willClose) {
           _notifyStatusListener(DraggableMenuStatus.willClose);
         } else {
           _notifyStatusListener(DraggableMenuStatus.mayClose);
         }
       } else {
-        // THE UP SIDE OF THE DRAGGABLE MENU
+        // The up side of the menu
         if (_isUnderLevel) {
-          // THE DOWN SIDE OF THE CURRENT LEVEL
+          // The down side of the current level
           if (_willMinimize) {
             _notifyStatusListener(DraggableMenuStatus.willMinimize);
           } else {
             _notifyStatusListener(DraggableMenuStatus.mayMinimize);
           }
         } else {
-          // THE UP SIDE OF THE CURRENT LEVEL
+          // The up side of the current level
           if (!_atMaxLevel) {
-            // THIS PART IS LOWER THAN THE MAX LEVEL
+            // This part is lower than the max level
             if (_willExpand) {
               _notifyStatusListener(DraggableMenuStatus.willExpand);
             } else {
               _notifyStatusListener(DraggableMenuStatus.mayExpand);
             }
           } else {
-            // THIS PART IS HIGHER THAN THE MAX LEVEL
-            // KEEP THIS TO AVOID POSSIBLE BUGS
+            // This part is higher than the max level
+            // Keep this to avoid possible bugs
             _notifyStatusListener(DraggableMenuStatus.expanded);
           }
         }
@@ -889,18 +887,18 @@ class _DraggableMenuState extends State<DraggableMenu>
     }
   }
 
-  /// NOTIFY THE STATUS LISTENERS
+  /// Notify the status listeners
   void _notifyStatusListener(DraggableMenuStatus status) {
-    // IF THE STATUS HASN'T CHANGED. DO NOT NOTIFY THE LISTENERS
-    // ONLY NOTIFY THEM WHEN THE STATUS HAS CHANGED
+    // If the status hasn't changed. Don't notify the listeners
+    // Only notify them when the status has changed
     if (_status == status) return;
 
-    // CHANGE THE STATUS
+    // Change the status
     _status = status;
 
-    // NOTIFY THE LISTENERS AND PASS THE LEVEL THE STATUS FOR
+    // Notify the listeners and pass the level the status related to
     widget.addStatusListener?.call(status, _currentLevel);
   }
 
-  // STATUS SECTION | END
+  // Status Section | End
 }
