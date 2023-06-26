@@ -1,10 +1,6 @@
-# 4.1.0 Release
+# 4.1.1 Release
 
-- Fixed the `blockMenuClosing` feature issue
-
-- Optimized the whole menu code
-
-- Organized the whole menu code
+- Optimized the Value Listeners
 
 ## 4.0.0 Release Notes
 

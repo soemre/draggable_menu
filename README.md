@@ -2,10 +2,10 @@
 
 <p align="center">
   <a href="https://pub.dev/packages/draggable_menu">
-    <img src="https://img.shields.io/badge/pub-v4.1.0-%237f7eff?style=flat&logo=flutter">
+    <img src="https://img.shields.io/badge/pub-v4.1.1-%237f7eff?style=flat&logo=flutter">
   </a>
   <a href="https://github.com/emresoysuren/draggable_menu">
-    <img src="https://img.shields.io/badge/GitHub-v4.1.0-%237f7eff?style=flat&logo=github">
+    <img src="https://img.shields.io/badge/GitHub-v4.1.1-%237f7eff?style=flat&logo=github">
   </a>
 </p>
 

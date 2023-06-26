@@ -294,6 +294,7 @@ class _DraggableMenuState extends State<DraggableMenu>
 
   // STATUS VALUES
   DraggableMenuStatus _status = DraggableMenuStatus.minimized;
+  double? _valueLog;
 
   // VARIBLES | END
 
@@ -380,8 +381,11 @@ class _DraggableMenuState extends State<DraggableMenu>
   }
 
   // NOTIFIES THE VALUE LISTENERS
-  _notifyValueListener() =>
-      widget.addValueListener?.call(_menuValue, _value, _levelValue);
+  _notifyValueListener() {
+    if (_valueLog == _value) return;
+    _valueLog = _value;
+    return widget.addValueListener?.call(_menuValue, _value, _levelValue);
+  }
 
   // ANIMATETO METHOD
 
