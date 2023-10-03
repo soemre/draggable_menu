@@ -35,6 +35,7 @@ class ClassicDraggableMenu extends CustomDraggableMenu {
       animationDuration: Duration.zero,
       color: color ?? DefaultColors.primaryBackground,
       borderRadius: BorderRadius.vertical(top: Radius.circular(radius ?? 16)),
+      clipBehavior: Clip.hardEdge,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

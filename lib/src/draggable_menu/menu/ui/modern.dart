@@ -163,6 +163,7 @@ class _ModernUiState extends State<_ModernUi> with TickerProviderStateMixin {
           bottom: Radius.circular(_radius ?? widget.radius ?? 16),
         ),
         color: widget.color ?? DefaultColors.primaryBackground,
+        clipBehavior: Clip.hardEdge,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

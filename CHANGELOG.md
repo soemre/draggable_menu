@@ -1,6 +1,6 @@
-# 4.1.3 Release
+# 4.1.4 Release
 
-- The notify status listeners method of the animations is moved inside of the `animateTo` method.
+- Default UI clip behavior bug fix
 
 ## 4.0.0 Release Notes
 

@@ -46,6 +46,7 @@ class SoftModernDraggableMenu extends CustomDraggableMenu {
                 (1 -
                     (levelValue < 0 ? 0 : (levelValue < 1 ? levelValue : 1))))),
         color: color ?? DefaultColors.primaryBackground,
+        clipBehavior: Clip.hardEdge,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
