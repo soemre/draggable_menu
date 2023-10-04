@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 import '../custom_draggable_menu.dart';
 
 class TestControllerMenu extends StatefulWidget {
-  final CustomDraggableMenu ui;
+  final Type ui;
   final bool enableExpandedScroll;
   final bool fastDrag;
   final bool minimizeBeforeFastDrag;

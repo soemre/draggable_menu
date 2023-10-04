@@ -4,6 +4,9 @@ import 'package:draggable_menu/src/draggable_menu/menu/widgets/default_bar_item.
 import 'package:flutter/material.dart';
 
 class ClassicDraggableMenu extends CustomDraggableMenu {
+  /// Adds a child inside the Draggable Menu's UI.
+  final Widget child;
+
   /// Overrides the Default Bar Item of the UI.
   final Widget? barItem;
 
@@ -16,13 +19,17 @@ class ClassicDraggableMenu extends CustomDraggableMenu {
   /// Specifies the radius of the UI.
   final double? radius;
 
-  const ClassicDraggableMenu(
-      {this.barItem, this.accentColor, this.color, this.radius});
+  const ClassicDraggableMenu({
+    this.barItem,
+    this.accentColor,
+    this.color,
+    this.radius,
+    required this.child,
+  });
 
   @override
   Widget buildUi(
     BuildContext context,
-    Widget child,
     DraggableMenuStatus status,
     int level,
     double menuValue,

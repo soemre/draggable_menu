@@ -3,7 +3,6 @@ import 'package:draggable_menu/src/draggable_menu/menu/custom_draggable_menu.dar
 import 'package:draggable_menu/src/draggable_menu/menu/draggable_menu_level.dart';
 import 'package:draggable_menu/src/draggable_menu/menu/enums/status.dart';
 import 'package:draggable_menu/src/draggable_menu/menu/ui_formatter.dart';
-import 'package:draggable_menu/src/draggable_menu/menu/ui/classic.dart';
 import 'package:draggable_menu/src/draggable_menu/route.dart';
 import 'package:draggable_menu/src/draggable_menu/utils/scrollable_manager/scrollable_manager_scope.dart';
 import 'package:flutter/material.dart';
@@ -22,9 +21,6 @@ class DraggableMenu extends StatefulWidget {
   ///
   /// By default, `Level 0`'s height is `240` (Unlike the `DraggableMenuLevel`s, your widget's height can pass this value.).
   final List<DraggableMenuLevel>? levels;
-
-  /// Adds a child inside the Draggable Menu's Default UI.
-  final Widget child;
 
   /// You can use `DraggableMenuController` to control the `DraggableMenu` widget.
   ///
@@ -51,7 +47,7 @@ class DraggableMenu extends StatefulWidget {
   ///
   /// *Check out the [Draggable Menu Example](https://github.com/emresoysuren/draggable_menu/tree/main/example)
   /// app for more examples.*
-  final CustomDraggableMenu? ui;
+  final CustomDraggableMenu ui;
 
   /// Adds a listener to listen to its Status.
   ///
@@ -196,8 +192,7 @@ class DraggableMenu extends StatefulWidget {
   /// *For more info, visit the [GitHub Repository](https://github.com/emresoysuren/draggable_menu).*
   const DraggableMenu({
     super.key,
-    required this.child,
-    this.ui,
+    required this.ui,
     this.addStatusListener,
     this.addValueListener,
     this.animationDuration,
@@ -676,9 +671,8 @@ class _DraggableMenuState extends State<DraggableMenu>
   // UI Getter
   Widget get _ui =>
       widget.customUi ??
-      (widget.ui ?? _defaultUi).buildUi(
+      widget.ui.buildUi(
         context,
-        widget.child,
         _status,
         _currentLevel,
         _menuValue,
@@ -687,9 +681,6 @@ class _DraggableMenuState extends State<DraggableMenu>
         widget.animationDuration ?? const Duration(milliseconds: 320),
         widget.curve ?? Curves.ease,
       );
-
-  // Defined Menu UI
-  CustomDraggableMenu get _defaultUi => const ClassicDraggableMenu();
 
   // Constrains
   double get _minHeight =>

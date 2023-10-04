@@ -15,7 +15,6 @@ abstract class CustomDraggableMenu {
   /// Use the `animationDuration` and the `curve` values to get Draggable Menu's current `animationDuration` and `curve`.
   Widget buildUi(
     BuildContext context,
-    Widget child,
     DraggableMenuStatus status,
     int level,
     double menuValue,

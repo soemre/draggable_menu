@@ -3,7 +3,7 @@ import 'package:example/menus/custom_draggable_menu.dart';
 import 'package:flutter/material.dart';
 
 class ScrollableMenu extends StatelessWidget {
-  final CustomDraggableMenu ui;
+  final Type ui;
   final bool enableExpandedScroll;
   final bool fastDrag;
   final bool minimizeBeforeFastDrag;

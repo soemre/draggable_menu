@@ -2,7 +2,7 @@ import 'package:draggable_menu/draggable_menu.dart';
 import 'package:flutter/material.dart';
 
 class CustomMenu extends StatelessWidget {
-  final CustomDraggableMenu? ui;
+  final Type ui;
   final Widget child;
   final bool fastDrag;
   final bool minimizeBeforeFastDrag;
@@ -13,7 +13,7 @@ class CustomMenu extends StatelessWidget {
     required this.child,
     required this.fastDrag,
     required this.minimizeBeforeFastDrag,
-    this.ui,
+    required this.ui,
     this.controller,
   });
 
@@ -21,7 +21,15 @@ class CustomMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return DraggableMenu(
       controller: controller,
-      ui: ui,
+      ui: ui == ModernDraggableMenu
+          ? ModernDraggableMenu(child: child)
+          : ui == SoftModernDraggableMenu
+              ? SoftModernDraggableMenu(child: child)
+              : ui == ModularDraggableMenu
+                  ? ModularDraggableMenu(
+                      children: [child, const Text("2nd Module Example")],
+                    )
+                  : ClassicDraggableMenu(child: child),
       levels: [
         DraggableMenuLevel.ratio(ratio: 1 / 3),
         DraggableMenuLevel.ratio(ratio: 2 / 3),
@@ -29,7 +37,6 @@ class CustomMenu extends StatelessWidget {
       ],
       fastDrag: fastDrag,
       minimizeBeforeFastDrag: minimizeBeforeFastDrag,
-      child: child,
     );
   }
 }

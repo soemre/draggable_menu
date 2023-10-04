@@ -24,7 +24,7 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  CustomDraggableMenu _ui = const ClassicDraggableMenu();
+  Type _ui = ClassicDraggableMenu;
   bool _barrier = true;
   bool _enableExpandedScroll = false;
   bool _fastDrag = true;
@@ -73,36 +73,36 @@ class _AppState extends State<App> {
                     children: [
                       AppButton(
                         padding: EdgeInsets.zero,
-                        active: _ui.runtimeType == ClassicDraggableMenu,
+                        active: _ui == ClassicDraggableMenu,
                         onPressed: () => setState(() {
-                          _ui = const ClassicDraggableMenu();
+                          _ui = ClassicDraggableMenu;
                         }),
                         label: "Classic",
                       ),
                       const SizedBox(width: 8),
                       AppButton(
                         padding: EdgeInsets.zero,
-                        active: _ui.runtimeType == ModernDraggableMenu,
+                        active: _ui == ModernDraggableMenu,
                         onPressed: () => setState(() {
-                          _ui = ModernDraggableMenu();
+                          _ui = ModernDraggableMenu;
                         }),
                         label: "Modern",
                       ),
                       const SizedBox(width: 8),
                       AppButton(
                         padding: EdgeInsets.zero,
-                        active: _ui.runtimeType == SoftModernDraggableMenu,
+                        active: _ui == SoftModernDraggableMenu,
                         onPressed: () => setState(() {
-                          _ui = const SoftModernDraggableMenu();
+                          _ui = SoftModernDraggableMenu;
                         }),
                         label: "Soft Modern",
                       ),
                       const SizedBox(width: 8),
                       AppButton(
                         padding: EdgeInsets.zero,
-                        active: _ui.runtimeType == Null,
+                        active: _ui == ModularDraggableMenu,
                         onPressed: () => setState(() {
-                          _ui = const SoftModernDraggableMenu();
+                          _ui = ModularDraggableMenu;
                         }),
                         label: "Modular",
                       ),
