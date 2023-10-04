@@ -11,6 +11,7 @@ class ModularDraggableMenu extends CustomDraggableMenu {
   /// Each item will be seperated with modules.
   final List<Widget> items;
 
+  /// Specifies the gap between modules.
   final double gap;
 
   /// Overrides the Default Bar Item of the UI.

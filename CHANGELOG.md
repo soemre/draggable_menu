@@ -1,6 +1,6 @@
-# 4.1.4 Release
+# 4.2.0 Release
 
-- Default UI clip behavior bug fix
+- Add `ModularDraggableMenu` UI
 
 ## 4.0.0 Release Notes
 

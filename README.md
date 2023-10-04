@@ -2,10 +2,10 @@
 
 <p align="center">
   <a href="https://pub.dev/packages/draggable_menu">
-    <img src="https://img.shields.io/badge/pub-v4.1.3-%237f7eff?style=flat&logo=flutter">
+    <img src="https://img.shields.io/badge/pub-v4.2.0-%237f7eff?style=flat&logo=flutter">
   </a>
   <a href="https://github.com/emresoysuren/draggable_menu">
-    <img src="https://img.shields.io/badge/GitHub-v4.1.3-%237f7eff?style=flat&logo=github">
+    <img src="https://img.shields.io/badge/GitHub-v4.2.0-%237f7eff?style=flat&logo=github">
   </a>
 </p>
 
@@ -31,14 +31,33 @@ Create Draggable Menus like some popular apps like **Instagram**, **Snapchat**, 
 
 **Contributions are welcome. And you can support it by giving it a star on `GitHub` or liking it in `pub.dev`.**
 
-| Classic UI | Modern UI (with Scrollable) | Soft Modern UI (with Status) |
+| Classic UI | Soft Modern UI (with Scrollable) | Modular UI (with Status) |
 |---|---|---|
 |<img width="200" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/video-1.gif?raw=true">|<img width="200" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/video-2.gif?raw=true">|<img width="200" src="https://github.com/emresoysuren/draggable_menu/blob/read-me-assets/video-3.gif?raw=true">|
+
+# Navigation
+
+- [Getting Started](#getting-started)
+  - [Create a Draggable Menu](#create-a-draggable-menu)
+  - [Open the Draggable Menu](#open-the-draggable-menu)
+- [Parameters of DraggableMenu](#parameters-of-draggablemenu)
+- [How To Use](#how-to-use)
+  - [Create a Draggable Menu and Open it](#create-a-draggable-menu-and-open-it)
+  - [How to Close](#how-to-close)
+  - [Use the Levels (Expandable Draggable Menu)](#use-the-levels-expandable-draggable-menu)
+  - [Use Different UIs or Edit The Current UI (eg. Change its color etc.)](#use-different-uis-or-edit-the-current-ui-eg-change-its-color-etc)
+  - [Using Scrollables](#using-scrollables)
+  - [Using Status Listener](#using-status-listener)
+  - [Using Value Listener](#using-value-listener)
+  - [Create your custom UI](#create-your-custom-ui)
+  - [Using Controller](#using-controller)
+
+Note: You can find more examples in the Draggable Menu Example app.
 
 # Getting Started
 Let's teach you how to create, open and close the DraggableMenu.
 
-## Create the Draggable Menu
+## Create a Draggable Menu
 Create a Draggable Menu widget and pass your child to its `child` parameter.
 
 ```dart
@@ -208,6 +227,7 @@ Pre-Made UIs:
 - `ClassicDraggableMenu`
 - `ModernDraggableMenu`
 - `SoftModernDraggableMenu`
+- `ModularDraggableMenu`
 
 You can change the UIs' colors by using their parameters.
 
@@ -257,7 +277,7 @@ Extra: *Check out the `ScrollableManager`'s `enableExpandedScroll` parameter.*
 
 ---
 
-## Using the Status Listener
+## Using Status Listener
 Use the `addStatusListener` parameter to listen to the Draggable Menu's status. 
 
 ### Dragable Menu's status are:
@@ -289,7 +309,7 @@ DraggableMenu(
 
 ---
 
-## Using the Value Listener
+## Using Value Listener
 Use the `addValueListener` parameter to listen to the Draggable Menu's Menu Value. 
 
 It takes a `double` value between `-1` and `1`.
