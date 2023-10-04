@@ -66,6 +66,8 @@ class _ScrollableManagerState extends State<ScrollableManager> {
   bool isOverScrolling = false;
   Drag? drag;
 
+  ScrollableManagerScope get _manager => ScrollableManagerScope.of(context);
+
   @override
   void dispose() {
     _controller.dispose();
@@ -98,19 +100,16 @@ class _ScrollableManagerState extends State<ScrollableManager> {
   onDragUpdate(DragUpdateDetails details) {
     if (details.primaryDelta == null) return;
     if (isOverScrolling) {
-      ScrollableManagerScope.of(context)
-          .onDragUpdate
-          ?.call(details.globalPosition.dy);
+      _manager.onDragUpdate.call(details.globalPosition.dy);
     } else if (drag != null) {
       drag!.update(details);
     } else {
       if ((widget.enableExpandedScroll != true) ||
-          (ScrollableManagerScope.of(context).canExpand != true)) {
+          (_manager.canExpand != true)) {
         _handleStart(details);
       } else {
         // if enableExpandedScroll == true
-        if (ScrollableManagerScope.of(context).status ==
-            DraggableMenuStatus.expanded) {
+        if (_manager.status == DraggableMenuStatus.expanded) {
           _handleStart(details);
         } else {
           if (details.primaryDelta!.sign < 0) {
@@ -127,7 +126,7 @@ class _ScrollableManagerState extends State<ScrollableManager> {
     drag?.end(details);
     if (isOverScrolling) {
       isOverScrolling = false;
-      ScrollableManagerScope.of(context).onDragEnd?.call(details);
+      _manager.onDragEnd.call(details);
     }
   }
 
@@ -150,9 +149,7 @@ class _ScrollableManagerState extends State<ScrollableManager> {
 
   void _startOverScrolling(DragUpdateDetails details) {
     isOverScrolling = true;
-    ScrollableManagerScope.of(context)
-        .onDragStart
-        ?.call(details.globalPosition.dy);
+    _manager.onDragStart.call(details.globalPosition.dy);
   }
 
   _throwIf() {

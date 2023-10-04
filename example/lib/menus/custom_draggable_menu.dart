@@ -27,10 +27,9 @@ class CustomMenu extends StatelessWidget {
           : ui == SoftModernDraggableMenu
               ? const SoftModernDraggableMenu()
               : ui == ModularDraggableMenu
-                  ? ModularDraggableMenu(
+                  ? const ModularDraggableMenu(
                       items: [
-                        child,
-                        const ModularMenuExampleItem(),
+                        ModularMenuExampleItem(),
                       ],
                     )
                   : const ClassicDraggableMenu(),

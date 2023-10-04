@@ -5,16 +5,16 @@ class ScrollableManagerScope extends InheritedWidget {
   const ScrollableManagerScope({
     this.canExpand,
     this.status,
-    this.onDragUpdate,
-    this.onDragEnd,
-    this.onDragStart,
+    required this.onDragUpdate,
+    required this.onDragEnd,
+    required this.onDragStart,
     super.key,
     required Widget child,
   }) : super(child: child);
 
-  final void Function(double globalPosition)? onDragUpdate;
-  final void Function(DragEndDetails details)? onDragEnd;
-  final void Function(double globalPosition)? onDragStart;
+  final void Function(double globalPosition) onDragUpdate;
+  final void Function(DragEndDetails details) onDragEnd;
+  final void Function(double globalPosition) onDragStart;
   final DraggableMenuStatus? status;
   final bool? canExpand;
 
