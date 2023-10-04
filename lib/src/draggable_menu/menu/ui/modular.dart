@@ -4,10 +4,12 @@ import 'package:draggable_menu/src/draggable_menu/menu/widgets/default_bar_item.
 import 'package:flutter/material.dart';
 
 class ModularDraggableMenu extends CustomDraggableMenu {
-  /// Adds a children inside the Draggable Menu's UI.
+  /// Adds a items inside the Draggable Menu's UI.
   ///
-  /// Each child will be seperated with modules.
-  final List<Widget> children;
+  /// Items will be placed under the child widget's module.
+  ///
+  /// Each item will be seperated with modules.
+  final List<Widget> items;
 
   final double gap;
 
@@ -29,12 +31,13 @@ class ModularDraggableMenu extends CustomDraggableMenu {
     this.accentColor,
     this.color,
     this.radius,
-    required this.children,
+    required this.items,
   });
 
   @override
   Widget buildUi(
     BuildContext context,
+    Widget child,
     DraggableMenuStatus status,
     int level,
     double menuValue,
@@ -43,6 +46,7 @@ class ModularDraggableMenu extends CustomDraggableMenu {
     Duration animationDuration,
     Curve curve,
   ) {
+    final List<Widget> children = [child, ...items];
     return Column(
       children: [
         for (int i = 0; i < children.length; i++)

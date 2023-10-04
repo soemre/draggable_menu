@@ -8,6 +8,8 @@ import 'package:draggable_menu/src/draggable_menu/utils/scrollable_manager/scrol
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
+import 'ui/classic.dart';
+
 class DraggableMenu extends StatefulWidget {
   /// If it is `true`, the widget will be at its minimum height.
   ///
@@ -21,6 +23,9 @@ class DraggableMenu extends StatefulWidget {
   ///
   /// By default, `Level 0`'s height is `240` (Unlike the `DraggableMenuLevel`s, your widget's height can pass this value.).
   final List<DraggableMenuLevel>? levels;
+
+  /// Adds a child inside the Draggable Menu's Default UI.
+  final Widget child;
 
   /// You can use `DraggableMenuController` to control the `DraggableMenu` widget.
   ///
@@ -192,7 +197,7 @@ class DraggableMenu extends StatefulWidget {
   /// *For more info, visit the [GitHub Repository](https://github.com/emresoysuren/draggable_menu).*
   const DraggableMenu({
     super.key,
-    required this.ui,
+    this.ui = const ClassicDraggableMenu(),
     this.addStatusListener,
     this.addValueListener,
     this.animationDuration,
@@ -214,6 +219,7 @@ class DraggableMenu extends StatefulWidget {
     this.levels,
     this.allowToShrink = false,
     this.controller,
+    required this.child,
   });
 
   /// Opens the given Draggable Menu using `Navigator`'s `push` method.
@@ -673,6 +679,7 @@ class _DraggableMenuState extends State<DraggableMenu>
       widget.customUi ??
       widget.ui.buildUi(
         context,
+        widget.child,
         _status,
         _currentLevel,
         _menuValue,

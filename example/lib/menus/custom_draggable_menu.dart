@@ -23,17 +23,17 @@ class CustomMenu extends StatelessWidget {
     return DraggableMenu(
       controller: controller,
       ui: ui == ModernDraggableMenu
-          ? ModernDraggableMenu(child: child)
+          ? const ModernDraggableMenu()
           : ui == SoftModernDraggableMenu
-              ? SoftModernDraggableMenu(child: child)
+              ? const SoftModernDraggableMenu()
               : ui == ModularDraggableMenu
                   ? ModularDraggableMenu(
-                      children: [
+                      items: [
                         child,
                         const ModularMenuExampleItem(),
                       ],
                     )
-                  : ClassicDraggableMenu(child: child),
+                  : const ClassicDraggableMenu(),
       levels: [
         DraggableMenuLevel.ratio(ratio: 1 / 3),
         DraggableMenuLevel.ratio(ratio: 2 / 3),
@@ -41,6 +41,7 @@ class CustomMenu extends StatelessWidget {
       ],
       fastDrag: fastDrag,
       minimizeBeforeFastDrag: minimizeBeforeFastDrag,
+      child: child,
     );
   }
 }

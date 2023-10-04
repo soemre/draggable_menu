@@ -86,18 +86,17 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
         });
       },
       ui: widget.ui == ModernDraggableMenu
-          ? ModernDraggableMenu(child: _child, color: _color)
+          ? ModernDraggableMenu(color: _color)
           : widget.ui == SoftModernDraggableMenu
-              ? SoftModernDraggableMenu(child: _child, color: _color)
+              ? SoftModernDraggableMenu(color: _color)
               : widget.ui == ModularDraggableMenu
                   ? ModularDraggableMenu(
                       color: _color,
-                      children: [
-                        _child,
+                      items: [
                         const ModularMenuExampleItem(),
                       ],
                     )
-                  : ClassicDraggableMenu(child: _child, color: _color),
+                  : ClassicDraggableMenu(color: _color),
       levels: [
         DraggableMenuLevel.ratio(ratio: 1 / 3),
         DraggableMenuLevel.ratio(ratio: 2 / 3),
@@ -113,6 +112,7 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
           _levelValue = levelValue;
         });
       },
+      child: _child,
     );
   }
 
