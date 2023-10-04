@@ -1,4 +1,5 @@
 import 'package:draggable_menu/draggable_menu.dart';
+import 'package:example/widgets/modular_menu_example_item.dart';
 import 'package:flutter/material.dart';
 
 class CustomMenu extends StatelessWidget {
@@ -27,7 +28,10 @@ class CustomMenu extends StatelessWidget {
               ? SoftModernDraggableMenu(child: child)
               : ui == ModularDraggableMenu
                   ? ModularDraggableMenu(
-                      children: [child, const Text("2nd Module Example")],
+                      children: [
+                        child,
+                        const ModularMenuExampleItem(),
+                      ],
                     )
                   : ClassicDraggableMenu(child: child),
       levels: [

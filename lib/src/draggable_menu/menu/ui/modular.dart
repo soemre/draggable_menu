@@ -9,6 +9,8 @@ class ModularDraggableMenu extends CustomDraggableMenu {
   /// Each child will be seperated with modules.
   final List<Widget> children;
 
+  final double gap;
+
   /// Overrides the Default Bar Item of the UI.
   final Widget? barItem;
 
@@ -22,6 +24,7 @@ class ModularDraggableMenu extends CustomDraggableMenu {
   final double? radius;
 
   const ModularDraggableMenu({
+    this.gap = 16,
     this.barItem,
     this.accentColor,
     this.color,
@@ -65,10 +68,10 @@ class ModularDraggableMenu extends CustomDraggableMenu {
       flex: expandable ? 1 : 0,
       child: Padding(
         padding: style == _ModulStyle.first
-            ? const EdgeInsets.fromLTRB(16, 16, 16, 8)
+            ? EdgeInsets.fromLTRB(16, 16, 16, gap / 2)
             : style == _ModulStyle.last
-                ? const EdgeInsets.fromLTRB(16, 8, 16, 16)
-                : const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                ? EdgeInsets.fromLTRB(16, gap / 2, 16, 16)
+                : EdgeInsets.fromLTRB(16, gap / 2, 16, gap / 2),
         child: Material(
           animationDuration: Duration.zero,
           borderRadius: BorderRadius.circular(radius ?? 16),

@@ -1,4 +1,5 @@
 import 'package:draggable_menu/draggable_menu.dart';
+import 'package:example/widgets/modular_menu_example_item.dart';
 import 'package:flutter/material.dart';
 
 class StatusDraggableMenu extends StatefulWidget {
@@ -91,7 +92,10 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
               : widget.ui == ModularDraggableMenu
                   ? ModularDraggableMenu(
                       color: _color,
-                      children: [_child, const Text("2nd Module Example")],
+                      children: [
+                        _child,
+                        const ModularMenuExampleItem(),
+                      ],
                     )
                   : ClassicDraggableMenu(child: _child, color: _color),
       levels: [
@@ -112,8 +116,8 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
     );
   }
 
-  Material get _child => Material(
-        color: Colors.transparent,
+  Widget get _child => SingleChildScrollView(
+        physics: const NeverScrollableScrollPhysics(),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Center(
@@ -130,7 +134,7 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  "Menu Value: ${_value.toStringAsFixed(8)}\nRaw Value: ${_raw?.toStringAsFixed(8)}\nLevel Value: ${_levelValue.toStringAsFixed(8)}\nUI Type: ${widget.ui == ModernDraggableMenu ? "Modern" : widget.ui == SoftModernDraggableMenu ? "Soft Modern" : "Classic"}\nEnable Expanded Scroll: ${widget.enableExpandedScroll ? "True" : "False"}\nFast Drag: ${widget.fastDrag ? "True" : "False"}\nMinimize Before Fast Drag: ${widget.minimizeBeforeFastDrag ? "True" : "False"}",
+                  "Menu Value: ${_value.toStringAsFixed(3)}\nRaw Value: ${_raw?.toStringAsFixed(3)}\nLevel Value: ${_levelValue.toStringAsFixed(3)}\nUI Type: ${widget.ui == ModernDraggableMenu ? "Modern" : widget.ui == SoftModernDraggableMenu ? "Soft Modern" : widget.ui == ModularDraggableMenu ? "Modular" : "Classic"}\nExpanded Scroll: ${widget.enableExpandedScroll ? "True" : "False"}\nFast Drag: ${widget.fastDrag ? "True" : "False"}\nMinimize Before Fast Drag: ${widget.minimizeBeforeFastDrag ? "True" : "False"}",
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     color: Colors.white,
