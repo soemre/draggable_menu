@@ -2,10 +2,10 @@
 
 <p align="center">
   <a href="https://pub.dev/packages/draggable_menu">
-    <img src="https://img.shields.io/badge/pub-v4.2.0-%237f7eff?style=flat&logo=flutter">
+    <img src="https://img.shields.io/badge/pub-v4.3.0-%237f7eff?style=flat&logo=flutter">
   </a>
   <a href="https://github.com/emresoysuren/draggable_menu">
-    <img src="https://img.shields.io/badge/GitHub-v4.2.0-%237f7eff?style=flat&logo=github">
+    <img src="https://img.shields.io/badge/GitHub-v4.3.0-%237f7eff?style=flat&logo=github">
   </a>
 </p>
 
@@ -102,28 +102,29 @@ Navigator.pop(context);
 
 | Category | Parameters | Description |
 |---|---|---|
-| Usage | bool? allowToShrink | If it is `true`, the widget will be at its minimum height. By default, it is `false`. |
+| Usage | bool allowToShrink | If it is `true`, the widget will be at its minimum height. By default, it is `false`. |
 | Usage | List\<DraggableMenuLevel>? levels | This is the parameter to use the `expand` feature and to define a level. If you want a fixed height for the `Level 0`, provide a Level as well. Provide `DraggableMenuLevel` objects inside of it to create a level and customize its height. The lowest object you pass will be `Level 0` of the `Draggable Menu`'s level. You must provide at least two levels to use the `expand` feature. By default, `Level 0`'s height is `240` (Unlike the `DraggableMenuLevel`s, your widget's height can pass this value.). |
-| Usage | double? closeThreshold | Specifies the Close Threshold of the Draggable Menu. Takes a value between `0` and `1`. |
-| Usage | double? expandThreshold | Specifies the Expand Threshold of the Draggable Menu. Takes a value between `0` and `1`. |
-| Usage | double? minimizeThreshold | Specifies the Minimize Threshold of the Draggable Menu. Takes a value between `0` and `1`. |
+| Usage | double closeThreshold | Specifies the Close Threshold of the Draggable Menu. Takes a value between `0` and `1`. By default, it is `0.5`. |
+| Usage | double expandThreshold | Specifies the Expand Threshold of the Draggable Menu. Takes a value between `0` and `1`. By default, it is `1 / 3`. |
+| Usage | double minimizeThreshold | Specifies the Minimize Threshold of the Draggable Menu. Takes a value between `0` and `1`. By default, it is `1 / 3`. |
 | Usage | double? fixedCloseThreshold | Specifies the Close Threshold of the Draggable Menu by giving it a fixed value. |
 | Usage | double? fixedExpandThreshold | Specifies the Expand Threshold of the Draggable Menu by giving it a fixed value. |
 | Usage | double? fixedMinimizeThreshold | Specifies the Minimize Threshold of the Draggable Menu by giving it a fixed value. |
-| Usage | bool? blockMenuClosing | It specifies whether the Draggable Menu can close itself by dragging down and taping outside of the Menu or not. |
-| Usage | bool? fastDrag | It specifies whether the Draggable Menu will run fast drag gestures when fast-dragged. By default, it is `true`. |
-| Usage | double? fastDragVelocity | Specifies the Fast Drag Velocity of the Draggable Menu. That means it defines how many velocities will be the threshold to run fast-drag gestures. Takes a value above `0`. If the value is negative, it will throw an error. |
-| Usage | bool? fastDragClose | It specifies whether the Draggable Menu will close itself when it has been fast-dragged. By default, it is `true`. |
-| Usage | bool? fastDragMinimize | It specifies whether the Draggable Menu will minimize itself when it has been fast-dragged and it's expanded. By default, it is `true`. |
-| Usage | bool? fastDragExpand | It specifies whether the Draggable Menu will expand when it has been fast-dragged and can be expandable. By default, it is `true`. |
-| Usage | bool? minimizeBeforeFastDrag | It specifies whether the Draggable Menu will be minimized when it has been dragged too fast or not when it's expanded. By default, it is `false`. |
+| Usage | bool blockMenuClosing | It specifies whether the Draggable Menu can close itself by dragging down and taping outside of the Menu or not. By default, it is `false`. |
+| Usage | bool fastDrag | It specifies whether the Draggable Menu will run fast drag gestures when fast-dragged. By default, it is `true`. |
+| Usage | double fastDragVelocity | Specifies the Fast Drag Velocity of the Draggable Menu. That means it defines how many velocities will be the threshold to run fast-drag gestures. Takes a value above `0`. If the value is negative, it will throw an error. By default, it is `1500`. |
+| Usage | bool fastDragClose | It specifies whether the Draggable Menu will close itself when it has been fast-dragged. By default, it is `true`. |
+| Usage | bool fastDragMinimize | It specifies whether the Draggable Menu will minimize itself when it has been fast-dragged and it's expanded. By default, it is `true`. |
+| Usage | bool fastDragExpand | It specifies whether the Draggable Menu will expand when it has been fast-dragged and can be expandable. By default, it is `true`. |
+| Usage | bool minimizeBeforeFastDrag | It specifies whether the Draggable Menu will be minimized when it has been dragged too fast or not when it's expanded. By default, it is `false`. |
+| Usage | int startLevel | Defines the level at which the menu will start. By default, it is `0`. |
 | UI | (required) Widget child | Adds a child inside the Draggable Menu's UI. |
-| UI | CustomDraggableMenu? ui | Overrides the Classic Draggable Menu UI. |
+| UI | CustomDraggableMenu ui | Overrides the Classic Draggable Menu UI. By default, it is `ClassicDraggableMenu()`. |
 | UI | Widget? customUi | Overrides the Draggable Menu's UI and uses the given widget. If used, the `child` parameter of the `DraggableMenu` widget won't work. |
 | Listener | Function(DraggableMenuStatus status, int level)? addStatusListener | Adds a listener to listen to its Status. |
-| Listener | Function(double menuValue, double? raw, double levelValue)? addValueListener | Adds a listener to listen to its Menu Value. |
-| Animation | Duration? animationDuration | Specifies the duration of the Draggable Menu's animations. |
-| Animation | Curve? curve | Specifies the curve of the Draggable Menu's animations. |
+| Listener | Function(double menuValue, double raw, double levelValue)? addValueListener | Adds a listener to listen to its Menu Value. |
+| Animation | Duration animationDuration | Specifies the duration of the Draggable Menu's animations. By default, it is `Duration(milliseconds: 320)`. |
+| Animation | Curve curve | Specifies the curve of the Draggable Menu's animations. By default, it is `Curves.ease`. |
 | Controller | DraggableMenuController? controller | Provide the `DraggableMenuController` to the `controller` parameter to control the `DraggableMenu` widget. |
 
 # How To Use
@@ -378,17 +379,20 @@ Pre-Made UIs:
 - `ClassicDraggableMenu`
 - `ModernDraggableMenu`
 - `SoftModernDraggableMenu`
+- `ModularDraggableMenu`
 
 Note: *You can change some features of the pre-made UIs by using their parameters.*
 
 ```dart
 DraggableMenu(
-  ui: SoftModernDraggableMenu();
+  ui: SoftModernDraggableMenu( // Pass your ui to the ui parameter
+    radius: 32, // Changes radius
+  );
   child: child,
 )
 ```
 
-You can use the `customUi` parameter as well. But it won't let you use the child that passed to the `DraggableMenu` widget. Its advantage is it is easy to use. Just give a widget, and override the `DraggableMenu`'s UI.
+You can use the `customUi` parameter as well. But it won't let you use the child that passed to the `DraggableMenu` widget. Its advantage is it is easy to use, therefore you can change the ui faster than creating with `CustomDraggableMenu`. Just give a widget, and override the `DraggableMenu`'s UI.
 
 ```dart
 DraggableMenu(
@@ -396,6 +400,8 @@ DraggableMenu(
   child: child, // That won't work. Add your item inside of the customUi instead.
 )
 ```
+
+`CustomDraggableMenu` has a getter called `expandable`. You can override it to enable the expansion of the `DraggableMenu` UI. By default, it is set to `true`. Please note that even if the `expandable` parameter is set to `false`, the `DraggableMenu` widget will still accept as many levels as specified, but only the lowest level will function as expected.
 
 ---
 

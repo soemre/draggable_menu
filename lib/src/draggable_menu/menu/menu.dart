@@ -70,25 +70,25 @@ class DraggableMenu extends StatefulWidget {
   ///
   /// *To understand better the usage of the "Value Listeners",
   /// check out the [Draggable Menu Example](https://github.com/emresoysuren/draggable_menu/tree/main/example) app.*
-  final void Function(double menuValue, double? raw, double levelValue)?
+  final void Function(double menuValue, double raw, double levelValue)?
       addValueListener;
 
   /// Specifies the duration of the Draggable Menu's animations.
   ///
   /// By default, it is `320ms`.
-  final Duration? animationDuration;
+  final Duration animationDuration;
 
   /// Specifies the curve of the Draggable Menu's animations.
   ///
   /// By default, it is `Curves.ease`.
-  final Curve? curve;
+  final Curve curve;
 
   /// Specifies the Close Threshold of the Draggable Menu.
   ///
   /// Takes a value between `0` and `1`.
   ///
   /// By default, it is `0.5`.
-  final double? closeThreshold;
+  final double closeThreshold;
 
   /// Specifies the Close Threshold of the Draggable Menu by giving it a fixed value.
   ///
@@ -100,7 +100,7 @@ class DraggableMenu extends StatefulWidget {
   /// Takes a value between `0` and `1`.
   ///
   /// By default, it is `1/3`.
-  final double? expandThreshold;
+  final double expandThreshold;
 
   /// Specifies the Expand Threshold of the Draggable Menu by giving it a fixed value.
   ///
@@ -112,7 +112,7 @@ class DraggableMenu extends StatefulWidget {
   /// Takes a value between `0` and `1`.
   ///
   /// By default, it is `1/3`.
-  final double? minimizeThreshold;
+  final double minimizeThreshold;
 
   /// Specifies the Minimize Threshold of the Draggable Menu by giving it a fixed value.
   ///
@@ -136,7 +136,7 @@ class DraggableMenu extends StatefulWidget {
   /// Takes a value above `0`. If the value is negative, it will throw an error.
   ///
   /// By default, it is `1500`.
-  final double? fastDragVelocity;
+  final double fastDragVelocity;
 
   /// It specifies whether the Draggable Menu will be minimized when it has been dragged too fast or not when it's expanded.
   ///
@@ -166,6 +166,11 @@ class DraggableMenu extends StatefulWidget {
   ///
   /// By default, it is `true`.
   final bool fastDragExpand;
+
+  /// Defines the level at which the menu will start.
+  ///
+  /// Throws if the level doesn't exist.
+  final int startLevel;
 
   /// Creates a Draggable Menu widget.
   ///
@@ -200,17 +205,17 @@ class DraggableMenu extends StatefulWidget {
     this.ui = const ClassicDraggableMenu(),
     this.addStatusListener,
     this.addValueListener,
-    this.animationDuration,
-    this.curve,
-    this.closeThreshold,
-    this.expandThreshold,
-    this.minimizeThreshold,
+    this.animationDuration = const Duration(milliseconds: 320),
+    this.curve = Curves.ease,
+    this.closeThreshold = 0.5,
+    this.expandThreshold = 1 / 3,
+    this.minimizeThreshold = 1 / 3,
     this.fixedCloseThreshold,
     this.fixedExpandThreshold,
     this.fixedMinimizeThreshold,
     this.blockMenuClosing = false,
     this.fastDrag = true,
-    this.fastDragVelocity,
+    this.fastDragVelocity = 1500,
     this.minimizeBeforeFastDrag = false,
     this.customUi,
     this.fastDragClose = true,
@@ -220,6 +225,7 @@ class DraggableMenu extends StatefulWidget {
     this.allowToShrink = false,
     this.controller,
     required this.child,
+    this.startLevel = 0,
   });
 
   /// Opens the given Draggable Menu using `Navigator`'s `push` method.
@@ -340,7 +346,7 @@ class _DraggableMenuState extends State<DraggableMenu>
 
   // Assign the animation controller to the varible
   void _animationControllerInit() => _animationController =
-      AnimationController(vsync: this, duration: _animationDuraiton);
+      AnimationController(vsync: this, duration: widget.animationDuration);
 
   void _tickerInit() {
     // Create the ticker and assign it to the varible
@@ -357,6 +363,20 @@ class _DraggableMenuState extends State<DraggableMenu>
     // Start the ticker
     _ticker.start();
   }
+
+  /// Configures the Draggable Menu with the given configuration.
+  ///
+  /// Configures:
+  /// - Start Height
+  void _configurationInit() =>
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        // Initilize the start height
+        _assertLevel(widget.startLevel);
+        _currentLevel = widget.startLevel;
+        _toHeight(_levelHeight(widget.startLevel));
+        _notifyStatusListener(DraggableMenuStatus.minimized, true);
+        _notifyValueListener();
+      });
 
   // Debug
 
@@ -394,6 +414,18 @@ class _DraggableMenuState extends State<DraggableMenu>
     return widget.addValueListener?.call(_menuValue, _value, _levelValue);
   }
 
+  // Height Management
+
+  void _toHeight(double height) {
+    if (height <= _levelHeight(0)) {
+      _bottom = height - _levelHeight(0);
+      _boxHeight = null;
+    } else {
+      _bottom = 0;
+      _boxHeight = height;
+    }
+  }
+
   // _animateTo Method
 
   void _animateTo(int level) {
@@ -418,18 +450,11 @@ class _DraggableMenuState extends State<DraggableMenu>
 
     final Animation<double> animation =
         Tween<double>(begin: _value, end: _levelHeight(level)).animate(
-      _animationController.drive(CurveTween(curve: _animationCurve)),
+      _animationController.drive(CurveTween(curve: widget.curve)),
     );
+
     // Reflect to the value changes
-    void callback() {
-      if (animation.value <= _levelHeight(0)) {
-        _bottom = animation.value - _levelHeight(0);
-        _boxHeight = null;
-      } else {
-        _bottom = 0;
-        _boxHeight = animation.value;
-      }
-    }
+    void callback() => _toHeight(animation.value);
 
     // Store the remove listener callback
     _removeLastAnimation = () => animation.removeListener(callback);
@@ -481,13 +506,13 @@ class _DraggableMenuState extends State<DraggableMenu>
     // Check the widget parameters
     if (!widget.fastDrag) return false;
     assert(
-      !_fastDragVelocity.isNegative,
+      !widget.fastDragVelocity.isNegative,
       "The `fastDragVelocity` parameter can't be negative.",
     );
 
     // Operation
     final double velocity = details.velocity.pixelsPerSecond.dy;
-    if (velocity > _fastDragVelocity) {
+    if (velocity > widget.fastDragVelocity) {
       // Fast dragging to down
       if ((_minimizeBeforeFastDrag && _boxHeight == null) ||
           !_minimizeBeforeFastDrag) {
@@ -503,7 +528,7 @@ class _DraggableMenuState extends State<DraggableMenu>
           return true;
         }
       }
-    } else if (velocity < -_fastDragVelocity) {
+    } else if (velocity < -widget.fastDragVelocity) {
       // Fast dragging to up
       // Cannot be at the last level
       if (!_atMaxLevel && widget.fastDragExpand) {
@@ -580,11 +605,6 @@ class _DraggableMenuState extends State<DraggableMenu>
 
   // Getters | Start
 
-  Curve get _animationCurve => widget.curve ?? Curves.ease;
-
-  Duration get _animationDuraiton =>
-      widget.animationDuration ?? const Duration(milliseconds: 320);
-
   double get _levelValue {
     if (_atUpperPart) {
       return _menuValue * _lastLevel;
@@ -644,26 +664,24 @@ class _DraggableMenuState extends State<DraggableMenu>
   bool get _minimizeBeforeFastDrag =>
       widget.blockMenuClosing ? true : widget.minimizeBeforeFastDrag;
 
-  double get _fastDragVelocity => widget.fastDragVelocity ?? 1500;
-
   // Status Check Getters
   /// Will the menu minimize itself when it's released
   bool get _willMinimize =>
       _levelHeight(_currentLevel) - _value >
       (widget.fixedMinimizeThreshold ??
           (_levelHeight(_currentLevel) - _levelHeight(_currentLevel - 1)) *
-              (widget.minimizeThreshold ?? (1 / 3)));
+              widget.minimizeThreshold);
 
   /// Will the menu expand itself when it's released
   bool get _willExpand =>
       _value - _levelHeight(_currentLevel) >
       (widget.fixedExpandThreshold ??
           (_levelHeight(_currentLevel + 1) - _levelHeight(_currentLevel)) *
-              (widget.expandThreshold ?? (1 / 3)));
+              widget.expandThreshold);
 
   /// Will the menu close itself when it's released
   bool get _willClose => widget.fixedCloseThreshold == null
-      ? (-_bottom / _levelHeight(0) > (widget.closeThreshold ?? (0.5)))
+      ? (-_bottom / _levelHeight(0) > widget.closeThreshold)
       : -_bottom > widget.fixedCloseThreshold!;
 
   /// Is the menu moving by itself (Like animating or pop)
@@ -691,8 +709,8 @@ class _DraggableMenuState extends State<DraggableMenu>
         _menuValue,
         _raw,
         _levelValue,
-        widget.animationDuration ?? const Duration(milliseconds: 320),
-        widget.curve ?? Curves.ease,
+        widget.animationDuration,
+        widget.curve,
       );
 
   // Constrains
@@ -713,6 +731,7 @@ class _DraggableMenuState extends State<DraggableMenu>
     _levelsInit();
     _animationControllerInit();
     _tickerInit();
+    _configurationInit();
   }
 
   @override
@@ -892,10 +911,11 @@ class _DraggableMenuState extends State<DraggableMenu>
   }
 
   /// Notify the status listeners
-  void _notifyStatusListener(DraggableMenuStatus status) {
+  void _notifyStatusListener(DraggableMenuStatus status,
+      [bool bypass = false]) {
     // If the status hasn't changed. Don't notify the listeners
     // Only notify them when the status has changed
-    if (_status == status) return;
+    if (!bypass && _status == status) return;
 
     // Change the status
     _status = status;

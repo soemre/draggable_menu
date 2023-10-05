@@ -24,9 +24,9 @@ class StatusDraggableMenu extends StatefulWidget {
 
 class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
   Color _color = Colors.amber;
-  String _text = "Minimized (At Level 0)";
+  String _text = "";
   double _value = 0;
-  double? _raw;
+  double _raw = 0;
   double _levelValue = 0;
 
   @override
@@ -134,7 +134,7 @@ class _StatusDraggableMenuState extends State<StatusDraggableMenu> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  "Menu Value: ${_value.toStringAsFixed(3)}\nRaw Value: ${_raw?.toStringAsFixed(3)}\nLevel Value: ${_levelValue.toStringAsFixed(3)}\nUI Type: ${widget.ui == ModernDraggableMenu ? "Modern" : widget.ui == SoftModernDraggableMenu ? "Soft Modern" : widget.ui == ModularDraggableMenu ? "Modular" : "Classic"}\nExpanded Scroll: ${widget.enableExpandedScroll ? "True" : "False"}\nFast Drag: ${widget.fastDrag ? "True" : "False"}\nMinimize Before Fast Drag: ${widget.minimizeBeforeFastDrag ? "True" : "False"}",
+                  "Menu Value: ${_value.toStringAsFixed(3)}\nRaw Value: ${_raw.toStringAsFixed(3)}\nLevel Value: ${_levelValue.toStringAsFixed(3)}\nUI Type: ${widget.ui == ModernDraggableMenu ? "Modern" : widget.ui == SoftModernDraggableMenu ? "Soft Modern" : widget.ui == ModularDraggableMenu ? "Modular" : "Classic"}\nExpanded Scroll: ${widget.enableExpandedScroll ? "True" : "False"}\nFast Drag: ${widget.fastDrag ? "True" : "False"}\nMinimize Before Fast Drag: ${widget.minimizeBeforeFastDrag ? "True" : "False"}",
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     color: Colors.white,

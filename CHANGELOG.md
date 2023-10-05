@@ -1,13 +1,7 @@
-# 4.2.0 Release
+# 4.3.0 Release
 
-- Add `ModularDraggableMenu` UI
+- Added the `startLevel` parameter to the `DraggableMenu` widget.
 
-## 4.0.0 Release Notes
+- Changed the `DraggableMenu`'s `addValueListener` parameter's return value of `double? raw` to `double raw`.
 
-- Added `DraggableMenuController` to manage the `DraggableMenu`.
-
-- Added `DraggableMenuLevel.ratio` to define the `DraggableMenu`'s `height` with `ratio`.
-
-- Removed the `defaultHeight` parameter of the `DraggableMenu` widget. (Provide a `DraggableMenuLevel` to the `levels` parameter of the `DraggableMenu` widget instead.)
-
-*If you are coming from an early version before the `4.0.0` of the `draggable_menu`, check out the version 3.0.0 changes before using.*
+- Added the `expandable` getter to the `CustomDraggableMenu` class.
