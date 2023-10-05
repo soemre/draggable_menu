@@ -7,6 +7,11 @@ import 'package:flutter/material.dart';
 abstract class CustomDraggableMenu {
   const CustomDraggableMenu();
 
+  /// Configures whether the draggable menu is expandable or not.
+  ///
+  /// If it's not expandable, only the level parameter with the lowest height will be used as the fixed height.
+  bool get expandable => true;
+
   /// You can listen to the Draggable Menu's current status with the `status` value and
   /// current menuValue with the `menuValue` value.
   ///

@@ -320,15 +320,21 @@ class _DraggableMenuState extends State<DraggableMenu>
   void _levelsInit() {
     // Check if there is any level given to the levels parameter
     if (widget.levels?.isNotEmpty == true) {
+      // Sorts the levels with their heights
+      widget.levels!.sort((a, b) => a.height.compareTo(b.height));
+
+      // If the menu is supposed to use only one fixed height, just add the minimum height instead.
+      if (widget.customUi == null && widget.ui.expandable == false) {
+        levels.add(widget.levels![0]);
+        return;
+      }
+
       // DO NOT ADD THE LEVELS WITH SAME HEIGHT
       for (DraggableMenuLevel level in widget.levels!) {
         if (!levels.any((element) => element.height == level.height)) {
           levels.add(level);
         }
       }
-
-      // Sorts the levels with their heights
-      levels.sort((a, b) => a.height.compareTo(b.height));
     }
   }
 
