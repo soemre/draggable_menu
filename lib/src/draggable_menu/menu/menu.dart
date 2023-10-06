@@ -285,22 +285,44 @@ class _DraggableMenuState extends State<DraggableMenu>
   // For animation
   late final AnimationController _animationController;
   late Ticker _ticker;
+
+  /// Removes the last animation when its called.
+  ///
+  /// It's called before running another animation.
   Function()? _removeLastAnimation;
 
-  // Menu Values
+  /// Size of the ui.
   double? _boxHeight;
+
+  /// Bottom position of the ui.
   double _bottom = 0;
+
+  /// Current level of the widget.
   int _currentLevel = 0;
+
+  /// UI's normal size with its content
+  /// before the `DraggableMenu` changes it.
   double? _defaultHeight;
+
+  /// Stores the avaliable levels.
   List<DraggableMenuLevel> levels = [];
+
+  /// Widget key is used to get the default
+  /// height of the ui with it's content.
   final _widgetKey = GlobalKey();
 
-  // Movement Values
+  /// Start position of the drag event.
   double? _startPosition;
+
+  /// Start size of the widget. (The current of the `_value` value is stored.)
   double? _startValue;
 
   // Status Values
+
+  /// Stores the widget's current status.
   DraggableMenuStatus _status = DraggableMenuStatus.minimized;
+
+  /// Stores the last value used to notify the value listeners.
   double? _valueLog;
 
   // Varibles | End
@@ -309,12 +331,16 @@ class _DraggableMenuState extends State<DraggableMenu>
 
   // Init
 
+  /// Initilizes the `_defaultHeight` value right after the build.
   void _defaultHeightInit() =>
       SchedulerBinding.instance.addPostFrameCallback((_) {
         // Set the current height as the default height before it changes
         _defaultHeight = _widgetKey.currentContext!.size!.height;
       });
 
+  /// Initilizes the DraggableMenuController if it's passed.
+  ///
+  /// Listens the contoller and gives its `_animateTo` method.
   void _controllerInit() {
     // Initilizes the controller (Passes the _animeteTo method)
     widget.controller?.init((int level) => _animateTo(level));
@@ -323,13 +349,23 @@ class _DraggableMenuState extends State<DraggableMenu>
     widget.controller?.addListener(() => setState(() {}));
   }
 
+  /// Initilizes the `DraggableMenu` widget's levels.
+  ///
+  /// Only accepts valid levels.
+  ///
+  /// Valid Levels must have:
+  /// - Different Heights
+  ///
+  /// If the widget ui's `expandable` parameter is set
+  /// to `false`, it only uses the minimum height.
   void _levelsInit() {
     // Check if there is any level given to the levels parameter
     if (widget.levels?.isNotEmpty == true) {
       // Sorts the levels with their heights
       widget.levels!.sort((a, b) => a.height.compareTo(b.height));
 
-      // If the menu is supposed to use only one fixed height, just add the minimum height instead.
+      // If the menu is supposed to use only one fixed height,
+      // just add the minimum height instead.
       if (widget.customUi == null && widget.ui.expandable == false) {
         levels.add(widget.levels![0]);
         return;
@@ -344,10 +380,16 @@ class _DraggableMenuState extends State<DraggableMenu>
     }
   }
 
-  // Assign the animation controller to the varible
+  /// Initilizes the animation controller by
+  /// assigning it to the `_animationController` variable.
   void _animationControllerInit() => _animationController =
       AnimationController(vsync: this, duration: widget.animationDuration);
 
+  /// Initilizes the ticker.
+  ///
+  /// Only ticker calls the `setState` method.
+  ///
+  /// Ticker notifies the menu's listeners and debugs its sizes in every `setState` call.
   void _tickerInit() {
     // Create the ticker and assign it to the varible
     _ticker = createTicker((_) {
@@ -380,6 +422,9 @@ class _DraggableMenuState extends State<DraggableMenu>
 
   // Debug
 
+  /// Debug the possible overflowing bugs.
+  ///
+  /// Fixes the sizes higher than their constraints
   void _debug() {
     // Debug the _bottom value
     if (_bottom > 0) _bottom = 0;
@@ -399,6 +444,10 @@ class _DraggableMenuState extends State<DraggableMenu>
 
   // Listeners
 
+  /// Notifies value and status listeners.
+  ///
+  /// The `_checkStatus` function is called to notify the status listeners.
+  /// Therefore it will look up for the widget's current status.
   void _notifyListeners() {
     // Check the status and notify its listeners
     _checkStatus();
@@ -416,6 +465,9 @@ class _DraggableMenuState extends State<DraggableMenu>
 
   // Height Management
 
+  /// Sets widget's height to given height.
+  ///
+  /// Converts height to `_bottom` and `_boxHeight` values.
   void _toHeight(double height) {
     if (height <= _levelHeight(0)) {
       _bottom = height - _levelHeight(0);
@@ -428,10 +480,19 @@ class _DraggableMenuState extends State<DraggableMenu>
 
   // _animateTo Method
 
+  /// Animates to the given level.
+  ///
+  /// If the given level doesn't exist, it will throw.
+  ///
+  /// Notifies the status listener with one of these:
+  /// - `DraggableMenuStatus.minimizing`
+  /// - `DraggableMenuStatus.canceling`
+  /// - `DraggableMenuStatus.expanding`
   void _animateTo(int level) {
     // Assert if the given level is valid
     _assertLevel(level);
 
+    // Notify the status listener with one of the animating status.
     if (level < _currentLevel) {
       _notifyStatusListener(DraggableMenuStatus.minimizing);
     } else if (level == _currentLevel) {
@@ -468,22 +529,33 @@ class _DraggableMenuState extends State<DraggableMenu>
   }
 
   // Default animate methods
+
+  /// Minimizes to current level.
+  ///
+  /// If the current level isn't higher than 0, does nothing.
   void _minimize() {
-    // If its height is not bigger than the level 0. Don't try to minimize it.
+    // If current height is lower than or equal to the level 0' height, it's not higher than the level 0.
+    // So do nothing.
     if (!_atUpperPart) return;
 
     // Minimize
     _animateTo(_currentLevel - 1);
   }
 
+  /// Expands the current level.
+  ///
+  /// If it is at the highest level, does nothing.
   void _expand() {
-    // If it is already expanded. Don't try to expand it.
+    // If it is already expanded, do nothing.
     if (_isExpanded) return;
 
     // Expand
     _animateTo(_currentLevel + 1);
   }
 
+  /// Cancels the current drag movement and stabilizes to the previous level.
+  ///
+  /// If it is already at the stable height, does nothing.
   void _cancel() {
     // If it is already stable. Don't try to stabilize it
     if (_isStable) return;
@@ -492,6 +564,10 @@ class _DraggableMenuState extends State<DraggableMenu>
     _animateTo(_currentLevel);
   }
 
+  /// Close pops the draggable menu.
+  ///
+  /// If the `blockMenuClosing` is set to `true`, it won't pop beacuse it calles maybePop.
+  /// And due to that pop should called programaticlly.
   void _close() {
     // The blockMenuClosing parameter can cancel the operation
     if (widget.blockMenuClosing) return _cancel();
@@ -502,6 +578,11 @@ class _DraggableMenuState extends State<DraggableMenu>
   }
 
   // Fast Drag
+
+  /// Checks the drag movment when it ends.
+  /// If the drag velocity is faster than widget's velocity thresold,
+  /// animates to the corresponding level with the corresponding animation
+  /// and returns `true`. If it won't do anything, it returns false.
   bool _fastDrag(DragEndDetails details) {
     // Check the widget parameters
     if (!widget.fastDrag) return false;
@@ -539,7 +620,9 @@ class _DraggableMenuState extends State<DraggableMenu>
     return false;
   }
 
-  /// Converts ghost value to _value and _boxHeight
+  /// Converts ghost value to actual widget size.
+  ///
+  /// Instead of returning it, implements it to the widget.
   void _convertGhost(double ghostValue, double position) {
     assert(_startValue != null);
 
@@ -564,7 +647,7 @@ class _DraggableMenuState extends State<DraggableMenu>
     }
   }
 
-  /// Assert the given level is valid
+  /// Checks if the given level exists. If it's not it throws.
   void _assertLevel(int level) {
     assert(
       (level <= levels.length && 0 <= level),
@@ -572,7 +655,9 @@ class _DraggableMenuState extends State<DraggableMenu>
     );
   }
 
-  // Use this instead of _defaultHeight for readability
+  /// Returns the given level's height.
+  ///
+  /// Use this instead of _defaultHeight when you want to get the level 0 for readability.
   double _levelHeight(int level) {
     // Assert the given level is valid
     _assertLevel(level);
@@ -582,22 +667,26 @@ class _DraggableMenuState extends State<DraggableMenu>
     return levels[level].height;
   }
 
+  /// Updates the widget's current level value with the corresponding new level.
   void _updateCurrentLevel() {
-    // Starts as -1. Because the for loop cannot check what level are lower than the positions under the level 0.
-    // Cause there is no such level exists
+    // Starts as -1. Because if the level's height is under the level 0, it still has to be level 0.
     int newLevel = -1;
+
     // Find the levels under current size
     for (int i = 0; i < levels.length; i++) {
       if (_value < _levelHeight(i)) break;
       newLevel = i;
     }
-    // If is comes from another level above found level
-    // It must be still at the same level. But maybe it's trying to minimize itself.
+
+    // If is comes from another level above, it must still be at the same level.
+    // But then the for loop miscalculated its level so we need to add 1 to the current level.
+    // Because even if it's under the level, it's coming from one level above.
     if (_currentLevel > newLevel) {
       newLevel = newLevel + 1;
     }
 
-    // Due to the first assignment, we need to check if it's lower than 0.
+    // Due to the first assignment (assigning -1), we need to check if it's lower than 0.
+    // It won't be because we are checking if it comes from upper level.
     _currentLevel = newLevel < 0 ? 0 : newLevel;
   }
 
@@ -605,6 +694,10 @@ class _DraggableMenuState extends State<DraggableMenu>
 
   // Getters | Start
 
+  /// **Values:**
+  /// - +n : At the level n.
+  /// -  0 : At the level 0.
+  /// - -1 : At the bottom of the app. (Not visible)
   double get _levelValue {
     if (_atUpperPart) {
       return _menuValue * _lastLevel;
@@ -613,6 +706,10 @@ class _DraggableMenuState extends State<DraggableMenu>
     }
   }
 
+  /// **Values:**
+  /// - +1 : At the highest level.
+  /// -  0 : At the level 0.
+  /// - -1 : At the bottom of the app. (Not visible)
   double get _menuValue {
     if (_raw == null) return 0;
     return (_raw! - _levelHeight(0)) /
@@ -643,6 +740,7 @@ class _DraggableMenuState extends State<DraggableMenu>
   /// Returns the current level's height
   double get _currentLevelHeight => _levelHeight(_currentLevel);
 
+  /// Returns the last level's height
   double get _lastLevelHeight => _levelHeight(_lastLevel);
 
   /// Level height value passed with the levels parameter
@@ -651,16 +749,23 @@ class _DraggableMenuState extends State<DraggableMenu>
     return levels.first.height;
   }
 
+  /// Does the widget have enough levels to expand
   bool get _canExpand => levels.length > 1;
 
+  /// Is the menu at the max level or not
   bool get _atMaxLevel => _currentLevel == _lastLevel;
 
-  // Number of the avaliable level (Last level number)
+  /// Number of the avaliable level (Last level number) (*Not as lenght*)
   int get _lastLevel => (levels.length - 1) <= 0 ? 0 : (levels.length - 1);
 
+  /// Is the level's position under the its current level height
   bool get _isUnderLevel => _value < _currentLevelHeight;
 
   // Parameter Getters
+
+  /// Should the widget minimize itself when fast dragging or not.
+  ///
+  /// By default, if the `widget.blockMenuClosing` parameter is `true` it's `true` as well.
   bool get _minimizeBeforeFastDrag =>
       widget.blockMenuClosing ? true : widget.minimizeBeforeFastDrag;
 
@@ -698,7 +803,7 @@ class _DraggableMenuState extends State<DraggableMenu>
     return _value == _lastLevelHeight;
   }
 
-  // UI Getter
+  /// Returns the right UI with passing it parameters.
   Widget get _ui =>
       widget.customUi ??
       widget.ui.buildUi(
@@ -725,6 +830,7 @@ class _DraggableMenuState extends State<DraggableMenu>
 
   @override
   void initState() {
+    // Always seperate the initialization to different funcitons.
     super.initState();
     _defaultHeightInit();
     _controllerInit();
@@ -792,6 +898,10 @@ class _DraggableMenuState extends State<DraggableMenu>
 
   // Main Movement Section | Start
 
+  /// Handels the drag start event.
+  ///
+  /// Stops the current animations and assigns
+  /// the new start references to the variables.
   void _onDragStart(double globalPosition) {
     // Stop animations
     if (_animationController.isAnimating) _animationController.stop();
@@ -801,8 +911,19 @@ class _DraggableMenuState extends State<DraggableMenu>
     _startValue = _value;
   }
 
+  /// Handels the drag update event.
+  ///
+  /// Calculates movement delta with `_startPosition` and ghosValue.
+  ///
+  /// **Ghost Value** = (Menu's drag start event size reference) + (Size Change Delta)
+  /// Why do we call it ghost? Because it's not the actual size menu will be.
+  /// It just stores what users input trying to make the menu's size.
+  /// The actual size will be converted from the ghost value.
+  /// Because if we don't track all the movment,we might lose user's position.
+  ///
+  /// And lastly, it updates the widgets level with the corresponding level to its height.
   void _onDragUpdate(double globalPosition) {
-    // Assert the needed values
+    // Assert the reference values
     assert(_startPosition != null);
     assert(_startValue != null);
 
@@ -817,6 +938,12 @@ class _DraggableMenuState extends State<DraggableMenu>
     _updateCurrentLevel();
   }
 
+  /// Handels the drag end event.
+  ///
+  /// If the movement allows to do a fastdrag event, it does the fastdrag event and returns.
+  ///
+  /// It does corresponding events depending on the widget's size.
+  /// For example doing nothing if it is stable, or expanding etc.
   void _onDragEnd(DragEndDetails details) {
     // If it can stable itself by doing fast drag don't do anyting
     if (_fastDrag(details)) return;
@@ -863,6 +990,10 @@ class _DraggableMenuState extends State<DraggableMenu>
 
   // Status Section | Start
 
+  /// Notifies the status listeners with checking the widget's current status.
+  ///
+  /// If it's moving (means the menu animating itself), it does nothing and returns.
+  /// Because the listeners should be notified by the dynamic status types while animating.
   void _checkStatus() {
     // If it's moving don't change its status with static status
     if (_isMoving) return;
@@ -910,7 +1041,11 @@ class _DraggableMenuState extends State<DraggableMenu>
     }
   }
 
-  /// Notify the status listeners
+  /// Notifies the status listener with the given status
+  /// and assigns the new status to the `_status` variable as well.
+  ///
+  /// If the `bypass` parameter set to `true`, it doesn't check if the
+  /// same status is being assigned or not.
   void _notifyStatusListener(DraggableMenuStatus status,
       [bool bypass = false]) {
     // If the status hasn't changed. Don't notify the listeners

@@ -2,13 +2,13 @@ enum DraggableMenuStatus {
   closing,
   willClose,
   mayClose,
-  canceling,
+  canceling, // Only for animations
   minimized,
-  minimizing,
+  minimizing, // Only for animations
   willMinimize,
   mayExpand,
   mayMinimize,
   willExpand,
-  expanding,
+  expanding, // Only for animations
   expanded,
 }
