@@ -2,9 +2,12 @@ import 'package:draggable_menu/src/draggable_menu/menu/enums/status.dart';
 import 'package:flutter/material.dart';
 
 class ScrollableManagerScope extends InheritedWidget {
+  /// Just an inherited widget to provied needed variables and functions to scrollable managers.
+  ///
+  /// Scrollable managers will look up for this widget to controll the `DraggableMenu` widget.
   const ScrollableManagerScope({
-    this.canExpand,
-    this.status,
+    required this.canExpand,
+    required this.status,
     required this.onDragUpdate,
     required this.onDragEnd,
     required this.onDragStart,
@@ -12,11 +15,20 @@ class ScrollableManagerScope extends InheritedWidget {
     required Widget child,
   }) : super(child: child);
 
-  final void Function(double globalPosition) onDragUpdate;
-  final void Function(DragEndDetails details) onDragEnd;
+  /// Handels Drag Start Events of the Draggable Menu
   final void Function(double globalPosition) onDragStart;
-  final DraggableMenuStatus? status;
-  final bool? canExpand;
+
+  /// Handels Drag Update Events of the Draggable Menu
+  final void Function(double globalPosition) onDragUpdate;
+
+  /// Handels Drag End Events of the Draggable Menu
+  final void Function(DragEndDetails details) onDragEnd;
+
+  /// Draggable Menu's Current Status
+  final DraggableMenuStatus status;
+
+  /// Does the widget have enough levels to expand
+  final bool canExpand;
 
   static ScrollableManagerScope of(BuildContext context) {
     final ScrollableManagerScope? result =

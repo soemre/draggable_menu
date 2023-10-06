@@ -16,11 +16,13 @@ class ScrollableManager extends StatefulWidget {
   /// If it can work, it will block its scrollable child's drag-up gesture when the Draggable Menu's status isn't `expanded`.
   ///
   /// By default, it is `false`.
-  final bool? enableExpandedScroll;
+  final bool enableExpandedScroll;
 
   /// The `controller` parameter allows you to use a `ScrollController` with the scrollable under it.
   final ScrollController? controller;
 
+  /// Manages scrollables compatible with `DraggableMenu` widget.
+  ///
   /// Prefer using this just above scrollables.
   ///
   /// Do not forget to set the physics of the scrollable to `NeverScrollableScrollPhysics`.
@@ -52,7 +54,7 @@ class ScrollableManager extends StatefulWidget {
   const ScrollableManager({
     super.key,
     required this.child,
-    this.enableExpandedScroll,
+    this.enableExpandedScroll = false,
     this.controller,
   });
 
@@ -61,15 +63,26 @@ class ScrollableManager extends StatefulWidget {
 }
 
 class _ScrollableManagerState extends State<ScrollableManager> {
+  /// Stores the scroll controller.
+  ///
+  /// This controller will serve as the primary scroll controller for the scrollable widget
+  /// under it. You don't need to pass the controller to the scrollable manager separately.
   late final ScrollController _controller =
       widget.controller ?? ScrollController();
-  bool isOverScrolling = false;
-  Drag? drag;
 
+  /// Whether the scrollable being overscrolled or not.
+  bool _isOverScrolling = false;
+
+  /// Stores the current drag activity to manage the scrollables.
+  Drag? _drag;
+
+  /// Looks up for the `ScrollableManagerScope` inherited widget
+  /// to contoller and access the variables of the `DraggableMenu` widget.
   ScrollableManagerScope get _manager => ScrollableManagerScope.of(context);
 
   @override
   void dispose() {
+    // Dispose the scroll controller.
     _controller.dispose();
     super.dispose();
   }
@@ -82,39 +95,63 @@ class _ScrollableManagerState extends State<ScrollableManager> {
         behavior: const _DisabledScrollBehavior(),
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onVerticalDragStart: (details) => onDragStart(details),
-          onVerticalDragUpdate: (details) => onDragUpdate(details),
-          onVerticalDragEnd: (details) => onDragEnd(details),
+          onVerticalDragStart: (details) => _onDragStart(details),
+          onVerticalDragUpdate: (details) => _onDragUpdate(details),
+          onVerticalDragEnd: (details) => _onDragEnd(details),
           child: widget.child,
         ),
       ),
     );
   }
 
-  onDragStart(DragStartDetails details) {
-    _throwIf();
-    isOverScrolling = false;
-    drag = null;
+  /// Handels the drag start event.
+  ///
+  /// Initilizes the needed variables to their start values.
+  _onDragStart(DragStartDetails details) {
+    assert(_controller.hasClients,
+        "The Scrollable Manager widget should be attached with a scrollable. Be sure you use one scrollable widget under it, and do not use any scroll controllers with the scrollable widget. If you want to use a scroll controller, give the controller to ScrollManager's controller parameter instead.");
+    _isOverScrolling = false;
+    _drag = null;
   }
 
-  onDragUpdate(DragUpdateDetails details) {
+  /// Handels the drag update event.
+  ///
+  /// If the scrollable being overscrolled, moves the `DraggableMenu` widget.
+  /// If it's not, moves the scrollable.
+  ///
+  /// If the drag behavior not initilized yet, start
+  /// and assign a new Drag behavior to the `_drag` variable.
+  ///
+  /// If `enableExpandedScroll` is set to `true` of the `DraggableMenu` widget
+  /// and there is enough levels for widget to expand itself,
+  /// move the `DraggableMenu` widget when dragging up until it reaches the top level.
+  _onDragUpdate(DragUpdateDetails details) {
+    // If there is no change returns immediately.
     if (details.primaryDelta == null) return;
-    if (isOverScrolling) {
+
+    if (_isOverScrolling) {
+      // Moves the `DraggableMenu` widget.
       _manager.onDragUpdate.call(details.globalPosition.dy);
-    } else if (drag != null) {
-      drag!.update(details);
+    } else if (_drag != null) {
+      // Moves the scrollable.
+      _drag!.update(details);
     } else {
-      if ((widget.enableExpandedScroll != true) ||
-          (_manager.canExpand != true)) {
+      // Drag event isn't started and assigned to the `_drag` variable.
+      if (!widget.enableExpandedScroll || !_manager.canExpand) {
+        // There is no need to move the `DraggableMenu` widget,
+        // therefore start draging the scrollable.
         _handleStart(details);
       } else {
-        // if enableExpandedScroll == true
+        // If `enableExpandedScroll` is set to `true` and the `DraggableMenu` can expand itself.
         if (_manager.status == DraggableMenuStatus.expanded) {
+          // If it is expanded already start dragging to scrollable.
           _handleStart(details);
         } else {
           if (details.primaryDelta!.sign < 0) {
+            // Drag the `DraggableMenu` widget.
             _startOverScrolling(details);
           } else {
+            // Start draging the scrollable.
             _handleStart(details);
           }
         }
@@ -122,14 +159,27 @@ class _ScrollableManagerState extends State<ScrollableManager> {
     }
   }
 
-  onDragEnd(DragEndDetails details) {
-    drag?.end(details);
-    if (isOverScrolling) {
-      isOverScrolling = false;
+  /// Handels the drag end event.
+  ///
+  /// Ends the drag event.
+  ///
+  /// Sets the `_isOverScrolling` variable to its start value.
+  ///
+  /// And if the `_isOverScrolling` is `true`,
+  /// calls the `DraggableMenu`'s onDragEnd method to end the ui's movement ass well.
+  _onDragEnd(DragEndDetails details) {
+    _drag?.end(details);
+    if (_isOverScrolling) {
+      _isOverScrolling = false;
       _manager.onDragEnd.call(details);
     }
   }
 
+  /// Starts a new drag event and assigns it to the scrollable.
+  ///
+  /// If the scrollable at its min or max scroll extents,
+  /// starts moving the `DraggableMenu` widget
+  /// instead of trying to scroll the scrollable out of it's extents.
   void _handleStart(DragUpdateDetails details) {
     if (_controller.position.atEdge == true) {
       if (details.primaryDelta!.sign > 0 &&
@@ -142,23 +192,27 @@ class _ScrollableManagerState extends State<ScrollableManager> {
         return;
       }
     }
-    drag = _controller.position.drag(DragStartDetails(), () {
-      drag = null;
+
+    // Starts the drag event and assigns it to the `_drag` variable.
+    _drag = _controller.position.drag(DragStartDetails(), () {
+      _drag = null;
     });
   }
 
+  /// Does certain tasks to start overscrolling.
+  ///
+  /// Assigns the `_isOverScrolling` variable to `true`.
+  /// And starts the `DraggableMenu`'s movement.
   void _startOverScrolling(DragUpdateDetails details) {
-    isOverScrolling = true;
-    _manager.onDragStart.call(details.globalPosition.dy);
-  }
+    _isOverScrolling = true;
 
-  _throwIf() {
-    assert(_controller.hasClients,
-        "The Scrollable Manager widget should be attached with a scrollable. Be sure you use one scrollable widget under it, and do not use any scroll controllers with the scrollable widget. If you want to use a scroll controller, give the controller to ScrollManager's controller parameter instead.");
+    // To move the `DraggableMenu` widget.
+    _manager.onDragStart.call(details.globalPosition.dy);
   }
 }
 
 class _DisabledScrollBehavior extends ScrollBehavior {
+  /// Removes the overscrolling animations.
   const _DisabledScrollBehavior();
 
   @override

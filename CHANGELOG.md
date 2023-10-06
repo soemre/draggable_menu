@@ -1,6 +1,7 @@
 # 4.3.1 Release
 
 - Update document
+- Change `ScrollableManager`'s `bool? enableExpandedScroll` to `bool enableExpandedScroll`
 
 ## 4.3.0 Release
 
