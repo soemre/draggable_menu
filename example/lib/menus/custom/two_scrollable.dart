@@ -7,6 +7,7 @@ class TwoScrollableMenu extends StatelessWidget {
   final bool enableExpandedScroll;
   final bool fastDrag;
   final bool minimizeBeforeFastDrag;
+  final bool smoothScrolling;
 
   const TwoScrollableMenu({
     super.key,
@@ -14,6 +15,7 @@ class TwoScrollableMenu extends StatelessWidget {
     required this.enableExpandedScroll,
     required this.fastDrag,
     required this.minimizeBeforeFastDrag,
+    required this.smoothScrolling,
   });
 
   @override
@@ -31,6 +33,7 @@ class TwoScrollableMenu extends StatelessWidget {
                 child: ColoredBox(
                   color: Colors.indigoAccent,
                   child: ScrollableManager(
+                    smoothScrolling: smoothScrolling,
                     enableExpandedScroll: enableExpandedScroll,
                     child: ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
@@ -53,6 +56,7 @@ class TwoScrollableMenu extends StatelessWidget {
                 child: ColoredBox(
                   color: Colors.indigoAccent,
                   child: ScrollableManager(
+                    smoothScrolling: smoothScrolling,
                     enableExpandedScroll: enableExpandedScroll,
                     child: ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),

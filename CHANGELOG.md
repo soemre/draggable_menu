@@ -1,7 +1,6 @@
-# 4.3.1 Release
+# 4.4.0 Release
 
-- Update document
-- Change `ScrollableManager`'s `bool? enableExpandedScroll` to `bool enableExpandedScroll`
+- Add `smoothScrolling` parameter to `ScrollableManager`. (New Smooth Scrolling Feature)
 
 ## 4.3.0 Release
 

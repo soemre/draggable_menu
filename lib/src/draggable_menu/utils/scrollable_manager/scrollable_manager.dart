@@ -14,9 +14,10 @@ class ScrollableManager extends StatefulWidget {
   /// Only work if the `DraggableMenu`'s expandable feature can work.
   ///
   /// If it can work, it will block its scrollable child's drag-up gesture when the Draggable Menu's status isn't `expanded`.
-  ///
-  /// By default, it is `false`.
   final bool enableExpandedScroll;
+
+  /// Scrolls the scrollable as soon as the `DraggableMenu` reaches to the top.
+  final bool smoothScrolling;
 
   /// The `controller` parameter allows you to use a `ScrollController` with the scrollable under it.
   final ScrollController? controller;
@@ -56,6 +57,7 @@ class ScrollableManager extends StatefulWidget {
     required this.child,
     this.enableExpandedScroll = false,
     this.controller,
+    this.smoothScrolling = false,
   });
 
   @override
@@ -130,9 +132,26 @@ class _ScrollableManagerState extends State<ScrollableManager> {
     if (details.primaryDelta == null) return;
 
     if (_isOverScrolling) {
+      // Smooth Scrolling
+      if (widget.smoothScrolling &&
+          _manager.status == DraggableMenuStatus.expanded &&
+          details.primaryDelta!.sign < 0) {
+        _isOverScrolling = false;
+        _handleStart(details);
+        return;
+      }
       // Moves the `DraggableMenu` widget.
       _manager.onDragUpdate.call(details.globalPosition.dy);
     } else if (_drag != null) {
+      // Smooth Scrolling
+      if (widget.smoothScrolling) {
+        if (_startEdgeOverscrolling(details)) {
+          _drag?.cancel();
+          _drag = null;
+          return;
+        }
+      }
+
       // Moves the scrollable.
       _drag!.update(details);
     } else {
@@ -181,17 +200,7 @@ class _ScrollableManagerState extends State<ScrollableManager> {
   /// starts moving the `DraggableMenu` widget
   /// instead of trying to scroll the scrollable out of it's extents.
   void _handleStart(DragUpdateDetails details) {
-    if (_controller.position.atEdge == true) {
-      if (details.primaryDelta!.sign > 0 &&
-          _controller.position.pixels == _controller.position.minScrollExtent) {
-        _startOverScrolling(details);
-        return;
-      } else if (details.primaryDelta!.sign < 0 &&
-          _controller.position.pixels == _controller.position.maxScrollExtent) {
-        _startOverScrolling(details);
-        return;
-      }
-    }
+    if (_startEdgeOverscrolling(details)) return;
 
     // Starts the drag event and assigns it to the `_drag` variable.
     _drag = _controller.position.drag(DragStartDetails(), () {
@@ -208,6 +217,24 @@ class _ScrollableManagerState extends State<ScrollableManager> {
 
     // To move the `DraggableMenu` widget.
     _manager.onDragStart.call(details.globalPosition.dy);
+  }
+
+  /// Moves the `DraggableMenu` widget if the scrollable is being overscrolled.
+  ///
+  /// Returns true if the current conditions suits overscrolling.
+  bool _startEdgeOverscrolling(DragUpdateDetails details) {
+    if (_controller.position.atEdge == true) {
+      if (details.primaryDelta!.sign > 0 &&
+          _controller.position.pixels == _controller.position.minScrollExtent) {
+        _startOverScrolling(details);
+        return true;
+      } else if (details.primaryDelta!.sign < 0 &&
+          _controller.position.pixels == _controller.position.maxScrollExtent) {
+        _startOverScrolling(details);
+        return true;
+      }
+    }
+    return false;
   }
 }
 

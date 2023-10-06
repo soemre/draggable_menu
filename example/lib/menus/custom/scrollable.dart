@@ -7,6 +7,7 @@ class ScrollableMenu extends StatelessWidget {
   final bool enableExpandedScroll;
   final bool fastDrag;
   final bool minimizeBeforeFastDrag;
+  final bool smoothScrolling;
 
   const ScrollableMenu({
     super.key,
@@ -14,6 +15,7 @@ class ScrollableMenu extends StatelessWidget {
     required this.enableExpandedScroll,
     required this.fastDrag,
     required this.minimizeBeforeFastDrag,
+    required this.smoothScrolling,
   });
 
   @override
@@ -23,6 +25,7 @@ class ScrollableMenu extends StatelessWidget {
       fastDrag: fastDrag,
       minimizeBeforeFastDrag: minimizeBeforeFastDrag,
       child: ScrollableManager(
+        smoothScrolling: smoothScrolling,
         enableExpandedScroll: enableExpandedScroll,
         child: ListView.builder(
           physics: const NeverScrollableScrollPhysics(),

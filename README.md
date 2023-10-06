@@ -2,10 +2,10 @@
 
 <p align="center">
   <a href="https://pub.dev/packages/draggable_menu">
-    <img src="https://img.shields.io/badge/pub-v4.3.1-%237f7eff?style=flat&logo=flutter">
+    <img src="https://img.shields.io/badge/pub-v4.4.0-%237f7eff?style=flat&logo=flutter">
   </a>
   <a href="https://github.com/emresoysuren/draggable_menu">
-    <img src="https://img.shields.io/badge/GitHub-v4.3.1-%237f7eff?style=flat&logo=github">
+    <img src="https://img.shields.io/badge/GitHub-v4.4.0-%237f7eff?style=flat&logo=github">
   </a>
 </p>
 
@@ -274,7 +274,7 @@ DraggableMenu(
 
 In short, do not forget to use `ScrollableManager` and set the physics of the scrollable you want to `NeverScrollableScrollPhysics`.
 
-Extra: *Check out the `ScrollableManager`'s `enableExpandedScroll` parameter.*
+Extra: *Check out the `ScrollableManager`'s `enableExpandedScroll` and `smoothScrolling` parameters.*
 
 ---
 

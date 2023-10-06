@@ -29,6 +29,7 @@ class _AppState extends State<App> {
   bool _enableExpandedScroll = false;
   bool _fastDrag = true;
   bool _minimizeBeforeFastDrag = false;
+  bool _smoothScrolling = false;
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +57,9 @@ class _AppState extends State<App> {
               ),
               const SizedBox(height: 8),
               _boolRow("Barrier", _barrier, (value) => _barrier = value),
+              const SizedBox(height: 8),
+              _boolRow("Smooth Scrolling", _smoothScrolling,
+                  (value) => _smoothScrolling = value),
               const SizedBox(height: 8),
               const Text(
                 "UI Type:",
@@ -153,6 +157,7 @@ class _AppState extends State<App> {
                     fastDrag: _fastDrag,
                     enableExpandedScroll: _enableExpandedScroll,
                     minimizeBeforeFastDrag: _minimizeBeforeFastDrag,
+                    smoothScrolling: _smoothScrolling,
                   ),
                   barrier: _barrier,
                 ),
@@ -166,6 +171,7 @@ class _AppState extends State<App> {
                     fastDrag: _fastDrag,
                     enableExpandedScroll: _enableExpandedScroll,
                     minimizeBeforeFastDrag: _minimizeBeforeFastDrag,
+                    smoothScrolling: _smoothScrolling,
                   ),
                   barrier: _barrier,
                 ),
