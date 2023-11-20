@@ -2,34 +2,35 @@
 
 <p align="center">
   <a href="https://pub.dev/packages/draggable_menu">
-    <img src="https://img.shields.io/badge/pub-v4.4.0-%237f7eff?style=flat&logo=flutter">
+    <img src="https://img.shields.io/badge/pub-v4.4.1-%237f7eff?style=flat&logo=flutter">
   </a>
   <a href="https://github.com/emresoysuren/draggable_menu">
-    <img src="https://img.shields.io/badge/GitHub-v4.4.0-%237f7eff?style=flat&logo=github">
+    <img src="https://img.shields.io/badge/GitHub-v4.4.1-%237f7eff?style=flat&logo=github">
   </a>
 </p>
 
 # Flutter Draggable Menu (draggable_menu)
 
-With `draggable_menu`, create Draggable Menus as you want and make your app look way better and more convenient.
+Create custom draggable menus that provide a familiar, customizable, and user-friendly experience, inspired by popular social media platforms such as Instagram, Snapchat, Facebook, Twitter, and YouTube. Make your app look way better and more convenient with `draggable_menu`.
 
-Create Draggable Menus like some popular apps like **Instagram**, **Snapchat**, **Facebook**, **Twitter**, **Youtube** etc. You can even make your Draggable Menus look identical to them.
-
-`draggable_menu` also allows you to customize the UI and the animations. You can use one of the default themes or create your custom UI from scratch.
+You can customize its UI, animations, and levels (thresholds) to create your own draggable menu. You can also use the pre-made UIs to create your draggable menu faster.
 
 ## Features
-- Expandable
+- Easy to use
+- Easy to customize
 - Fully customizable UI
-- Fully customizable levels
-- Fully customizable animations
+- Fully customizable levels that can be used to create an expandable draggable menu
 - Controllable with its controller
-- Compatible with the scrollable usage 
-- Fast Drag Gestures
+- Compatible with the scrollable usage
+- Supports fast-drag gestures
 - Has multiple listeners to listen to its values
 - You can use it without any configurations
 - Contains pre-build UIs and route
+- Smooth scrolling feature
+- and more...
 
-**Contributions are welcome. And you can support it by giving it a star on `GitHub` or liking it in `pub.dev`.**
+
+**If you like this package, you can support it by giving a star on [GitHub](https://github.com/emresoysuren/draggable_menu) and a like on [pub.dev](https://pub.dev/packages/draggable_menu).**
 
 | Classic UI | Soft Modern UI (with Scrollable) | Modular UI (with Status) |
 |---|---|---|
