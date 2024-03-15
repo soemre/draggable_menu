@@ -172,6 +172,11 @@ class DraggableMenu extends StatefulWidget {
   /// Throws if the level doesn't exist.
   final int startLevel;
 
+  /// It checks Draggable Menu is opened or not.
+  ///
+  /// By default, it is `true`.
+  bool isOpen = false; 
+  
   /// Creates a Draggable Menu widget.
   ///
   /// To push the Draggable Menu to the screen, you can use the `DraggableMenu`'s `open` and `openReplacement` methods.
@@ -239,8 +244,10 @@ class DraggableMenu extends StatefulWidget {
     Curve? popCurve,
     bool? barrier,
     Color? barrierColor,
-  }) =>
-      Navigator.of(context).push<T>(
+    DraggableMenuController? controller,
+  }) {
+    controller?.isOpen = true;
+    return Navigator.of(context).push<T>(
         MenuRoute<T>(
           child: draggableMenu,
           duration: animationDuration,
@@ -250,6 +257,7 @@ class DraggableMenu extends StatefulWidget {
           barrierColor: barrierColor,
         ),
       );
+  }
 
   /// Opens the given Draggable Menu using `Navigator`'s `pushReplacement` method.
   ///
@@ -262,8 +270,10 @@ class DraggableMenu extends StatefulWidget {
     Curve? popCurve,
     bool? barrier,
     Color? barrierColor,
-  }) =>
-      Navigator.of(context).pushReplacement(
+    DraggableMenuController? controller,
+  }) {
+    controller?.isOpen = true;
+     return Navigator.of(context).pushReplacement(
         MenuRoute(
           child: draggableMenu,
           duration: animationDuration,
@@ -273,6 +283,7 @@ class DraggableMenu extends StatefulWidget {
           barrierColor: barrierColor,
         ),
       );
+  }
 
   @override
   State<DraggableMenu> createState() => _DraggableMenuState();
@@ -891,6 +902,7 @@ class _DraggableMenuState extends State<DraggableMenu>
   void dispose() {
     _ticker.dispose();
     _animationController.dispose();
+    widget.controller?.isOpen = false;
     super.dispose();
   }
 
