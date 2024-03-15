@@ -899,7 +899,8 @@ class _DraggableMenuState extends State<DraggableMenu>
 
   @override
   void dispose() {
-    widget.controller?.isOpen = false;
+    // widget.controller?.isOpen = false;
+    widget.controller?.dispose();
     _ticker.dispose();
     _animationController.dispose();
     super.dispose();
