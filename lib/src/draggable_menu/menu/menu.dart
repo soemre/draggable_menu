@@ -239,7 +239,6 @@ class DraggableMenu extends StatefulWidget {
     Curve? popCurve,
     bool? barrier,
     Color? barrierColor,
-    DraggableMenuController? controller,
   }) {
     controller?.isOpen = true;
     return Navigator.of(context).push<T>(
@@ -265,7 +264,6 @@ class DraggableMenu extends StatefulWidget {
     Curve? popCurve,
     bool? barrier,
     Color? barrierColor,
-    DraggableMenuController? controller,
   }) {
     controller?.isOpen = true;
      return Navigator.of(context).pushReplacement(
