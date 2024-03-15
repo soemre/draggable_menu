@@ -352,7 +352,11 @@ class _DraggableMenuState extends State<DraggableMenu>
     widget.controller?.init((int level) => _animateTo(level));
 
     // Adds itself as listener to the controller
-    widget.controller?.addListener(() => setState(() {}));
+    widget.controller?.addListener(() {
+    if (mounted) { // Check if the state is still mounted
+      setState(() {});
+    }
+  });
   }
 
   /// Initilizes the `DraggableMenu` widget's levels.
