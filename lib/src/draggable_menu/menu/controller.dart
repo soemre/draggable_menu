@@ -27,10 +27,5 @@ class DraggableMenuController extends ChangeNotifier {
     this.animateTo = (level) => animateTo(level);
   }
 
-  bool _isOpen = false;
-  bool get isOpen => _isOpen;
-  set isOpen(bool value) {
-    _isOpen = value;
-    if (this.hasListeners) notifyListeners();
-  }
+  bool isOpen = false;
 }
