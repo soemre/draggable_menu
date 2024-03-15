@@ -171,11 +171,6 @@ class DraggableMenu extends StatefulWidget {
   ///
   /// Throws if the level doesn't exist.
   final int startLevel;
-
-  /// It checks Draggable Menu is opened or not.
-  ///
-  /// By default, it is `true`.
-  bool isOpen = false; 
   
   /// Creates a Draggable Menu widget.
   ///
