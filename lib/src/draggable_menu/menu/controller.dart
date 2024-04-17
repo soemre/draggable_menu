@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 class DraggableMenuController extends ChangeNotifier {
   late void Function(int level) animateTo;
-
   ///You can use `DraggableMenuController` to control the `DraggableMenu` widget.
   ///
   /// Provide the `DraggableMenuController` to the `controller` parameter of the `DraggableMenu`.
@@ -27,4 +26,6 @@ class DraggableMenuController extends ChangeNotifier {
   init(void Function(int level) animateTo) {
     this.animateTo = (level) => animateTo(level);
   }
+
+  bool isOpen = false;
 }

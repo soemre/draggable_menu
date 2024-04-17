@@ -171,7 +171,7 @@ class DraggableMenu extends StatefulWidget {
   ///
   /// Throws if the level doesn't exist.
   final int startLevel;
-
+  
   /// Creates a Draggable Menu widget.
   ///
   /// To push the Draggable Menu to the screen, you can use the `DraggableMenu`'s `open` and `openReplacement` methods.
@@ -239,8 +239,10 @@ class DraggableMenu extends StatefulWidget {
     Curve? popCurve,
     bool? barrier,
     Color? barrierColor,
-  }) =>
-      Navigator.of(context).push<T>(
+    DraggableMenuController? controller,
+  }) {
+    controller?.isOpen = true;
+    return Navigator.of(context).push<T>(
         MenuRoute<T>(
           child: draggableMenu,
           duration: animationDuration,
@@ -250,6 +252,7 @@ class DraggableMenu extends StatefulWidget {
           barrierColor: barrierColor,
         ),
       );
+  }
 
   /// Opens the given Draggable Menu using `Navigator`'s `pushReplacement` method.
   ///
@@ -262,8 +265,10 @@ class DraggableMenu extends StatefulWidget {
     Curve? popCurve,
     bool? barrier,
     Color? barrierColor,
-  }) =>
-      Navigator.of(context).pushReplacement(
+    DraggableMenuController? controller,
+  }) {
+    controller?.isOpen = true;
+     return Navigator.of(context).pushReplacement(
         MenuRoute(
           child: draggableMenu,
           duration: animationDuration,
@@ -273,6 +278,7 @@ class DraggableMenu extends StatefulWidget {
           barrierColor: barrierColor,
         ),
       );
+  }
 
   @override
   State<DraggableMenu> createState() => _DraggableMenuState();
@@ -344,9 +350,14 @@ class _DraggableMenuState extends State<DraggableMenu>
   void _controllerInit() {
     // Initilizes the controller (Passes the _animeteTo method)
     widget.controller?.init((int level) => _animateTo(level));
+    widget.controller?.isOpen = true;
 
     // Adds itself as listener to the controller
-    widget.controller?.addListener(() => setState(() {}));
+    widget.controller?.addListener(() {
+    if (mounted) { // Check if the state is still mounted
+      setState(() {});
+    }
+  });
   }
 
   /// Initilizes the `DraggableMenu` widget's levels.
@@ -889,6 +900,7 @@ class _DraggableMenuState extends State<DraggableMenu>
 
   @override
   void dispose() {
+    widget.controller?.isOpen = false;
     _ticker.dispose();
     _animationController.dispose();
     super.dispose();
