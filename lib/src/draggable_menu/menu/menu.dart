@@ -350,6 +350,7 @@ class _DraggableMenuState extends State<DraggableMenu>
   void _controllerInit() {
     // Initilizes the controller (Passes the _animeteTo method)
     widget.controller?.init((int level) => _animateTo(level));
+    widget.controller?.isOpen = true;
 
     // Adds itself as listener to the controller
     widget.controller?.addListener(() {
